@@ -24,8 +24,8 @@ extern "C" {
 #include <stdlib.h>
 
 /* Defines. */
-#define CUEW_VERSION_MAJOR 1
-#define CUEW_VERSION_MINOR 2
+#define CUEW_VERSION_MAJOR 2
+#define CUEW_VERSION_MINOR 0
 
 #define CUDA_VERSION 9010
 #define CU_IPC_HANDLE_SIZE 64
@@ -878,6 +878,8 @@ typedef enum  {
 } nvrtcResult;
 
 typedef struct _nvrtcProgram* nvrtcProgram;
+
+
 /* Function types. */
 typedef CUresult CUDAAPI tcuGetErrorString(CUresult error, const char** pStr);
 typedef CUresult CUDAAPI tcuGetErrorName(CUresult error, const char** pStr);
@@ -1362,10 +1364,16 @@ enum {
   CUEW_ERROR_ATEXIT_FAILED = -2,
 };
 
-int cuewInit(void);
+enum {
+	CUEW_INIT_CUDA = 1,
+	CUEW_INIT_NVRTC = 2
+};
+
+int cuewInit(cuuint32_t flags);
 const char *cuewErrorString(CUresult result);
 const char *cuewCompilerPath(void);
 int cuewCompilerVersion(void);
+int cuewNvrtcVersion(void);
 
 #ifdef __cplusplus
 }
