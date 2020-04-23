@@ -29,8 +29,13 @@ from cuda_errors import CUDA_ERRORS
 from pycparser import c_parser, c_ast, parse_file
 from subprocess import Popen, PIPE
 
-INCLUDE_DIR = "/usr/include"
-FILES = ["cuda.h", "cudaGL.h", 'nvrtc.h']
+#INCLUDE_DIR = "/usr/local/cuda-9.1/include/"
+INCLUDE_DIR = "/usr/local/cuda-10.1/include/"
+#FILES = ["cuda.h", "cudaGL.h", 'nvrtc.h']
+
+# TODO(syoyo): cudaGL.h, cudnn.h
+FILES = ["cuda.h", 'nvrtc.h']
+#FILES = ["cudnn.h"]
 
 TYPEDEFS = []
 FUNC_TYPEDEFS = []
@@ -39,6 +44,8 @@ DEFINES = []
 DEFINES_V2 = []
 ERRORS = []
 
+# HACK(syoyo)
+#sys.path.append(INCLUDE_DIR)
 
 class FuncDefVisitor(c_ast.NodeVisitor):
     indent = 0
@@ -232,9 +239,12 @@ def get_latest_cpp():
 
 
 def preprocess_file(filename, cpp_path):
-    args = [cpp_path, "-I./"]
+    args = [cpp_path, "-I./", "-I/usr/local/cuda-10.1/include"]
     if filename.endswith("GL.h"):
         args.append("-DCUDAAPI= ")
+
+    # CUDA-10 or later
+    args.append("-DCUDA_ENABLE_DEPRECATED= ")
     args.append(filename)
 
     try:
@@ -258,6 +268,7 @@ def parse_files():
         filepath = os.path.join(INCLUDE_DIR, filename)
         dummy_typedefs = {}
         text = preprocess_file(filepath, cpp_path)
+        #print(text)
 
         if filepath.endswith("GL.h"):
             dummy_typedefs = {
@@ -290,6 +301,7 @@ def parse_files():
                                         "CUDA_CB",
                                         "CUDAAPI",
                                         "CUDAGL_H",
+                                        "__CUDA_DEPRECATED",
                                         "__NVRTC_H__"):
                         DEFINES.append(token)
 
