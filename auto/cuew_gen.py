@@ -29,13 +29,11 @@ from cuda_errors import CUDA_ERRORS
 from pycparser import c_parser, c_ast, parse_file
 from subprocess import Popen, PIPE
 
-#INCLUDE_DIR = "/usr/local/cuda-9.1/include/"
 INCLUDE_DIR = "/usr/local/cuda-10.1/include/"
-#FILES = ["cuda.h", "cudaGL.h", 'nvrtc.h']
+CUDNN_EXTRA_INCLUDE_DIR = "/usr/include/" # Extra include directory to search CUDNN header
 
-# TODO(syoyo): cudaGL.h, cudnn.h
-FILES = ["cuda.h", 'nvrtc.h']
-#FILES = ["cudnn.h"]
+# TODO(syoyo): cudaGL.h
+FILES = ["cuda.h", 'nvrtc.h',"cudnn.h"]
 
 TYPEDEFS = []
 FUNC_TYPEDEFS = []
@@ -44,13 +42,10 @@ DEFINES = []
 DEFINES_V2 = []
 ERRORS = []
 
-# HACK(syoyo)
-#sys.path.append(INCLUDE_DIR)
-
 class FuncDefVisitor(c_ast.NodeVisitor):
     indent = 0
     prev_complex = False
-    dummy_typedefs = ['size_t', 'CUdeviceptr', 'uint32_t', 'uint64_t',
+    dummy_typedefs = ['size_t', 'CUdeviceptr', 'int8_t', 'uint8_t', 'int16_t', 'uint16_t', 'int32_t', 'uint32_t', 'int64_t', 'uint64_t',
                       'cuuint32_t', 'cuuint64_t'];
 
     def _get_quals_string(self, node):
@@ -120,7 +115,10 @@ class FuncDefVisitor(c_ast.NodeVisitor):
             # TODO(sergey): Workaround to deal with the
             # preprocessed file where array size got
             # substituded.
-            dim = param_type.dim.value
+            if param_type.dim:
+                dim = param_type.dim.value
+            else:
+                dim = ""
             if param.name == "reserved" and dim == "64":
                 dim = "CU_IPC_HANDLE_SIZE"
             result += '[' + dim + ']'
@@ -203,7 +201,10 @@ class FuncDefVisitor(c_ast.NodeVisitor):
             self.indent += 1
             struct = self._stringify_struct(node.type.type)
             self.indent -= 1
-            typedef = quals + type + " {\n" + struct + "} " + node.name
+            if node.type.type.name:
+                typedef = quals + type + " {\n" + struct + "} " + node.name
+            else:
+                typedef = quals + "struct {\n" + struct + "} " + node.name
             complex = True
         elif isinstance(node.type.type, c_ast.Enum):
             self.indent += 1
@@ -239,12 +240,14 @@ def get_latest_cpp():
 
 
 def preprocess_file(filename, cpp_path):
-    args = [cpp_path, "-I./", "-I/usr/local/cuda-10.1/include"]
+    args = [cpp_path, "-I./", "-I{}".format(INCLUDE_DIR)]
+    if filename.endswith("cudnn.h"):
+        args.append("-I{}".format(CUDNN_EXTRA_INCLUDE_DIR))
+    args.append("-DCUDA_ENABLE_DEPRECATED=1 ") # CUDA-10 or later?
     if filename.endswith("GL.h"):
         args.append("-DCUDAAPI= ")
-
-    # CUDA-10 or later
-    args.append("-DCUDA_ENABLE_DEPRECATED= ")
+    if filename.endswith("cudnn.h"):
+        args.append("-DCUDNNWINAPI= ")
     args.append(filename)
 
     try:
@@ -266,6 +269,10 @@ def parse_files():
 
     for filename in FILES:
         filepath = os.path.join(INCLUDE_DIR, filename)
+        if filename.endswith("cudnn.h"):
+            if not os.path.exists(filepath):
+                filepath = os.path.join(CUDNN_EXTRA_INCLUDE_DIR, filename)
+
         dummy_typedefs = {}
         text = preprocess_file(filepath, cpp_path)
         #print(text)
@@ -277,13 +284,18 @@ def parse_files():
                 "CUdevice": "void *",
                 "CUcontext": "void *",
                 "CUdeviceptr": "void *",
-                "CUstream": "void *"
+                "CUstream": "void *",
                 }
 
             text = "typedef int GLint;\n" + text
             text = "typedef unsigned int GLuint;\n" + text
             text = "typedef unsigned int GLenum;\n" + text
             text = "typedef long size_t;\n" + text
+        elif filepath.endswith("cudnn.h"):
+            dummy_typedefs = {
+                "cudaStream_t": "void *",
+                "int32_t": "int" # For some reason, pycparser cannot parse `int32_t`
+            }
 
         for typedef in sorted(dummy_typedefs):
             text = "typedef " + dummy_typedefs[typedef] + " " + \
@@ -300,8 +312,12 @@ def parse_files():
                     if token[0] not in ("__cuda_cuda_h__",
                                         "CUDA_CB",
                                         "CUDAAPI",
+                                        "CUDNNWINAPI",
                                         "CUDAGL_H",
+                                        "__NVRTC_H__",
+                                        "CUDA_ENABLE_DEPRECATED",
                                         "__CUDA_DEPRECATED",
+                                        "CUDNN_H_",
                                         "__NVRTC_H__"):
                         DEFINES.append(token)
 
@@ -383,7 +399,7 @@ def print_implementation():
     lib_find_cuda = ''
     for symbol in SYMBOLS:
         if symbol:
-          if not symbol.startswith('nvrtc'):
+          if not symbol.startswith('nvrtc') and not symbol.startswith('cudnn'):
             lib_find_cuda += "  CUDA_LIBRARY_FIND(%s);\n" % (symbol)
         else:
             lib_find_cuda += "\n"
@@ -393,10 +409,16 @@ def print_implementation():
         if symbol and symbol.startswith('nvrtc'):
             lib_find_nvrtc += "  NVRTC_LIBRARY_FIND(%s);\n" % (symbol)
 
+    lib_find_cudnn = ''
+    for symbol in SYMBOLS:
+        if symbol and symbol.startswith('cudnn'):
+            lib_find_cudnn += "  CUDNN_LIBRARY_FIND(%s);\n" % (symbol)
+
     source = source.replace('%FUNCTION_DEFINITIONS%', function_definitions.rstrip())
     source = source.replace('%CUDA_ERRORS%', cuda_errors.rstrip())
     source = source.replace('%LIB_FIND_CUDA%', lib_find_cuda.rstrip())
     source = source.replace('%LIB_FIND_NVRTC%', lib_find_nvrtc.rstrip())
+    source = source.replace('%LIB_FIND_CUDNN%', lib_find_cudnn.rstrip())
 
     sys.stdout.write(source)
 
