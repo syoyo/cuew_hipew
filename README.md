@@ -2,8 +2,7 @@ syoyo's modification to CUEW.
 
 ## Changes
 
-* Support CUDA 10.1
-  * CUDA 10.2 would work
+* Support CUDA 10.2
 * Support CUDNN 7.6
 
 ## Generate cuew
@@ -32,12 +31,14 @@ $ make
 
 ## Known issues
 
+* Combining with Address Sanitizer(`-fsanitizer=address`) won't work(calling CUDA API results in undefined behavior)
 * CUEW does not warn when using deprecated API
 
 ## TODO
 
-* [ ] Keep up with CUDA 10.2
+* [x] Keep up with CUDA 10.2
 * [ ] Test cuDNN API call.
+* [ ] Find a way to co-exist with Address Sanitizer
 
 =================
 
