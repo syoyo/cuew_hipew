@@ -1,10 +1,19 @@
 syoyo's modification to CUEW.
 
+Currently tests on Ubuntu 18.04.
+
 ## Changes
 
 * Support CUDA 10.1
   * CUDA 10.2 would work
 * Support CUDNN 7.6
+
+## Supported API
+
+* [x] cuda.h
+* [x] cudnn.h
+* [x] nvrtc.h
+* [ ] cudaGL.h
 
 ## Generate cuew
 
@@ -36,6 +45,8 @@ $ make
 
 ## TODO
 
+* [ ] Test on MSVC.
+* [ ] Support cudaGL.h
 * [ ] Keep up with CUDA 10.2
 * [ ] Test cuDNN API call.
 
