@@ -140,6 +140,8 @@ extern "C" {
 #ifdef _MSC_VER
 typedef unsigned __int32 cuuint32_t;
 typedef unsigned __int64 cuuint64_t;
+/* Assume VS2017 or later */
+#include <stdint.h>
 #else
 #include <stdint.h>
 typedef uint32_t cuuint32_t;
