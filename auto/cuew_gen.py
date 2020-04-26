@@ -202,7 +202,11 @@ class FuncDefVisitor(c_ast.NodeVisitor):
             struct = self._stringify_struct(node.type.type)
             self.indent -= 1
             if node.type.type.name:
-                typedef = quals + type + " {\n" + struct + "} " + node.name
+                if len(struct) > 0:
+                    typedef = quals + type + " {\n" + struct + "} " + node.name
+                else:
+                    # probably forward decl.
+                    typedef = quals + type + " " + node.name
             else:
                 typedef = quals + "struct {\n" + struct + "} " + node.name
             complex = True
