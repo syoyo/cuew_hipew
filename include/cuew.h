@@ -27,7 +27,7 @@ extern "C" {
 #define CUEW_VERSION_MAJOR 2
 #define CUEW_VERSION_MINOR 0
 
-#define CUDA_VERSION 10010
+#define CUDA_VERSION 10020
 #define CU_UUID_HAS_BEEN_DEFINED
 #define CU_IPC_HANDLE_SIZE 64
 #define CU_STREAM_LEGACY ((CUstream)0x1)
@@ -39,6 +39,10 @@ extern "C" {
 #define CU_MEMHOSTREGISTER_DEVICEMAP 0x02
 #define CU_MEMHOSTREGISTER_IOMEMORY 0x04
 #define CUDA_EXTERNAL_MEMORY_DEDICATED 0x1
+#define CUDA_EXTERNAL_SEMAPHORE_SIGNAL_SKIP_NVSCIBUF_MEMSYNC 0x01
+#define CUDA_EXTERNAL_SEMAPHORE_WAIT_SKIP_NVSCIBUF_MEMSYNC 0x02
+#define CUDA_NVSCISYNC_ATTR_SIGNAL 0x1
+#define CUDA_NVSCISYNC_ATTR_WAIT 0x2
 #define CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC 0x01
 #define CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC 0x02
 #define CUDA_ARRAY3D_LAYERED 0x01
@@ -58,9 +62,14 @@ extern "C" {
 #define CU_PARAM_TR_DEFAULT -1
 #define CU_DEVICE_CPU ((CUdevice)-1)
 #define CU_DEVICE_INVALID ((CUdevice)-2)
+#define __CUDA_RUNTIME_H__
+#define __CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__
+#define __UNDEF_CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS_CUDA_RUNTIME_H__
+#define EXCLUDE_FROM_RTC
+#define EXCLUDE_FROM_RTC
 #define CUDNN_MAJOR 7
 #define CUDNN_MINOR 6
-#define CUDNN_PATCHLEVEL 3
+#define CUDNN_PATCHLEVEL 5
 #define CUDNN_VERSION (CUDNN_MAJOR * 1000 + CUDNN_MINOR * 100 + CUDNN_PATCHLEVEL)
 #define CUDNN_DIM_MAX 8
 #define CUDNN_LRN_MIN_N 1 /* minimum allowed lrnN */
@@ -418,6 +427,10 @@ typedef enum CUdevice_attribute_enum {
   CU_DEVICE_ATTRIBUTE_HOST_REGISTER_SUPPORTED = 99,
   CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS_USES_HOST_PAGE_TABLES = 100,
   CU_DEVICE_ATTRIBUTE_DIRECT_MANAGED_MEM_ACCESS_FROM_HOST = 101,
+  CU_DEVICE_ATTRIBUTE_VIRTUAL_ADDRESS_MANAGEMENT_SUPPORTED = 102,
+  CU_DEVICE_ATTRIBUTE_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR_SUPPORTED = 103,
+  CU_DEVICE_ATTRIBUTE_HANDLE_TYPE_WIN32_HANDLE_SUPPORTED = 104,
+  CU_DEVICE_ATTRIBUTE_HANDLE_TYPE_WIN32_KMT_HANDLE_SUPPORTED = 105,
   CU_DEVICE_ATTRIBUTE_MAX,
 } CUdevice_attribute;
 
@@ -444,6 +457,11 @@ typedef enum CUpointer_attribute_enum {
   CU_POINTER_ATTRIBUTE_BUFFER_ID = 7,
   CU_POINTER_ATTRIBUTE_IS_MANAGED = 8,
   CU_POINTER_ATTRIBUTE_DEVICE_ORDINAL = 9,
+  CU_POINTER_ATTRIBUTE_IS_LEGACY_CUDA_IPC_CAPABLE = 10,
+  CU_POINTER_ATTRIBUTE_RANGE_START_ADDR = 11,
+  CU_POINTER_ATTRIBUTE_RANGE_SIZE = 12,
+  CU_POINTER_ATTRIBUTE_MAPPED = 13,
+  CU_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES = 14,
 } CUpointer_attribute;
 
 typedef enum CUfunction_attribute_enum {
@@ -737,6 +755,8 @@ typedef enum cudaError_enum {
   CUDA_ERROR_STREAM_CAPTURE_IMPLICIT = 906,
   CUDA_ERROR_CAPTURED_EVENT = 907,
   CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD = 908,
+  CUDA_ERROR_TIMEOUT = 909,
+  CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE = 910,
   CUDA_ERROR_UNKNOWN = 999,
 } CUresult;
 
@@ -959,6 +979,9 @@ typedef enum CUexternalMemoryHandleType_enum {
   CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT = 3,
   CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP = 4,
   CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE = 5,
+  CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE = 6,
+  CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT = 7,
+  CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF = 8,
 } CUexternalMemoryHandleType;
 
 typedef struct CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st {
@@ -969,6 +992,7 @@ typedef struct CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st {
       void* handle;
       const void* name;
     } win32;
+    const void* nvSciBufObject;
   } handle;
   unsigned long long size;
   unsigned int flags;
@@ -994,6 +1018,10 @@ typedef enum CUexternalSemaphoreHandleType_enum {
   CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32 = 2,
   CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT = 3,
   CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE = 4,
+  CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_FENCE = 5,
+  CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC = 6,
+  CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_KEYED_MUTEX = 7,
+  CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D11_KEYED_MUTEX_KMT = 8,
 } CUexternalSemaphoreHandleType;
 
 typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st {
@@ -1004,6 +1032,7 @@ typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st {
       void* handle;
       const void* name;
     } win32;
+    const void* nvSciSyncObj;
   } handle;
   unsigned int flags;
   unsigned int reserved[16];
@@ -1014,7 +1043,14 @@ typedef struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_st {
     struct {
       unsigned long long value;
     } fence;
-    unsigned int reserved[16];
+    union {
+      void* fence;
+      unsigned long long reserved;
+    } nvSciSync;
+    struct {
+      unsigned long long key;
+    } keyedMutex;
+    unsigned int reserved[12];
   } params;
   unsigned int flags;
   unsigned int reserved[16];
@@ -1025,11 +1061,80 @@ typedef struct CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_st {
     struct {
       unsigned long long value;
     } fence;
-    unsigned int reserved[16];
+    union {
+      void* fence;
+      unsigned long long reserved;
+    } nvSciSync;
+    struct {
+      unsigned long long key;
+      unsigned int timeoutMs;
+    } keyedMutex;
+    unsigned int reserved[10];
   } params;
   unsigned int flags;
   unsigned int reserved[16];
 } CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS;
+
+typedef unsigned long long CUmemGenericAllocationHandle;
+
+typedef enum CUmemAllocationHandleType_enum {
+  CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR = 0x1,
+  CU_MEM_HANDLE_TYPE_WIN32 = 0x2,
+  CU_MEM_HANDLE_TYPE_WIN32_KMT = 0x4,
+  CU_MEM_HANDLE_TYPE_MAX = 0xFFFFFFFF,
+} CUmemAllocationHandleType;
+
+typedef enum CUmemAccess_flags_enum {
+  CU_MEM_ACCESS_FLAGS_PROT_NONE = 0x0,
+  CU_MEM_ACCESS_FLAGS_PROT_READ = 0x1,
+  CU_MEM_ACCESS_FLAGS_PROT_READWRITE = 0x3,
+  CU_MEM_ACCESS_FLAGS_PROT_MAX = 0xFFFFFFFF,
+} CUmemAccess_flags;
+
+typedef enum CUmemLocationType_enum {
+  CU_MEM_LOCATION_TYPE_INVALID = 0x0,
+  CU_MEM_LOCATION_TYPE_DEVICE = 0x1,
+  CU_MEM_LOCATION_TYPE_MAX = 0xFFFFFFFF,
+} CUmemLocationType;
+
+typedef enum CUmemAllocationType_enum {
+  CU_MEM_ALLOCATION_TYPE_INVALID = 0x0,
+  CU_MEM_ALLOCATION_TYPE_PINNED = 0x1,
+  CU_MEM_ALLOCATION_TYPE_MAX = 0xFFFFFFFF,
+} CUmemAllocationType;
+
+typedef enum CUmemAllocationGranularity_flags_enum {
+  CU_MEM_ALLOC_GRANULARITY_MINIMUM = 0x0,
+  CU_MEM_ALLOC_GRANULARITY_RECOMMENDED = 0x1,
+} CUmemAllocationGranularity_flags;
+
+typedef struct CUmemLocation_st {
+  CUmemLocationType type;
+  int id;
+} CUmemLocation;
+
+typedef struct CUmemAllocationProp_st {
+  CUmemAllocationType type;
+  CUmemAllocationHandleType requestedHandleTypes;
+  CUmemLocation location;
+  void* win32HandleMetaData;
+  unsigned long long reserved;
+} CUmemAllocationProp;
+
+typedef struct CUmemAccessDesc_st {
+  CUmemLocation location;
+  CUmemAccess_flags flags;
+} CUmemAccessDesc;
+
+typedef enum CUgraphExecUpdateResult_enum {
+  CU_GRAPH_EXEC_UPDATE_SUCCESS = 0x0,
+  CU_GRAPH_EXEC_UPDATE_ERROR = 0x1,
+  CU_GRAPH_EXEC_UPDATE_ERROR_TOPOLOGY_CHANGED = 0x2,
+  CU_GRAPH_EXEC_UPDATE_ERROR_NODE_TYPE_CHANGED = 0x3,
+  CU_GRAPH_EXEC_UPDATE_ERROR_FUNCTION_CHANGED = 0x4,
+  CU_GRAPH_EXEC_UPDATE_ERROR_PARAMETERS_CHANGED = 0x5,
+  CU_GRAPH_EXEC_UPDATE_ERROR_NOT_SUPPORTED = 0x6,
+} CUgraphExecUpdateResult;
 
 typedef enum  {
   NVRTC_SUCCESS = 0,
@@ -1536,6 +1641,7 @@ typedef CUresult CUDAAPI tcuDeviceGetName(char* name, int len, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceGetUuid(CUuuid* uuid, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceTotalMem_v2(size_t* bytes, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceGetAttribute(int* pi, CUdevice_attribute attrib, CUdevice dev);
+typedef CUresult CUDAAPI tcuDeviceGetNvSciSyncAttributes(void* nvSciSyncAttrList, CUdevice dev, int flags);
 typedef CUresult CUDAAPI tcuDeviceGetProperties(CUdevprop* prop, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceComputeCapability(int* major, int* minor, CUdevice dev);
 typedef CUresult CUDAAPI tcuDevicePrimaryCtxRetain(CUcontext* pctx, CUdevice dev);
@@ -1640,6 +1746,18 @@ typedef CUresult CUDAAPI tcuArray3DGetDescriptor_v2(CUDA_ARRAY3D_DESCRIPTOR* pAr
 typedef CUresult CUDAAPI tcuMipmappedArrayCreate(CUmipmappedArray* pHandle, const CUDA_ARRAY3D_DESCRIPTOR* pMipmappedArrayDesc, unsigned int numMipmapLevels);
 typedef CUresult CUDAAPI tcuMipmappedArrayGetLevel(CUarray* pLevelArray, CUmipmappedArray hMipmappedArray, unsigned int level);
 typedef CUresult CUDAAPI tcuMipmappedArrayDestroy(CUmipmappedArray hMipmappedArray);
+typedef CUresult CUDAAPI tcuMemAddressReserve(CUdeviceptr* ptr, size_t size, size_t alignment, CUdeviceptr addr, unsigned long long flags);
+typedef CUresult CUDAAPI tcuMemAddressFree(CUdeviceptr ptr, size_t size);
+typedef CUresult CUDAAPI tcuMemCreate(CUmemGenericAllocationHandle* handle, size_t size, const CUmemAllocationProp* prop, unsigned long long flags);
+typedef CUresult CUDAAPI tcuMemRelease(CUmemGenericAllocationHandle handle);
+typedef CUresult CUDAAPI tcuMemMap(CUdeviceptr ptr, size_t size, size_t offset, CUmemGenericAllocationHandle handle, unsigned long long flags);
+typedef CUresult CUDAAPI tcuMemUnmap(CUdeviceptr ptr, size_t size);
+typedef CUresult CUDAAPI tcuMemSetAccess(CUdeviceptr ptr, size_t size, const CUmemAccessDesc* desc, size_t count);
+typedef CUresult CUDAAPI tcuMemGetAccess(unsigned long long* flags, const CUmemLocation* location, CUdeviceptr ptr);
+typedef CUresult CUDAAPI tcuMemExportToShareableHandle(void* shareableHandle, CUmemGenericAllocationHandle handle, CUmemAllocationHandleType handleType, unsigned long long flags);
+typedef CUresult CUDAAPI tcuMemImportFromShareableHandle(CUmemGenericAllocationHandle* handle, void* osHandle, CUmemAllocationHandleType shHandleType);
+typedef CUresult CUDAAPI tcuMemGetAllocationGranularity(size_t* granularity, const CUmemAllocationProp* prop, CUmemAllocationGranularity_flags option);
+typedef CUresult CUDAAPI tcuMemGetAllocationPropertiesFromHandle(CUmemAllocationProp* prop, CUmemGenericAllocationHandle handle);
 typedef CUresult CUDAAPI tcuPointerGetAttribute(void* data, CUpointer_attribute attribute, CUdeviceptr ptr);
 typedef CUresult CUDAAPI tcuMemPrefetchAsync(CUdeviceptr devPtr, size_t count, CUdevice dstDevice, CUstream hStream);
 typedef CUresult CUDAAPI tcuMemAdvise(CUdeviceptr devPtr, size_t count, CUmem_advise advice, CUdevice device);
@@ -1729,9 +1847,13 @@ typedef CUresult CUDAAPI tcuGraphRemoveDependencies(CUgraph hGraph, const CUgrap
 typedef CUresult CUDAAPI tcuGraphDestroyNode(CUgraphNode hNode);
 typedef CUresult CUDAAPI tcuGraphInstantiate(CUgraphExec* phGraphExec, CUgraph hGraph, CUgraphNode* phErrorNode, char* logBuffer, size_t bufferSize);
 typedef CUresult CUDAAPI tcuGraphExecKernelNodeSetParams(CUgraphExec hGraphExec, CUgraphNode hNode, const CUDA_KERNEL_NODE_PARAMS* nodeParams);
+typedef CUresult CUDAAPI tcuGraphExecMemcpyNodeSetParams(CUgraphExec hGraphExec, CUgraphNode hNode, const CUDA_MEMCPY3D* copyParams, CUcontext ctx);
+typedef CUresult CUDAAPI tcuGraphExecMemsetNodeSetParams(CUgraphExec hGraphExec, CUgraphNode hNode, const CUDA_MEMSET_NODE_PARAMS* memsetParams, CUcontext ctx);
+typedef CUresult CUDAAPI tcuGraphExecHostNodeSetParams(CUgraphExec hGraphExec, CUgraphNode hNode, const CUDA_HOST_NODE_PARAMS* nodeParams);
 typedef CUresult CUDAAPI tcuGraphLaunch(CUgraphExec hGraphExec, CUstream hStream);
 typedef CUresult CUDAAPI tcuGraphExecDestroy(CUgraphExec hGraphExec);
 typedef CUresult CUDAAPI tcuGraphDestroy(CUgraph hGraph);
+typedef CUresult CUDAAPI tcuGraphExecUpdate(CUgraphExec hGraphExec, CUgraph hGraph, CUgraphNode* hErrorNode_out, CUgraphExecUpdateResult* updateResult_out);
 typedef CUresult CUDAAPI tcuOccupancyMaxActiveBlocksPerMultiprocessor(int* numBlocks, CUfunction func, int blockSize, size_t dynamicSMemSize);
 typedef CUresult CUDAAPI tcuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int* numBlocks, CUfunction func, int blockSize, size_t dynamicSMemSize, unsigned int flags);
 typedef CUresult CUDAAPI tcuOccupancyMaxPotentialBlockSize(int* minGridSize, int* blockSize, CUfunction func, CUoccupancyB2DSize blockSizeToDynamicSMemSize, size_t dynamicSMemSize, int blockSizeLimit);
@@ -1785,6 +1907,7 @@ typedef CUresult CUDAAPI tcuGraphicsResourceSetMapFlags_v2(CUgraphicsResource re
 typedef CUresult CUDAAPI tcuGraphicsMapResources(unsigned int count, CUgraphicsResource* resources, CUstream hStream);
 typedef CUresult CUDAAPI tcuGraphicsUnmapResources(unsigned int count, CUgraphicsResource* resources, CUstream hStream);
 typedef CUresult CUDAAPI tcuGetExportTable(const void** ppExportTable, const CUuuid* pExportTableId);
+
 
 typedef const char* CUDAAPI tnvrtcGetErrorString(nvrtcResult result);
 typedef nvrtcResult CUDAAPI tnvrtcVersion(int* major, int* minor);
@@ -1990,8 +2113,8 @@ typedef cudnnStatus_t CUDAAPI tcudnnSetAttnDescriptor(cudnnAttnDescriptor_t attn
 typedef cudnnStatus_t CUDAAPI tcudnnGetAttnDescriptor(cudnnAttnDescriptor_t attnDesc, unsigned* attnMode, int* nHeads, double* smScaler, cudnnDataType_t* dataType, cudnnDataType_t* computePrec, cudnnMathType_t* mathType, cudnnDropoutDescriptor_t* attnDropoutDesc, cudnnDropoutDescriptor_t* postDropoutDesc, int* qSize, int* kSize, int* vSize, int* qProjSize, int* kProjSize, int* vProjSize, int* oProjSize, int* qoMaxSeqLength, int* kvMaxSeqLength, int* maxBatchSize, int* maxBeamSize);
 typedef cudnnStatus_t CUDAAPI tcudnnGetMultiHeadAttnBuffers(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, size_t* weightSizeInBytes, size_t* workSpaceSizeInBytes, size_t* reserveSpaceSizeInBytes);
 typedef cudnnStatus_t CUDAAPI tcudnnGetMultiHeadAttnWeights(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, cudnnMultiHeadAttnWeightKind_t wKind, size_t weightSizeInBytes, const void* weights, cudnnTensorDescriptor_t wDesc, void** wAddr);
-typedef cudnnStatus_t CUDAAPI tcudnnMultiHeadAttnForward(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, int currIdx, const int* loWinIdx, const int* hiWinIdx, const int* seqLengthArrayQRO, const int* seqLengthArrayKV, const cudnnSeqDataDescriptor_t qDesc, const void* queries, const void* residuals, const cudnnSeqDataDescriptor_t kDesc, const void* keys, const cudnnSeqDataDescriptor_t vDesc, const void* values, const cudnnSeqDataDescriptor_t oDesc, void* out, size_t weightSizeInBytes, const void* weights, size_t workSpaceSizeInBytes, void* workSpace, size_t reserveSpaceSizeInBytes, void* reserveSpace);
-typedef cudnnStatus_t CUDAAPI tcudnnMultiHeadAttnBackwardData(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, const int* loWinIdx, const int* hiWinIdx, const int* seqLengthArrayDQDO, const int* seqLengthArrayDKDV, const cudnnSeqDataDescriptor_t doDesc, const void* dout, const cudnnSeqDataDescriptor_t dqDesc, void* dqueries, const void* queries, const cudnnSeqDataDescriptor_t dkDesc, void* dkeys, const void* keys, const cudnnSeqDataDescriptor_t dvDesc, void* dvalues, const void* values, size_t weightSizeInBytes, const void* weights, size_t workSpaceSizeInBytes, void* workSpace, size_t reserveSpaceSizeInBytes, void* reserveSpace);
+typedef cudnnStatus_t CUDAAPI tcudnnMultiHeadAttnForward(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, int currIdx, const int loWinIdx[], const int hiWinIdx[], const int devSeqLengthsQO[], const int devSeqLengthsKV[], const cudnnSeqDataDescriptor_t qDesc, const void* queries, const void* residuals, const cudnnSeqDataDescriptor_t kDesc, const void* keys, const cudnnSeqDataDescriptor_t vDesc, const void* values, const cudnnSeqDataDescriptor_t oDesc, void* out, size_t weightSizeInBytes, const void* weights, size_t workSpaceSizeInBytes, void* workSpace, size_t reserveSpaceSizeInBytes, void* reserveSpace);
+typedef cudnnStatus_t CUDAAPI tcudnnMultiHeadAttnBackwardData(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, const int loWinIdx[], const int hiWinIdx[], const int devSeqLengthsDQDO[], const int devSeqLengthsDKDV[], const cudnnSeqDataDescriptor_t doDesc, const void* dout, const cudnnSeqDataDescriptor_t dqDesc, void* dqueries, const void* queries, const cudnnSeqDataDescriptor_t dkDesc, void* dkeys, const void* keys, const cudnnSeqDataDescriptor_t dvDesc, void* dvalues, const void* values, size_t weightSizeInBytes, const void* weights, size_t workSpaceSizeInBytes, void* workSpace, size_t reserveSpaceSizeInBytes, void* reserveSpace);
 typedef cudnnStatus_t CUDAAPI tcudnnMultiHeadAttnBackwardWeights(cudnnHandle_t handle, const cudnnAttnDescriptor_t attnDesc, cudnnWgradMode_t addGrad, const cudnnSeqDataDescriptor_t qDesc, const void* queries, const cudnnSeqDataDescriptor_t kDesc, const void* keys, const cudnnSeqDataDescriptor_t vDesc, const void* values, const cudnnSeqDataDescriptor_t doDesc, const void* dout, size_t weightSizeInBytes, const void* weights, void* dweights, size_t workSpaceSizeInBytes, void* workSpace, size_t reserveSpaceSizeInBytes, void* reserveSpace);
 typedef cudnnStatus_t CUDAAPI tcudnnCreateCTCLossDescriptor(cudnnCTCLossDescriptor_t* ctcLossDesc);
 typedef cudnnStatus_t CUDAAPI tcudnnSetCTCLossDescriptor(cudnnCTCLossDescriptor_t ctcLossDesc, cudnnDataType_t compType);
@@ -2042,6 +2165,7 @@ extern tcuDeviceGetName *cuDeviceGetName;
 extern tcuDeviceGetUuid *cuDeviceGetUuid;
 extern tcuDeviceTotalMem_v2 *cuDeviceTotalMem_v2;
 extern tcuDeviceGetAttribute *cuDeviceGetAttribute;
+extern tcuDeviceGetNvSciSyncAttributes *cuDeviceGetNvSciSyncAttributes;
 extern tcuDeviceGetProperties *cuDeviceGetProperties;
 extern tcuDeviceComputeCapability *cuDeviceComputeCapability;
 extern tcuDevicePrimaryCtxRetain *cuDevicePrimaryCtxRetain;
@@ -2146,6 +2270,18 @@ extern tcuArray3DGetDescriptor_v2 *cuArray3DGetDescriptor_v2;
 extern tcuMipmappedArrayCreate *cuMipmappedArrayCreate;
 extern tcuMipmappedArrayGetLevel *cuMipmappedArrayGetLevel;
 extern tcuMipmappedArrayDestroy *cuMipmappedArrayDestroy;
+extern tcuMemAddressReserve *cuMemAddressReserve;
+extern tcuMemAddressFree *cuMemAddressFree;
+extern tcuMemCreate *cuMemCreate;
+extern tcuMemRelease *cuMemRelease;
+extern tcuMemMap *cuMemMap;
+extern tcuMemUnmap *cuMemUnmap;
+extern tcuMemSetAccess *cuMemSetAccess;
+extern tcuMemGetAccess *cuMemGetAccess;
+extern tcuMemExportToShareableHandle *cuMemExportToShareableHandle;
+extern tcuMemImportFromShareableHandle *cuMemImportFromShareableHandle;
+extern tcuMemGetAllocationGranularity *cuMemGetAllocationGranularity;
+extern tcuMemGetAllocationPropertiesFromHandle *cuMemGetAllocationPropertiesFromHandle;
 extern tcuPointerGetAttribute *cuPointerGetAttribute;
 extern tcuMemPrefetchAsync *cuMemPrefetchAsync;
 extern tcuMemAdvise *cuMemAdvise;
@@ -2235,9 +2371,13 @@ extern tcuGraphRemoveDependencies *cuGraphRemoveDependencies;
 extern tcuGraphDestroyNode *cuGraphDestroyNode;
 extern tcuGraphInstantiate *cuGraphInstantiate;
 extern tcuGraphExecKernelNodeSetParams *cuGraphExecKernelNodeSetParams;
+extern tcuGraphExecMemcpyNodeSetParams *cuGraphExecMemcpyNodeSetParams;
+extern tcuGraphExecMemsetNodeSetParams *cuGraphExecMemsetNodeSetParams;
+extern tcuGraphExecHostNodeSetParams *cuGraphExecHostNodeSetParams;
 extern tcuGraphLaunch *cuGraphLaunch;
 extern tcuGraphExecDestroy *cuGraphExecDestroy;
 extern tcuGraphDestroy *cuGraphDestroy;
+extern tcuGraphExecUpdate *cuGraphExecUpdate;
 extern tcuOccupancyMaxActiveBlocksPerMultiprocessor *cuOccupancyMaxActiveBlocksPerMultiprocessor;
 extern tcuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags *cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags;
 extern tcuOccupancyMaxPotentialBlockSize *cuOccupancyMaxPotentialBlockSize;
@@ -2291,6 +2431,7 @@ extern tcuGraphicsResourceSetMapFlags_v2 *cuGraphicsResourceSetMapFlags_v2;
 extern tcuGraphicsMapResources *cuGraphicsMapResources;
 extern tcuGraphicsUnmapResources *cuGraphicsUnmapResources;
 extern tcuGetExportTable *cuGetExportTable;
+
 
 extern tnvrtcGetErrorString *nvrtcGetErrorString;
 extern tnvrtcVersion *nvrtcVersion;

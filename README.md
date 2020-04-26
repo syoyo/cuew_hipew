@@ -4,8 +4,7 @@ Currently tests on Ubuntu 18.04.
 
 ## Changes
 
-* Support CUDA 10.1
-  * CUDA 10.2 would work
+* Support CUDA 10.2
 * Support CUDNN 7.6
 
 ## Supported API
@@ -41,14 +40,16 @@ $ make
 
 ## Known issues
 
+* Combining with Address Sanitizer(`-fsanitizer=address`) won't work(calling CUDA API results in undefined behavior)
 * CUEW does not warn when using deprecated API
 
 ## TODO
 
 * [ ] Test on MSVC.
 * [ ] Support cudaGL.h
-* [ ] Keep up with CUDA 10.2
+* [x] Keep up with CUDA 10.2
 * [ ] Test cuDNN API call.
+* [ ] Find a way to co-exist with Address Sanitizer
 
 =================
 
