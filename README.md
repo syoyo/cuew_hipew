@@ -4,8 +4,8 @@ Currently tests on Ubuntu 18.04.
 
 ## Changes
 
-* Support CUDA 10.2
-* Support CUDNN 7.6
+* Support CUDA 11.0
+* Support CUDNN 8
 
 ## Supported API
 

@@ -29,7 +29,7 @@ from cuda_errors import CUDA_ERRORS
 from pycparser import c_parser, c_ast, parse_file
 from subprocess import Popen, PIPE
 
-INCLUDE_DIR = "/usr/local/cuda-10.1/include/"
+INCLUDE_DIR = "/usr/local/cuda-11.0/include/"
 CUDNN_EXTRA_INCLUDE_DIR = "/usr/include/" # Extra include directory to search CUDNN header
 
 # TODO(syoyo): cudaGL.h
@@ -298,7 +298,10 @@ def parse_files():
         elif filepath.endswith("cudnn.h"):
             dummy_typedefs = {
                 "cudaStream_t": "void *",
-                "int32_t": "int" # For some reason, pycparser cannot parse `int32_t`
+                # For some reason, pycparser cannot parse some cstdint types
+                "int64_t": "long long",
+                "int32_t": "int",
+                "size_t": "long"
             }
 
         for typedef in sorted(dummy_typedefs):
