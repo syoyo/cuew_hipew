@@ -320,7 +320,17 @@ def parse_files():
                 if line.startswith("#define"):
                     line = line[8:-1]
                     token = line.split()
-                    if token[0] not in ("__cuda_cuda_h__",
+
+                    # cuda11 headers
+                    if len(token) == 2 and (token[1].endswith("_v2") or
+                                            token[1].endswith("_v2)")):
+                        if token[1].startswith('__CUDA_API_PTDS') or \
+                           token[1].startswith('__CUDA_API_PTSZ'):
+                            token[1] = token[1][16:-1]
+
+                        DEFINES_V2.append(token)
+
+                    elif token[0] not in ("__cuda_cuda_h__",
                                         "CUDA_CB",
                                         "CUDAAPI",
                                         "CUDNNWINAPI",
