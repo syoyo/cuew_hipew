@@ -1,11 +1,12 @@
 syoyo's modification to CUEW.
 
-Currently tests on Ubuntu 18.04.
+Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
 
-## Changes
+## Changes compared to original version
 
-* Support CUDA 10.2
-* Support CUDNN 7.6
+* Support CUDA 11.0
+* Support CUDNN 8.0
+* Disable cudaGL
 
 ## Supported API
 
@@ -14,7 +15,7 @@ Currently tests on Ubuntu 18.04.
 * [x] nvrtc.h
 * [ ] cudaGL.h
 
-## Generate cuew
+## Generate cuew(for developer)
 
 You need python3.
 Install pycparser.
@@ -40,14 +41,16 @@ $ make
 
 ## Known issues
 
-* Combining with Address Sanitizer(`-fsanitizer=address`) won't work(calling CUDA API results in undefined behavior)
-* CUEW does not warn when using deprecated API
+* Combining with Address Sanitizer(`-fsanitizer=address`) won't work
+  * calling CUDA API results in undefined behavior or seg faults
+  * https://github.com/google/sanitizers/issues/629
+* CUEW does not report warning when using deprecated CUDA API
 
 ## TODO
 
 * [ ] Test on MSVC.
+  * [x] `clang-cl` wors
 * [ ] Support cudaGL.h
-* [x] Keep up with CUDA 10.2
 * [ ] Test cuDNN API call.
 * [ ] Find a way to co-exist with Address Sanitizer
 
