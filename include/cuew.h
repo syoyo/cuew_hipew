@@ -476,7 +476,7 @@ typedef enum CUsharedconfig_enum {
 } CUsharedconfig;
 
 typedef enum CUshared_carveout_enum {
-  CU_SHAREDMEM_CARVEOUT_DEFAULT,
+  CU_SHAREDMEM_CARVEOUT_DEFAULT = -1,
   CU_SHAREDMEM_CARVEOUT_MAX_SHARED = 100,
   CU_SHAREDMEM_CARVEOUT_MAX_L1 = 0,
 } CUshared_carveout;

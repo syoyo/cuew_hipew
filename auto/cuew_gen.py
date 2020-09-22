@@ -150,6 +150,10 @@ class FuncDefVisitor(c_ast.NodeVisitor):
                     value_type = value.__class__.__name__
                     if value_type == "Constant":
                         result += " = " + value.value
+                    elif value_type == "UnaryOp":
+                        # Assume negative value e.g. '-1'
+                        assert value.op == '-'
+                        result += " = -{}".format(value.expr.value)
                     elif value_type == "BinaryOp":
                         result += " = ({} {} {})".format(value.left.value,
                                                          value.op,
