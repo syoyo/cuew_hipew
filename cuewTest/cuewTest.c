@@ -33,9 +33,11 @@ int main(int argc, char* argv[]) {
   if (cuewInit(CUEW_INIT_CUDNN) == CUEW_SUCCESS) {
     printf("CUDNN found\n");
     size_t version = cudnnGetVersion();
-    printf("Found Deep Neural Network library version %d.%d\n",
-           (int)(version / 1000),
-           (int)(version % 1000));
+    int major = version / 1000;
+    int minor = (version - (major * 1000)) / 100;
+    int patchlevel = version - major * 1000 - minor * 100;
+    printf("Found Deep Neural Network library version %d.%d.%d\n",
+      major, minor, patchlevel);
   }
   else {
     printf("CUDNN not found\n");
