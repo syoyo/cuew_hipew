@@ -7,6 +7,8 @@ endif()
 
 include(CMakeParseArguments)
 
+find_package(Threads REQUIRED)
+
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 message(STATUS "Project source dir = ${PROJECT_SOURCE_DIR}")
 message(STATUS "Project build dir = ${CMAKE_BINARY_DIR}")
@@ -22,3 +24,9 @@ add_library(cuew src/cuew.c include/cuew.h)
 
 add_executable(testcuew cuewTest/cuewTest.c include/cuew.h)
 target_link_libraries(testcuew cuew ${CMAKE_DL_LIBS})
+
+# ptxcompiler
+#include_directories(/usr/local/cuda-11.1/include)
+#add_executable(testptxcompiler cuewTest/ptxCompilerTest.c include/cuew.h)
+#target_link_libraries(testptxcompiler cuew ${CMAKE_DL_LIBS})
+#target_link_libraries(testptxcompiler cuew /usr/local/cuda-11.1/targets/x86_64-linux/lib/libnvptxcompiler_static.a Threads::Threads m)

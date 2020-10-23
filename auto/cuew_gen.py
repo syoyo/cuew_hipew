@@ -29,11 +29,12 @@ from cuda_errors import CUDA_ERRORS
 from pycparser import c_parser, c_ast, parse_file
 from subprocess import Popen, PIPE
 
-INCLUDE_DIR = "/usr/local/cuda-11.0/include/"
+INCLUDE_DIR = "/usr/local/cuda-11.1/include"
 CUDNN_EXTRA_INCLUDE_DIR = "/usr/include/" # Extra include directory to search CUDNN header
+GL_FAKE_INCLUDE_DIR = "./fakeinclude/" # Path to dummy cuda.h and gl.h header
 
-# TODO(syoyo): cudaGL.h
-FILES = ["cuda.h", 'nvrtc.h',"cudnn.h"]
+# TODO(syoyo): Use cuda_gl_interop.h instead of cudaGL.h
+FILES = ["cuda.h", 'nvrtc.h',"cudnn.h", "cudaGL.h"]
 
 TYPEDEFS = []
 FUNC_TYPEDEFS = []
@@ -248,14 +249,22 @@ def get_latest_cpp():
 
 
 def preprocess_file(filename, cpp_path):
-    args = [cpp_path, "-I./", "-I{}".format(INCLUDE_DIR)]
+    args = [cpp_path, "-I./"]
     if filename.endswith("cudnn.h"):
         args.append("-I{}".format(CUDNN_EXTRA_INCLUDE_DIR))
     args.append("-DCUDA_ENABLE_DEPRECATED=1 ") # CUDA-10 or later?
     if filename.endswith("GL.h"):
+        # to lookup <GL/gl.h> in GL_FAKE_INCLUDE_DIR, not from /usr/include or other system include dirs.
+        args.append("-nostdinc")
+        args.append("-isystem{}".format(GL_FAKE_INCLUDE_DIR))
         args.append("-DCUDAAPI= ")
     if filename.endswith("cudnn.h"):
         args.append("-DCUDNNWINAPI= ")
+
+    # do not see <path/to/cuda/include> to lookup cuda.h for cudaGL.h
+    if not filename.endswith("GL.h"):
+        args.append("-I{}".format(INCLUDE_DIR))
+
     args.append(filename)
 
     try:

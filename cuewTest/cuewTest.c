@@ -5,6 +5,17 @@
 #include <stdio.h>
 #include "cuew.h"
 
+#define CUDA_SAFE_CALL(x)                                               \
+    do {                                                                \
+        CUresult result = x;                                            \
+        if (result != CUDA_SUCCESS) {                                   \
+            const char *msg;                                            \
+            cuGetErrorName(result, &msg);                               \
+            printf("error: %s failed with error %s\n", #x, msg);        \
+            exit(1);                                                    \
+        }                                                               \
+    } while(0)
+
 int main(int argc, char* argv[]) {
   (void) argc;  // Ignored.
   (void) argv;  // Ignored.
@@ -42,6 +53,13 @@ int main(int argc, char* argv[]) {
   else {
     printf("CUDNN not found\n");
   }
+
+  CUdevice cuDevice;
+  CUcontext context;
+  CUDA_SAFE_CALL(cuInit(0));
+  CUDA_SAFE_CALL(cuDeviceGet(&cuDevice, 0));
+
+  CUDA_SAFE_CALL(cuCtxCreate(&context, 0, cuDevice));
 
   return EXIT_SUCCESS;
 }

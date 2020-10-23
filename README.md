@@ -4,16 +4,16 @@ Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
 
 ## Changes compared to original version
 
-* Support CUDA 11.0
+* Support CUDA 11.1
 * Support CUDNN 8.0.3
-* Disable cudaGL
 
 ## Supported API
 
 * [x] cuda.h
 * [x] cudnn.h
 * [x] nvrtc.h
-* [ ] cudaGL.h
+* [x] cudaGL.h
+  * [ ] Use cuda_gl_interop.h instead
 
 ## Generate cuew(for developer)
 
@@ -29,6 +29,13 @@ $ cd auto
 # Edit header path in cuew_ge.py if required
 $ ./cuew_gen.sh
 ```
+
+### GL header
+
+If you encounter the parse error on GL header, there is a work around.
+
+Copy `cudaGL.h` to `mycudaGL.h` and remove `<GL/gl.h>` include line. and use `mycudaGL.h` as an input .h file.
+Content of `<gl.h>` is not used when generating cuew header/source.
 
 ## Buld tests
 
@@ -49,8 +56,8 @@ $ make
 ## TODO
 
 * [ ] Test on MSVC.
-  * [x] `clang-cl` wors
-* [ ] Support cudaGL.h
+  * [x] `clang-cl` works
+* [ ] Test CUDA-GL interop API
 * [ ] Test cuDNN API call.
 * [ ] Find a way to co-exist with Address Sanitizer
 
