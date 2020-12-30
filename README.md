@@ -4,7 +4,7 @@ Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
 
 ## Changes compared to original version
 
-* Support CUDA 11.1
+* Support CUDA 11.2
 * Support CUDNN 8.0.3
 
 ## Supported API
