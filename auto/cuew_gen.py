@@ -29,7 +29,7 @@ from cuda_errors import CUDA_ERRORS
 from pycparser import c_parser, c_ast, parse_file
 from subprocess import Popen, PIPE
 
-INCLUDE_DIR = "/usr/local/cuda-11.2/include"
+INCLUDE_DIR = "/usr/local/cuda-11.4/include"
 CUDNN_EXTRA_INCLUDE_DIR = "/usr/include/" # Extra include directory to search CUDNN header
 GL_FAKE_INCLUDE_DIR = "./fakeinclude/" # Path to dummy cuda.h and gl.h header
 
