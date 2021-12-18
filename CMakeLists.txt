@@ -25,6 +25,21 @@ add_library(cuew src/cuew.c include/cuew.h)
 add_executable(testcuew cuewTest/cuewTest.c include/cuew.h)
 target_link_libraries(testcuew cuew ${CMAKE_DL_LIBS})
 
+# [VisualStudio]
+if(WIN32)
+  # Set testcuew as a startup project for VS IDE
+  set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT testcuew)
+
+  # For easier debugging in VS IDE(cmake 3.8.0 or later required) Set working
+  # directory to cuew git repo root.
+  if(CMAKE_VERSION VERSION_GREATER 3.8.0)
+    set_target_properties(testcuew
+                          PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+                                     "${CMAKE_CURRENT_SOURCE_DIR}")
+  endif()
+endif()
+
+
 # ptxcompiler
 #include_directories(/usr/local/cuda-11.1/include)
 #add_executable(testptxcompiler cuewTest/ptxCompilerTest.c include/cuew.h)

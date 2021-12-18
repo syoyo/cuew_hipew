@@ -166,7 +166,9 @@ static int cuewNvrtcInit(void) {
   /* Library paths. */
 #ifdef _WIN32
   /* Expected in c:/windows/system or similar, no path needed. */
-  const char *nvrtc_paths[] = {"nvrtc64_110_0.dll",
+  const char *nvrtc_paths[] = {"nvrtc64_115_0.dll",
+                               "nvrtc64_114_0.dll",
+                               "nvrtc64_110_0.dll",
                                "nvrtc64_102_0.dll",
                                "nvrtc64_101_0.dll",
                                "nvrtc64_100_0.dll",
@@ -346,6 +348,7 @@ const char *cuewCompilerPath(void) {
     "/usr/local/cuda-6.0/bin",
     "/Developer/NVIDIA/CUDA-5.5/bin",
     "/usr/local/cuda-5.5/bin",
+    "/usr/local/cuda-11.5/bin",
     NULL};
   const char *executable = "nvcc";
 #endif

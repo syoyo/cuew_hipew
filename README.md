@@ -1,10 +1,11 @@
 syoyo's modification to CUEW.
 
-Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
+Currently tested on Ubuntu 20.04 x86-64 and Windows 10 64bit.
 
 ## Changes compared to original version
 
-* Support CUDA 11.2
+* Support CUDA 11.5
+  * cuGetProcAddress is not supported.
 * Support CUDNN 8.0.3
 
 ## Supported API
@@ -14,6 +15,29 @@ Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
 * [x] nvrtc.h
 * [x] cudaGL.h
   * [ ] Use cuda_gl_interop.h instead
+
+## Buld tests
+
+### Linux
+
+```
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
+### Windows
+
+```
+> vcsetup-2019.bat
+```
+
+Then open .sln file in `build` folder.
+
+## Add cuew to your project
+
+Simply copy `include/cuew.h` and `src/cuew.c` to your project.
 
 ## Generate cuew(for developer)
 
@@ -37,21 +61,13 @@ If you encounter the parse error on GL header, there is a work around.
 Copy `cudaGL.h` to `mycudaGL.h` and remove `<GL/gl.h>` include line. and use `mycudaGL.h` as an input .h file.
 Content of `<gl.h>` is not used when generating cuew header/source.
 
-## Buld tests
-
-```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-```
-
 ## Known issues
 
 * Combining with Address Sanitizer(`-fsanitizer=address`) won't work
   * calling CUDA API results in undefined behavior or seg faults
   * https://github.com/google/sanitizers/issues/629
 * CUEW does not report warning when using deprecated CUDA API
+* `CUDA_API_PER_THREAD_DEFAULT_STREAM` is not supported.
 
 ## TODO
 
@@ -60,6 +76,7 @@ $ make
 * [ ] Test CUDA-GL interop API
 * [ ] Test cuDNN API call.
 * [ ] Find a way to co-exist with Address Sanitizer
+* [ ] `CUDA_API_PER_THREAD_DEFAULT_STREAM` support
 
 =================
 
