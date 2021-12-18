@@ -319,8 +319,7 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 def main():
 
     input_filename = "cudart.json"
-    allowlist_filename = "cudart-allowlist.json"
-    api_prefix = "cuda"
+    config_filename = "cudart-config.json"
     output_filename = os.path.splitext(input_filename)[0] + ".h"
 
     if len(sys.argv) > 1:
@@ -333,18 +332,16 @@ def main():
         output_filename = sys.argv[3]
 
     if len(sys.argv) > 4:
-        allowlist_filename = sys.argv[4]
+        config_filename = sys.argv[4]
 
     j = json.loads(open(input_filename, 'r').read())
 
-    allowlist_j = None
+    config_j = json.loads(open(config_filename, 'r').read())
 
-    if os.path.exists(allowlist_filename):
-        allowlist_j = json.loads(open(allowlist_filename, 'r').read())
-        print(allowlist_j)
-    else:
-        print("allowlist file \"{}\" does not exist. skip reading allowlist.")
-
+    prefix = config_j["prefix"]
+    api_prefix = config_j["api_prefix"]
+    dllpaths = config_j["dllpaths"]
+    allowlist_j = config_j.get("allowedSymbols", None)
 
     ss = emit_header()
 
@@ -449,10 +446,6 @@ def main():
     print("Wrote header: ", output_filename)
 
     # Write symbol initializer
-    # HACK
-    dllpaths = {}
-    dllpaths['win32'] = ['cudart.dll']
-    dllpaths['linux'] = ['libcudart.so', '/usr/local/cuda/lib64/libcudart.so']
     ss = emit_initializer("cudart", dllpaths, func_names)
 
     impl_filename = os.path.splitext(output_filename)[0] + ".c"

@@ -1,0 +1,11 @@
+{ "prefix": "cufft",
+  "lib_prefix": "cufft",
+  "dllpaths": {
+    "win32": [ "cufft.dll" ],
+    "linux": [ "libcufft.so", "/usr/local/cuda/lib64/libcufft.so"]
+  },
+  "allowedSymbols": {
+    "struct" : [ ],
+    "union" : [ ]
+  }
+}

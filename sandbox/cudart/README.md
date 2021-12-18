@@ -33,6 +33,9 @@ This list describes allowed symbol names(struct, union, etc) which does not star
 * [ ] cuSPARSE API
 * [ ] cuRAND API
 * [ ] cuFFT API
+  * [ ] cuFFT
+  * [ ] cuFFT Xt
+  * [ ] cuFFTW
 * [ ] nvJPEG API(depends on CUDA runtime API)
 * [ ] NPP API(depends on CUDA runtime API)
 
