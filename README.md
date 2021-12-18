@@ -1,6 +1,6 @@
 syoyo's modification to CUEW.
 
-Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
+Currently tested on Ubuntu 20.04 x86-64 and Windows 10 64bit.
 
 ## Changes compared to original version
 
@@ -15,6 +15,29 @@ Currently tested on Ubuntu 18.04 x86-64 and Windows 10 64bit.
 * [x] nvrtc.h
 * [x] cudaGL.h
   * [ ] Use cuda_gl_interop.h instead
+
+## Buld tests
+
+### Linux
+
+```
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
+### Windows
+
+```
+> vcsetup-2019.bat
+```
+
+Then open .sln file in `build` folder.
+
+## Add cuew to your project
+
+Simply copy `include/cuew.h` and `src/cuew.c` to your project.
 
 ## Generate cuew(for developer)
 
@@ -37,15 +60,6 @@ If you encounter the parse error on GL header, there is a work around.
 
 Copy `cudaGL.h` to `mycudaGL.h` and remove `<GL/gl.h>` include line. and use `mycudaGL.h` as an input .h file.
 Content of `<gl.h>` is not used when generating cuew header/source.
-
-## Buld tests
-
-```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-```
 
 ## Known issues
 
