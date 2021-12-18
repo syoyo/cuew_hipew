@@ -3,8 +3,7 @@ Parse JSON and emit stub file in python.
 
 ## Requirements
 
-* [x] Linux
-* [ ] Windows
+* Python 3.9+
 
 ## Dump ast
 
@@ -19,10 +18,15 @@ $ make
 ```
 
 
+## allowlist
+
+allowlist JSON is provided manually.
+This list describes allowed symbol names(struct, union, etc) which does not starts with "cuda" prefix(e.g. textureReference).
+
 ## TODO
 
 * [x] enum
-* [ ] CUDA runtime API
+* [x] CUDA runtime API
 * [ ] cuBlas API
   * [ ] NVBLAS API?
 * [ ] cuSOLVER API

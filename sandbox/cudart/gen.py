@@ -111,6 +111,7 @@ def emit_header():
 
     s += "\n#include <stdint.h>\n\n"
     s += "\n#include <stddef.h>\n\n"
+    s += "\n#include <stdlib.h>\n\n"
 
     s += "#ifdef __cplusplus\n"
     s += "extern \"C\" {\n"
@@ -158,7 +159,7 @@ struct cudaChannelFormatDesc
 };
 """
 
-    s += "extern int Init{}()".format(suffix) + ";\n\n"
+    s += "extern int cuewInit{}(void)".format(suffix) + ";\n\n"
 
 
     s += "\n"
@@ -219,11 +220,13 @@ typedef void* DynamicLibrary;
 #  define dynamic_library_find(lib, symbol)  dlsym(lib, symbol)
 #endif
 
-#define _LIBRARY_FIND_CHECKED(lib, name) \
+/*
+#define CUEW_IMPL_LIBRARY_FIND_CHECKED(lib, name) \
         name = (t##name *)dynamic_library_find(lib, #name); \
         assert(name);
+*/
 
-#define _LIBRARY_FIND(lib, name) \
+#define CUEW_IMPL_LIBRARY_FIND(lib, name) \
         name = (t##name *)dynamic_library_find(lib, #name);
 
 
@@ -241,10 +244,20 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 
 """
 
-    s += "#define {}_LIBRARY_FIND_CHECKED(name) _LIBRARY_FIND_CHECKED({}_lib, name)\n".format(suffix, suffix_lowered)
-    s += "#define {}_LIBRARY_FIND(name) _LIBRARY_FIND({}_lib, name)\n".format(suffix, suffix_lowered)
+    s += "/*#define {}_LIBRARY_FIND_CHECKED(name) CUEW_IMPL_LIBRARY_FIND_CHECKED({}_lib, name)*/\n".format(suffix, suffix_lowered)
+    s += "#define {}_LIBRARY_FIND(name) CUEW_IMPL_LIBRARY_FIND({}_lib, name)\n".format(suffix, suffix_lowered)
 
     s += "static DynamicLibrary {}_lib;\n\n".format(suffix_lowered)
+
+    s += "static void cuewExit" + suffix + "(void) {\n"
+    s += "  if (" + suffix_lowered + "_lib != NULL) {\n"
+    s += "    /* ignore errors */\n"
+    s += "    dynamic_library_close({}_lib);\n".format(suffix_lowered)
+    s += "    {}_lib = NULL;\n".format(suffix_lowered)
+    s += "  }\n"
+    s += "}\n"
+    s += "\n"
+
 
     # decl
     for fun in functions:
@@ -252,7 +265,7 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 
     s += "\n"
 
-    s += "int Init{}()".format(suffix) + " {\n\n"
+    s += "int cuewInit{}()".format(suffix) + " {\n\n"
 
     s += "#ifdef _WIN32\n"
     s += "  const char *paths[] = {"
@@ -276,14 +289,15 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
   }
 
   initialized = 1;
+"""
 
-  /* TODO */
-  /*error = atexit(cuewExitNvrtc);
+    s += "  error = atexit(cuewExit{});\n".format(suffix)
+
+    s += """
   if (error) {
-    result = CUEW_ERROR_ATEXIT_FAILED;
+    result = -2;
     return result;
   }
-  */
 """
 
     s += "  {}_lib = dynamic_library_open_find(paths);\n".format(suffix_lowered)
@@ -293,7 +307,7 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
     s += "\n"
 
     for fun in functions:
-        s += "  {}_LIBRARY_FIND({});\n".format(suffix, fun)
+        s += "  {}_LIBRARY_FIND({})\n".format(suffix, fun)
 
     s += "  result = 0; // success\n"
     s += "  return result;\n"
@@ -305,6 +319,7 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 def main():
 
     input_filename = "cudart.json"
+    allowlist_filename = "cudart-allowlist.json"
     api_prefix = "cuda"
     output_filename = os.path.splitext(input_filename)[0] + ".h"
 
@@ -317,7 +332,19 @@ def main():
     if len(sys.argv) > 3:
         output_filename = sys.argv[3]
 
+    if len(sys.argv) > 4:
+        allowlist_filename = sys.argv[4]
+
     j = json.loads(open(input_filename, 'r').read())
+
+    allowlist_j = None
+
+    if os.path.exists(allowlist_filename):
+        allowlist_j = json.loads(open(allowlist_filename, 'r').read())
+        print(allowlist_j)
+    else:
+        print("allowlist file \"{}\" does not exist. skip reading allowlist.")
+
 
     ss = emit_header()
 
@@ -377,12 +404,16 @@ def main():
 
             print(item)
             if not item['name'].lower().startswith(api_prefix.lower()):
-                continue
+                if allowlist_j is not None:
+                    if item['name'] not in allowlist_j[item['tagUsed']]:
+                        continue
+                    else:
+                        pass
+                else:
+                    continue
 
             if item['tagUsed'] == 'union':
-                # pass
-                # TODO
-                s = ""
+                s = "union " + item['name'] + ";\n"
             elif item['tagUsed'] == 'struct':
                 s = "struct " + item['name'] + ";\n"
 

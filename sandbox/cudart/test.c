@@ -1,18 +1,23 @@
 #include "cudart.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
-  int ret = InitCUDART();
+  (void)argc;
+  (void)argv;
+
+  int ret = cuewInitCUDART();
   printf("ret = %d\n", ret);
 
-  if (ret == 0) {
-    printf("addr %p\n", cudaMalloc);
+  if (ret != 0) {
+    printf("cudart init failed.\n");
+    exit(-1);
   }
 
   char *ptr;
 
-  cudaMalloc(&ptr, 1024);
+  cudaMalloc((void **)&ptr, 1024);
   cudaFree(ptr);
 
   return 0;

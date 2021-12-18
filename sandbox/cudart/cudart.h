@@ -5,6 +5,9 @@
 
 #include <stddef.h>
 
+
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -241,6 +244,7 @@ enum cudaStreamAttrID
   cudaStreamAttributeSynchronizationPolicy = 3
 }; // id 0xc0b6e8 
 
+union cudaStreamAttrValue;
 enum cudaStreamUpdateCaptureDependenciesFlags
 {
   cudaStreamAddCaptureDependencies = 0,
@@ -290,6 +294,7 @@ enum cudaKernelNodeAttrID
   cudaKernelNodeAttributeCooperative = 2
 }; // id 0xc0d1f8 
 
+union cudaKernelNodeAttrValue;
 enum cudaResourceType
 {
   cudaResourceTypeArray = 0,
@@ -742,6 +747,7 @@ enum cudaSurfaceFormatMode
   cudaFormatModeAuto = 1
 }; // id 0xc3cac8 
 
+struct surfaceReference;
 typedef unsigned long long cudaSurfaceObject_t; // id 0xc3f7f0 
 
 enum cudaTextureAddressMode
@@ -764,6 +770,7 @@ enum cudaTextureReadMode
   cudaReadModeNormalizedFloat = 1
 }; // id 0xc3ff58 
 
+struct textureReference;
 struct cudaTextureDesc;
 typedef unsigned long long cudaTextureObject_t; // id 0xc44910 
 
@@ -1367,7 +1374,7 @@ struct cudaChannelFormatDesc
     int                        w;
     enum cudaChannelFormatKind f;
 };
-extern int InitCUDART();
+extern int cuewInitCUDART(void);
 
 
 #ifdef __cplusplus
