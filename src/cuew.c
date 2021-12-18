@@ -92,6 +92,7 @@ tcuDeviceGetNvSciSyncAttributes *cuDeviceGetNvSciSyncAttributes;
 tcuDeviceSetMemPool *cuDeviceSetMemPool;
 tcuDeviceGetMemPool *cuDeviceGetMemPool;
 tcuDeviceGetDefaultMemPool *cuDeviceGetDefaultMemPool;
+tcuFlushGPUDirectRDMAWrites *cuFlushGPUDirectRDMAWrites;
 tcuDeviceGetProperties *cuDeviceGetProperties;
 tcuDeviceComputeCapability *cuDeviceComputeCapability;
 tcuDevicePrimaryCtxRetain *cuDevicePrimaryCtxRetain;
@@ -424,7 +425,6 @@ tcuGraphicsMapResources *cuGraphicsMapResources;
 tcuGraphicsUnmapResources *cuGraphicsUnmapResources;
 tcuGetProcAddress *cuGetProcAddress;
 tcuGetExportTable *cuGetExportTable;
-tcuFlushGPUDirectRDMAWrites *cuFlushGPUDirectRDMAWrites;
 
 tnvrtcGetErrorString *nvrtcGetErrorString;
 tnvrtcVersion *nvrtcVersion;
@@ -809,6 +809,7 @@ static int cuewCudaInit(void) {
   CUDA_LIBRARY_FIND(cuDeviceSetMemPool);
   CUDA_LIBRARY_FIND(cuDeviceGetMemPool);
   CUDA_LIBRARY_FIND(cuDeviceGetDefaultMemPool);
+  CUDA_LIBRARY_FIND(cuFlushGPUDirectRDMAWrites);
   CUDA_LIBRARY_FIND(cuDeviceGetProperties);
   CUDA_LIBRARY_FIND(cuDeviceComputeCapability);
   CUDA_LIBRARY_FIND(cuDevicePrimaryCtxRetain);
@@ -1141,7 +1142,6 @@ static int cuewCudaInit(void) {
   CUDA_LIBRARY_FIND(cuGraphicsUnmapResources);
   CUDA_LIBRARY_FIND(cuGetProcAddress);
   CUDA_LIBRARY_FIND(cuGetExportTable);
-  CUDA_LIBRARY_FIND(cuFlushGPUDirectRDMAWrites);
 
 
 
@@ -1672,6 +1672,7 @@ const char *cuewErrorString(CUresult result) {
     case CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD: return "Stream capture wrong thread";
     case CUDA_ERROR_TIMEOUT: return "Timeout";
     case CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE: return "Graph exec update failure";
+    case CUDA_ERROR_EXTERNAL_DEVICE: return "External device";
     case CUDA_ERROR_UNKNOWN: return "Unknown error";
     default: return "Unknown CUDA error value";
   }

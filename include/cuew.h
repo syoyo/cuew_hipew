@@ -29,7 +29,7 @@ extern "C" {
 
 #define cuCtxCreate_v3 cuCtxCreate_v3
 #define cuTexRefSetAddress2D cuTexRefSetAddress2D_v3
-#define CUDA_VERSION 11040
+#define CUDA_VERSION 11050
 #define CU_UUID_HAS_BEEN_DEFINED
 #define CU_IPC_HANDLE_SIZE 64
 #define CU_STREAM_LEGACY ((CUstream)0x1)
@@ -69,7 +69,7 @@ extern "C" {
 #define CU_PARAM_TR_DEFAULT -1
 #define CU_DEVICE_CPU ((CUdevice)-1)
 #define CU_DEVICE_INVALID ((CUdevice)-2)
-//#define cuGetProcAddress cuGetProcAddress_ptsz //TODO
+//#define cuGetProcAddress cuGetProcAddress_ptsz // TODO
 
 /* Functions which changed 3.1 -> 3.2 for 64 bit stuff,
  * the cuda library has both the old ones for compatibility and new
@@ -329,6 +329,32 @@ typedef enum CUarray_format_enum {
   CU_AD_FORMAT_HALF = 0x10,
   CU_AD_FORMAT_FLOAT = 0x20,
   CU_AD_FORMAT_NV12 = 0xb0,
+  CU_AD_FORMAT_UNORM_INT8X1 = 0xc0,
+  CU_AD_FORMAT_UNORM_INT8X2 = 0xc1,
+  CU_AD_FORMAT_UNORM_INT8X4 = 0xc2,
+  CU_AD_FORMAT_UNORM_INT16X1 = 0xc3,
+  CU_AD_FORMAT_UNORM_INT16X2 = 0xc4,
+  CU_AD_FORMAT_UNORM_INT16X4 = 0xc5,
+  CU_AD_FORMAT_SNORM_INT8X1 = 0xc6,
+  CU_AD_FORMAT_SNORM_INT8X2 = 0xc7,
+  CU_AD_FORMAT_SNORM_INT8X4 = 0xc8,
+  CU_AD_FORMAT_SNORM_INT16X1 = 0xc9,
+  CU_AD_FORMAT_SNORM_INT16X2 = 0xca,
+  CU_AD_FORMAT_SNORM_INT16X4 = 0xcb,
+  CU_AD_FORMAT_BC1_UNORM = 0x91,
+  CU_AD_FORMAT_BC1_UNORM_SRGB = 0x92,
+  CU_AD_FORMAT_BC2_UNORM = 0x93,
+  CU_AD_FORMAT_BC2_UNORM_SRGB = 0x94,
+  CU_AD_FORMAT_BC3_UNORM = 0x95,
+  CU_AD_FORMAT_BC3_UNORM_SRGB = 0x96,
+  CU_AD_FORMAT_BC4_UNORM = 0x97,
+  CU_AD_FORMAT_BC4_SNORM = 0x98,
+  CU_AD_FORMAT_BC5_UNORM = 0x99,
+  CU_AD_FORMAT_BC5_SNORM = 0x9a,
+  CU_AD_FORMAT_BC6H_UF16 = 0x9b,
+  CU_AD_FORMAT_BC6H_SF16 = 0x9c,
+  CU_AD_FORMAT_BC7_UNORM = 0x9d,
+  CU_AD_FORMAT_BC7_UNORM_SRGB = 0x9e,
 } CUarray_format;
 
 typedef enum CUaddress_mode_enum {
@@ -901,6 +927,7 @@ typedef enum cudaError_enum {
   CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD = 908,
   CUDA_ERROR_TIMEOUT = 909,
   CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE = 910,
+  CUDA_ERROR_EXTERNAL_DEVICE = 911,
   CUDA_ERROR_UNKNOWN = 999,
 } CUresult;
 
@@ -1582,6 +1609,7 @@ typedef enum  {
   CUDNN_DATA_INT8x32 = 8,
   CUDNN_DATA_BFLOAT16 = 9,
   CUDNN_DATA_INT64 = 10,
+  CUDNN_DATA_BOOLEAN = 11,
 } cudnnDataType_t;
 
 typedef enum  {
@@ -2012,10 +2040,25 @@ typedef void* cudnnBackendDescriptor_t;
 
 typedef enum  {
   CUDNN_POINTWISE_ADD = 0,
-  CUDNN_POINTWISE_MUL = 1,
-  CUDNN_POINTWISE_MIN = 2,
+  CUDNN_POINTWISE_ADD_SQUARE = 5,
+  CUDNN_POINTWISE_DIV = 6,
   CUDNN_POINTWISE_MAX = 3,
+  CUDNN_POINTWISE_MIN = 2,
+  CUDNN_POINTWISE_MOD = 7,
+  CUDNN_POINTWISE_MUL = 1,
+  CUDNN_POINTWISE_POW = 8,
+  CUDNN_POINTWISE_SUB = 9,
+  CUDNN_POINTWISE_ABS = 10,
+  CUDNN_POINTWISE_CEIL = 11,
+  CUDNN_POINTWISE_COS = 12,
+  CUDNN_POINTWISE_EXP = 13,
+  CUDNN_POINTWISE_FLOOR = 14,
+  CUDNN_POINTWISE_LOG = 15,
+  CUDNN_POINTWISE_NEG = 16,
+  CUDNN_POINTWISE_RSQRT = 17,
+  CUDNN_POINTWISE_SIN = 18,
   CUDNN_POINTWISE_SQRT = 4,
+  CUDNN_POINTWISE_TAN = 19,
   CUDNN_POINTWISE_RELU_FWD = 100,
   CUDNN_POINTWISE_TANH_FWD = 101,
   CUDNN_POINTWISE_SIGMOID_FWD = 102,
@@ -2030,7 +2073,23 @@ typedef enum  {
   CUDNN_POINTWISE_GELU_BWD = 204,
   CUDNN_POINTWISE_SOFTPLUS_BWD = 205,
   CUDNN_POINTWISE_SWISH_BWD = 206,
+  CUDNN_POINTWISE_CMP_EQ = 300,
+  CUDNN_POINTWISE_CMP_NEQ = 301,
+  CUDNN_POINTWISE_CMP_GT = 302,
+  CUDNN_POINTWISE_CMP_GE = 303,
+  CUDNN_POINTWISE_CMP_LT = 304,
+  CUDNN_POINTWISE_CMP_LE = 305,
+  CUDNN_POINTWISE_LOGICAL_AND = 400,
+  CUDNN_POINTWISE_LOGICAL_OR = 401,
+  CUDNN_POINTWISE_LOGICAL_NOT = 402,
 } cudnnPointwiseMode_t;
+
+typedef enum  {
+  CUDNN_RESAMPLE_NEAREST = 0,
+  CUDNN_RESAMPLE_BILINEAR = 1,
+  CUDNN_RESAMPLE_AVGPOOL = 2,
+  CUDNN_RESAMPLE_MAXPOOL = 3,
+} cudnnResampleMode_t;
 
 typedef enum  {
   CUDNN_GENSTATS_SUM_SQSUM = 0,
@@ -2101,6 +2160,7 @@ typedef enum  {
   CUDNN_ATTR_OPERATION_POINTWISE_ALPHA2 = 755,
   CUDNN_ATTR_OPERATION_POINTWISE_DXDESC = 756,
   CUDNN_ATTR_OPERATION_POINTWISE_DYDESC = 757,
+  CUDNN_ATTR_OPERATION_POINTWISE_TDESC = 758,
   CUDNN_ATTR_OPERATION_GENSTATS_MODE = 770,
   CUDNN_ATTR_OPERATION_GENSTATS_MATH_PREC = 771,
   CUDNN_ATTR_OPERATION_GENSTATS_XDESC = 772,
@@ -2135,6 +2195,7 @@ typedef enum  {
   CUDNN_ATTR_TENSOR_UNIQUE_ID = 906,
   CUDNN_ATTR_TENSOR_IS_VIRTUAL = 907,
   CUDNN_ATTR_TENSOR_IS_BY_VALUE = 908,
+  CUDNN_ATTR_TENSOR_REORDERING_MODE = 909,
   CUDNN_ATTR_VARIANT_PACK_UNIQUE_IDS = 1000,
   CUDNN_ATTR_VARIANT_PACK_DATA_POINTERS = 1001,
   CUDNN_ATTR_VARIANT_PACK_INTERMEDIATES = 1002,
@@ -2173,6 +2234,27 @@ typedef enum  {
   CUDNN_ATTR_OPERATION_BN_BWD_WEIGHTS_EQ_DY_SCALE_DESC = 1628,
   CUDNN_ATTR_OPERATION_BN_BWD_WEIGHTS_EQ_X_SCALE_DESC = 1629,
   CUDNN_ATTR_OPERATION_BN_BWD_WEIGHTS_EQ_BIAS = 1630,
+  CUDNN_ATTR_RESAMPLE_MODE = 1700,
+  CUDNN_ATTR_RESAMPLE_COMP_TYPE = 1701,
+  CUDNN_ATTR_RESAMPLE_SPATIAL_DIMS = 1702,
+  CUDNN_ATTR_RESAMPLE_POST_PADDINGS = 1703,
+  CUDNN_ATTR_RESAMPLE_PRE_PADDINGS = 1704,
+  CUDNN_ATTR_RESAMPLE_STRIDES = 1705,
+  CUDNN_ATTR_RESAMPLE_WINDOW_DIMS = 1706,
+  CUDNN_ATTR_RESAMPLE_NAN_PROPAGATION = 1707,
+  CUDNN_ATTR_RESAMPLE_PADDING_MODE = 1708,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_XDESC = 1710,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_YDESC = 1711,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_IDXDESC = 1712,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_ALPHA = 1713,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_BETA = 1714,
+  CUDNN_ATTR_OPERATION_RESAMPLE_FWD_DESC = 1716,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_DXDESC = 1720,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_DYDESC = 1721,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_IDXDESC = 1722,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_ALPHA = 1723,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_BETA = 1724,
+  CUDNN_ATTR_OPERATION_RESAMPLE_BWD_DESC = 1725,
 } cudnnBackendAttributeName_t;
 
 typedef enum  {
@@ -2196,6 +2278,10 @@ typedef enum  {
   CUDNN_TYPE_BN_FINALIZE_STATS_MODE,
   CUDNN_TYPE_REDUCTION_OPERATOR_TYPE,
   CUDNN_TYPE_BEHAVIOR_NOTE,
+  CUDNN_TYPE_TENSOR_REORDERING_MODE,
+  CUDNN_TYPE_RESAMPLE_MODE,
+  CUDNN_TYPE_PADDING_MODE,
+  CUDNN_TYPE_INT32,
 } cudnnBackendAttributeType_t;
 
 typedef enum  {
@@ -2223,6 +2309,9 @@ typedef enum  {
   CUDNN_BACKEND_REDUCTION_DESCRIPTOR,
   CUDNN_BACKEND_OPERATION_REDUCTION_DESCRIPTOR,
   CUDNN_BACKEND_OPERATION_BN_BWD_WEIGHTS_DESCRIPTOR,
+  CUDNN_BACKEND_RESAMPLE_DESCRIPTOR,
+  CUDNN_BACKEND_OPERATION_RESAMPLE_FWD_DESCRIPTOR,
+  CUDNN_BACKEND_OPERATION_RESAMPLE_BWD_DESCRIPTOR,
 } cudnnBackendDescriptorType_t;
 
 typedef enum  {
@@ -2232,11 +2321,16 @@ typedef enum  {
   CUDNN_NUMERICAL_NOTE_FFT,
   CUDNN_NUMERICAL_NOTE_NONDETERMINISTIC,
   CUDNN_NUMERICAL_NOTE_WINOGRAD,
+  CUDNN_NUMERICAL_NOTE_WINOGRAD_TILE_4x4,
+  CUDNN_NUMERICAL_NOTE_WINOGRAD_TILE_6x6,
+  CUDNN_NUMERICAL_NOTE_WINOGRAD_TILE_13x13,
   CUDNN_NUMERICAL_NOTE_TYPE_COUNT,
 } cudnnBackendNumericalNote_t;
 
 typedef enum  {
   CUDNN_BEHAVIOR_NOTE_RUNTIME_COMPILATION = 0,
+  CUDNN_BEHAVIOR_NOTE_REQUIRES_FILTER_INT8x32_REORDER = 1,
+  CUDNN_BEHAVIOR_NOTE_REQUIRES_BIAS_INT8x32_REORDER = 2,
   CUDNN_BEHAVIOR_NOTE_TYPE_COUNT,
 } cudnnBackendBehaviorNote_t;
 
@@ -2280,8 +2374,21 @@ typedef enum  {
 typedef enum  {
   CUDNN_HEUR_MODE_INSTANT = 0,
   CUDNN_HEUR_MODE_B = 1,
-  CUDNN_HEUR_MODES_COUNT = 2,
+  CUDNN_HEUR_MODE_FALLBACK = 2,
+  CUDNN_HEUR_MODE_A = 3,
+  CUDNN_HEUR_MODES_COUNT = 4,
 } cudnnBackendHeurMode_t;
+
+typedef enum  {
+  CUDNN_TENSOR_REORDERING_NONE = 0,
+  CUDNN_TENSOR_REORDERING_INT8x32 = 1,
+} cudnnBackendTensorReordering_t;
+
+typedef enum  {
+  CUDNN_ZERO_PAD = 0,
+  CUDNN_NEG_INF_PAD = 1,
+  CUDNN_EDGE_VAL_PAD = 2,
+} cudnnPaddingMode_t;
 typedef unsigned int GLenum;
 typedef unsigned int GLuint;
 typedef int GLint;
@@ -2317,6 +2424,7 @@ typedef CUresult CUDAAPI tcuDeviceGetNvSciSyncAttributes(void* nvSciSyncAttrList
 typedef CUresult CUDAAPI tcuDeviceSetMemPool(CUdevice dev, CUmemoryPool pool);
 typedef CUresult CUDAAPI tcuDeviceGetMemPool(CUmemoryPool* pool, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceGetDefaultMemPool(CUmemoryPool* pool_out, CUdevice dev);
+typedef CUresult CUDAAPI tcuFlushGPUDirectRDMAWrites(CUflushGPUDirectRDMAWritesTarget target, CUflushGPUDirectRDMAWritesScope scope);
 typedef CUresult CUDAAPI tcuDeviceGetProperties(CUdevprop* prop, CUdevice dev);
 typedef CUresult CUDAAPI tcuDeviceComputeCapability(int* major, int* minor, CUdevice dev);
 typedef CUresult CUDAAPI tcuDevicePrimaryCtxRetain(CUcontext* pctx, CUdevice dev);
@@ -2649,7 +2757,6 @@ typedef CUresult CUDAAPI tcuGraphicsMapResources(unsigned int count, CUgraphicsR
 typedef CUresult CUDAAPI tcuGraphicsUnmapResources(unsigned int count, CUgraphicsResource* resources, CUstream hStream);
 typedef CUresult CUDAAPI tcuGetProcAddress(const char* symbol, void** pfn, int cudaVersion, cuuint64_t flags);
 typedef CUresult CUDAAPI tcuGetExportTable(const void** ppExportTable, const CUuuid* pExportTableId);
-typedef CUresult CUDAAPI tcuFlushGPUDirectRDMAWrites(CUflushGPUDirectRDMAWritesTarget target, CUflushGPUDirectRDMAWritesScope scope);
 
 typedef const char* CUDAAPI tnvrtcGetErrorString(nvrtcResult result);
 typedef nvrtcResult CUDAAPI tnvrtcVersion(int* major, int* minor);
@@ -2965,6 +3072,7 @@ extern tcuDeviceGetNvSciSyncAttributes *cuDeviceGetNvSciSyncAttributes;
 extern tcuDeviceSetMemPool *cuDeviceSetMemPool;
 extern tcuDeviceGetMemPool *cuDeviceGetMemPool;
 extern tcuDeviceGetDefaultMemPool *cuDeviceGetDefaultMemPool;
+extern tcuFlushGPUDirectRDMAWrites *cuFlushGPUDirectRDMAWrites;
 extern tcuDeviceGetProperties *cuDeviceGetProperties;
 extern tcuDeviceComputeCapability *cuDeviceComputeCapability;
 extern tcuDevicePrimaryCtxRetain *cuDevicePrimaryCtxRetain;
@@ -3297,7 +3405,6 @@ extern tcuGraphicsMapResources *cuGraphicsMapResources;
 extern tcuGraphicsUnmapResources *cuGraphicsUnmapResources;
 extern tcuGetProcAddress *cuGetProcAddress;
 extern tcuGetExportTable *cuGetExportTable;
-extern tcuFlushGPUDirectRDMAWrites *cuFlushGPUDirectRDMAWrites;
 
 extern tnvrtcGetErrorString *nvrtcGetErrorString;
 extern tnvrtcVersion *nvrtcVersion;
