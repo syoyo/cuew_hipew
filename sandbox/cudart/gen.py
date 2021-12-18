@@ -164,8 +164,146 @@ struct cudaChannelFormatDesc
 
     return s
 
+def emit_initializer(suffix: str, dllpaths: dict, functions):
+    """
+    dllpaths['win32'] and dllpaths['linux'] are looked up
+    """
+
+    suffix = suffix.upper()
+    suffix_lowered = suffix.lower()
+
+    s = """
+
+#ifdef _MSC_VER
+#  if _MSC_VER < 1900
+#    define snprintf _snprintf
+#  endif
+#  define popen _popen
+#  define pclose _pclose
+#  define _CRT_SECURE_NO_WARNINGS
+#endif
+"""
+
+    s += "#include \"{}.h\"".format(suffix_lowered)
+    s += """
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+
+
+#ifdef _WIN32
+#  define WIN32_LEAN_AND_MEAN
+#  define VC_EXTRALEAN
+#  include <windows.h>
+
+
+/* Utility macros. */
+
+typedef HMODULE DynamicLibrary;
+
+#  define dynamic_library_open(path)         LoadLibraryA(path)
+#  define dynamic_library_close(lib)         FreeLibrary(lib)
+#  define dynamic_library_find(lib, symbol)  GetProcAddress(lib, symbol)
+#else
+#  include <dlfcn.h>
+
+typedef void* DynamicLibrary;
+
+#  define dynamic_library_open(path)         dlopen(path, RTLD_NOW)
+#  define dynamic_library_close(lib)         dlclose(lib)
+#  define dynamic_library_find(lib, symbol)  dlsym(lib, symbol)
+#endif
+
+#define _LIBRARY_FIND_CHECKED(lib, name) \
+        name = (t##name *)dynamic_library_find(lib, #name); \
+        assert(name);
+
+#define _LIBRARY_FIND(lib, name) \
+        name = (t##name *)dynamic_library_find(lib, #name);
+
+
+static DynamicLibrary dynamic_library_open_find(const char **paths) {
+  int i = 0;
+  while (paths[i] != NULL) {
+      DynamicLibrary lib = dynamic_library_open(paths[i]);
+      if (lib != NULL) {
+        return lib;
+      }
+      ++i;
+  }
+  return NULL;
+}
+
+/* hack */
+tcudaStreamGetFlags *cudaStreamGetFlags;
+"""
+
+    s += "#define {}_LIBRARY_FIND_CHECKED(name) _LIBRARY_FIND_CHECKED({}_lib, name)\n".format(suffix, suffix_lowered)
+    s += "#define {}_LIBRARY_FIND(name) _LIBRARY_FIND({}_lib, name)\n".format(suffix, suffix_lowered)
+
+    s += "static DynamicLibrary {}_lib;\n\n".format(suffix_lowered)
+
+    s += "int Init{}()".format(suffix) + " {\n\n"
+
+    s += "#ifdef _WIN32\n"
+    s += "  const char *paths[] = {"
+    for path in dllpaths['win32']:
+        s += "   \"" + path + "\",\n"
+    s += "NULL};\n"
+    s += "#else /* linux */\n"
+    s += "  const char *paths[] = {"
+    for path in dllpaths['linux']:
+        s += "   \"" + path + "\",\n"
+    s += "NULL};\n"
+    s += "#endif\n\n"
+
+    s += """
+  static int initialized = 0;
+  static int result = 0;
+  int error;
+
+  if (initialized) {
+    return result;
+  }
+
+  initialized = 1;
+
+  /* TODO */
+  /*error = atexit(cuewExitNvrtc);
+  if (error) {
+    result = CUEW_ERROR_ATEXIT_FAILED;
+    return result;
+  }
+  */
+"""
+
+    s += "  {}_lib = dynamic_library_open_find(paths);\n".format(suffix_lowered)
+
+    s += "  if (" + suffix_lowered + "_lib == NULL) { result = -1; return result; }\n"
+
+    s += "\n"
+
+    for fun in functions:
+        s += "  {}_LIBRARY_FIND({});\n".format(suffix, fun)
+
+    s += "  result = 0; // success\n"
+    s += "  return result;\n"
+    s += "}\n"
+
+    return s
+
 
 def main():
+
+    # HACK
+    funs = ["cudaStreamGetFlags"]
+    dllpaths = {}
+    dllpaths['win32'] = ['cudart.dll']
+    dllpaths['linux'] = ['libcudart.so', '/usr/local/cuda/lib64/libcudart.so']
+    ret = emit_initializer("cudart", dllpaths, funs)
+    print(ret)
+    sys.exit(-1)
 
     input_filename = "cudart.json"
     api_prefix = "cuda"
