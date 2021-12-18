@@ -165,14 +165,20 @@ enum cudaChannelFormatKind
   cudaChannelFormatKindNV12 = 4
 }; // id 0xc00228 
 
+struct cudaChannelFormatDesc;
+struct cudaArray;
 typedef struct cudaArray * cudaArray_t; // id 0xc00d10 
 
 typedef const struct cudaArray * cudaArray_const_t; // id 0xc00e60 
 
+struct cudaArray;
+struct cudaMipmappedArray;
 typedef struct cudaMipmappedArray * cudaMipmappedArray_t; // id 0xc010d0 
 
 typedef const struct cudaMipmappedArray * cudaMipmappedArray_const_t; // id 0xc01220 
 
+struct cudaMipmappedArray;
+struct cudaArraySparseProperties;
 enum cudaMemoryType
 {
   cudaMemoryTypeUnregistered = 0,
@@ -190,6 +196,12 @@ enum cudaMemcpyKind
   cudaMemcpyDefault = 4
 }; // id 0xc05ea8 
 
+struct cudaPitchedPtr;
+struct cudaExtent;
+struct cudaPos;
+struct cudaMemcpy3DParms;
+struct cudaMemcpy3DPeerParms;
+struct cudaMemsetParams;
 enum cudaAccessProperty
 {
   cudaAccessPropertyNormal = 0,
@@ -197,8 +209,10 @@ enum cudaAccessProperty
   cudaAccessPropertyPersisting = 2
 }; // id 0xc09c78 
 
+struct cudaAccessPolicyWindow;
 typedef void (*cudaHostFn_t)(void *); // id 0xc0a500 
 
+struct cudaHostNodeParams;
 enum cudaStreamCaptureStatus
 {
   cudaStreamCaptureStatusNone = 0,
@@ -243,6 +257,7 @@ enum cudaUserObjectRetainFlags
   cudaGraphUserObjectMove = 1
 }; // id 0xc0bfc8 
 
+struct cudaGraphicsResource;
 enum cudaGraphicsRegisterFlags
 {
   cudaGraphicsRegisterFlagsNone = 0,
@@ -322,6 +337,10 @@ enum cudaResourceViewFormat
   cudaResViewFormatUnsignedBlockCompressed7 = 34
 }; // id 0xc0ef78 
 
+struct cudaResourceDesc;
+struct cudaResourceViewDesc;
+struct cudaPointerAttributes;
+struct cudaFuncAttributes;
 enum cudaFuncAttribute
 {
   cudaFuncAttributeMaxDynamicSharedMemorySize = 8,
@@ -552,6 +571,7 @@ enum cudaMemLocationType
   cudaMemLocationTypeDevice = 1
 }; // id 0xc20ad8 
 
+struct cudaMemLocation;
 enum cudaMemAccessFlags
 {
   cudaMemAccessFlagsProtNone = 0,
@@ -559,6 +579,7 @@ enum cudaMemAccessFlags
   cudaMemAccessFlagsProtReadWrite = 3
 }; // id 0xc211a8 
 
+struct cudaMemAccessDesc;
 enum cudaMemAllocationType
 {
   cudaMemAllocationTypeInvalid = 0,
@@ -574,6 +595,8 @@ enum cudaMemAllocationHandleType
   cudaMemHandleTypeWin32Kmt = 4
 }; // id 0xc21a38 
 
+struct cudaMemPoolProps;
+struct cudaMemPoolPtrExportData;
 enum cudaDeviceP2PAttr
 {
   cudaDevP2PAttrPerformanceRank = 1,
@@ -584,8 +607,11 @@ enum cudaDeviceP2PAttr
 
 typedef struct CUuuid_st cudaUUID_t; // id 0xc26bf8 
 
+struct cudaDeviceProp;
+struct cudaIpcEventHandle_st;
 typedef struct cudaIpcEventHandle_st cudaIpcEventHandle_t; // id 0xc2f688 
 
+struct cudaIpcMemHandle_st;
 typedef struct cudaIpcMemHandle_st cudaIpcMemHandle_t; // id 0xc2f8c8 
 
 enum cudaExternalMemoryHandleType
@@ -600,6 +626,9 @@ enum cudaExternalMemoryHandleType
   cudaExternalMemoryHandleTypeNvSciBuf = 8
 }; // id 0xc2f960 
 
+struct cudaExternalMemoryHandleDesc;
+struct cudaExternalMemoryBufferDesc;
+struct cudaExternalMemoryMipmappedArrayDesc;
 enum cudaExternalSemaphoreHandleType
 {
   cudaExternalSemaphoreHandleTypeOpaqueFd = 1,
@@ -614,6 +643,9 @@ enum cudaExternalSemaphoreHandleType
   cudaExternalSemaphoreHandleTypeTimelineSemaphoreWin32 = 10
 }; // id 0xc316b8 
 
+struct cudaExternalSemaphoreHandleDesc;
+struct cudaExternalSemaphoreSignalParams;
+struct cudaExternalSemaphoreWaitParams;
 typedef enum cudaError cudaError_t; // id 0xc365c0 
 
 typedef struct CUstream_st * cudaStream_t; // id 0xc367b0 
@@ -645,6 +677,10 @@ enum cudaCGScope
   cudaCGScopeMultiGrid = 2
 }; // id 0xc37ab0 
 
+struct cudaLaunchParams;
+struct cudaKernelNodeParams;
+struct cudaExternalSemaphoreSignalNodeParams;
+struct cudaExternalSemaphoreWaitNodeParams;
 enum cudaGraphNodeType
 {
   cudaGraphNodeTypeKernel = 0,
@@ -728,6 +764,7 @@ enum cudaTextureReadMode
   cudaReadModeNormalizedFloat = 1
 }; // id 0xc3ff58 
 
+struct cudaTextureDesc;
 typedef unsigned long long cudaTextureObject_t; // id 0xc44910 
 
 enum cudaDataType_t
@@ -1321,6 +1358,17 @@ typedef cudaError_t  CUDAAPI tcudaGetExportTable(const void **, const cudaUUID_t
 extern tcudaGetExportTable *cudaGetExportTable;
 typedef cudaError_t  CUDAAPI tcudaGetFuncBySymbol(cudaFunction_t *, const void *);
 extern tcudaGetFuncBySymbol *cudaGetFuncBySymbol;
+
+struct cudaChannelFormatDesc
+{
+    int                        x;
+    int                        y;
+    int                        z;
+    int                        w;
+    enum cudaChannelFormatKind f;
+};
+extern int InitCUDART();
+
 
 #ifdef __cplusplus
 }

@@ -143,7 +143,9 @@ struct cudaChannelFormatDesc;
     return s
 
 
-def emit_footer():
+def emit_footer(suffix: str):
+
+    suffix = suffix.upper()
 
     s = """
 struct cudaChannelFormatDesc
@@ -156,8 +158,10 @@ struct cudaChannelFormatDesc
 };
 """
 
+    s += "extern int Init{}()".format(suffix) + ";\n\n"
 
-    s = "\n"
+
+    s += "\n"
     s += "#ifdef __cplusplus\n"
     s += "}\n"
     s += "#endif\n"
@@ -235,14 +239,18 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
   return NULL;
 }
 
-/* hack */
-tcudaStreamGetFlags *cudaStreamGetFlags;
 """
 
     s += "#define {}_LIBRARY_FIND_CHECKED(name) _LIBRARY_FIND_CHECKED({}_lib, name)\n".format(suffix, suffix_lowered)
     s += "#define {}_LIBRARY_FIND(name) _LIBRARY_FIND({}_lib, name)\n".format(suffix, suffix_lowered)
 
     s += "static DynamicLibrary {}_lib;\n\n".format(suffix_lowered)
+
+    # decl
+    for fun in functions:
+        s += "t{} *{};\n".format(fun, fun)
+
+    s += "\n"
 
     s += "int Init{}()".format(suffix) + " {\n\n"
 
@@ -296,15 +304,6 @@ tcudaStreamGetFlags *cudaStreamGetFlags;
 
 def main():
 
-    # HACK
-    funs = ["cudaStreamGetFlags"]
-    dllpaths = {}
-    dllpaths['win32'] = ['cudart.dll']
-    dllpaths['linux'] = ['libcudart.so', '/usr/local/cuda/lib64/libcudart.so']
-    ret = emit_initializer("cudart", dllpaths, funs)
-    print(ret)
-    sys.exit(-1)
-
     input_filename = "cudart.json"
     api_prefix = "cuda"
     output_filename = os.path.splitext(input_filename)[0] + ".h"
@@ -321,6 +320,8 @@ def main():
     j = json.loads(open(input_filename, 'r').read())
 
     ss = emit_header()
+
+    func_names = []
 
     inner = j['inner']
     for item in inner:
@@ -370,8 +371,22 @@ def main():
             ss += "\n"
 
         elif item['kind'] == "RecordDecl":
-            # TODO
-            pass
+
+            if 'name' not in item:
+                continue
+
+            print(item)
+            if not item['name'].lower().startswith(api_prefix.lower()):
+                continue
+
+            if item['tagUsed'] == 'union':
+                # pass
+                # TODO
+                s = ""
+            elif item['tagUsed'] == 'struct':
+                s = "struct " + item['name'] + ";\n"
+
+            ss += s
 
         elif item['kind'] == "FunctionDecl":
 
@@ -393,12 +408,28 @@ def main():
 
             ss += s
 
-    ss += emit_footer()
+            func_names.append(item['name'])
+
+    ss += emit_footer("cudart")
 
     with open(output_filename, 'w') as f:
         f.write(ss)
 
-    print("Wrote: ", output_filename)
+    print("Wrote header: ", output_filename)
+
+    # Write symbol initializer
+    # HACK
+    dllpaths = {}
+    dllpaths['win32'] = ['cudart.dll']
+    dllpaths['linux'] = ['libcudart.so', '/usr/local/cuda/lib64/libcudart.so']
+    ss = emit_initializer("cudart", dllpaths, func_names)
+
+    impl_filename = os.path.splitext(output_filename)[0] + ".c"
+    with open(impl_filename, 'w') as f:
+        f.write(ss)
+
+    print("Wrote impl: ", impl_filename)
+
 
 if __name__ == '__main__':
     main()
