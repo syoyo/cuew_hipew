@@ -1,5 +1,5 @@
 { "prefix": "cuda",
-  "api_prefix": "cuda",
+  "api_prefix": "cudart",
   "lib_prefix": "cudart",
   "header_prologue": "cudart-prologue.inc",
   "header_epilogue": "cudart-epilogue.inc",
@@ -12,5 +12,10 @@
     "struct" : [ "textureReference", "surfaceReference" ],
     "union" : [ ],
     "enum" : [ ]
+  },
+  "ignoredSymbols": {
+    "struct": [],
+    "union": [],
+    "enum": [ ]
   }
 }
