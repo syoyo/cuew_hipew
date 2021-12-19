@@ -3,25 +3,26 @@ Parse JSON and emit stub file in python.
 
 ## Requirements
 
-* Python 3.9+
+* Python 3.8+
 
 ## Dump ast
 
 Run `generate_json.sh`.
 
-## Generate stub header and .c
+## Generate stub header and loader
 
-Edit `Makefile`, then:
+Edit `generate_stub.sh`, then
 
-```
-$ make
-```
+Run `generate_stub.sh`
 
+## Config JSON
 
-## allowlist
+Config JSON is provided manually. The content will be changed over CUDA versions.
 
-allowlist JSON is provided manually.
-This list describes allowed symbol names(struct, union, etc) which does not starts with "cuda" prefix(e.g. textureReference).
+* "prefix": API symbol prefix(e.g. `cufft` for cuFFT)
+* "lib\_prefix": Specify the library prefix(e.g. `cufft` for cuFFT)
+* "dllpaths": List of dll(`.so`) search path. Key "win32" and "linux" are required.
+* "allowedSymbols" : This list describes allowed symbol names(struct, union, etc) which does not starts with "cuda" prefix(e.g. textureReference).
 
 ## TODO
 
@@ -33,7 +34,7 @@ This list describes allowed symbol names(struct, union, etc) which does not star
 * [ ] cuSPARSE API
 * [ ] cuRAND API
 * [ ] cuFFT API
-  * [ ] cuFFT
+  * [x] cuFFT
   * [ ] cuFFT Xt
   * [ ] cuFFTW
 * [ ] nvJPEG API(depends on CUDA runtime API)

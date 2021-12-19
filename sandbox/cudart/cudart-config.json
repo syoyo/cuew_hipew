@@ -1,11 +1,13 @@
 { "prefix": "cuda",
+  "api_prefix": "cuda",
   "lib_prefix": "cudart",
   "dllpaths": {
     "win32": [ "cudart.dll" ],
     "linux": [ "libcudart.so", "/usr/local/cuda/lib64/libcudart.so"]
   },
   "allowedSymbols": {
-    "struct" : [ "textureReference", "surfaceReference" ],
-    "union" : [ ]
+    "struct" : [ "dim3", "textureReference", "surfaceReference" ],
+    "union" : [ ],
+    "enum" : [ ]
   }
 }
