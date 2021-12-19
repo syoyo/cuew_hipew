@@ -14,6 +14,15 @@
  * limitations under the License
  */
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#pragma clang diagnostic ignored "-Wpadded"
+#if __has_warning("-Wdocumentation-deprecated-sync")
+  #pragma clang diagnostic ignored "-Wdocumentation-deprecated-sync"
+#endif
+#endif
+
 #ifndef __CUEW_H__
 #define __CUEW_H__
 
@@ -103,3 +112,7 @@ int cuewNvrtcVersion(void);
 #endif
 
 #endif  /* __CUEW_H__ */
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif

@@ -14,6 +14,15 @@
  * limitations under the License
  */
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#pragma clang diagnostic ignored "-Wpadded"
+#if __has_warning("-Wdocumentation-deprecated-sync")
+  #pragma clang diagnostic ignored "-Wdocumentation-deprecated-sync"
+#endif
+#endif
+
 #ifndef __CUEW_H__
 #define __CUEW_H__
 
@@ -69,7 +78,8 @@ extern "C" {
 #define CU_PARAM_TR_DEFAULT -1
 #define CU_DEVICE_CPU ((CUdevice)-1)
 #define CU_DEVICE_INVALID ((CUdevice)-2)
-//#define cuGetProcAddress cuGetProcAddress_ptsz // TODO
+/* TODO */
+/*#define cuGetProcAddress cuGetProcAddress_ptsz */
 
 /* Functions which changed 3.1 -> 3.2 for 64 bit stuff,
  * the cuda library has both the old ones for compatibility and new
@@ -3725,3 +3735,7 @@ int cuewNvrtcVersion(void);
 #endif
 
 #endif  /* __CUEW_H__ */
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif

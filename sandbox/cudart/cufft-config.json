@@ -1,13 +1,15 @@
 { "prefix": "cufft",
   "api_prefix": "cufft",
   "lib_prefix": "cufft",
+  "0header_prologue": "cufft-prologue.inc",
+  "header_epilogue": "cufft-epilogue.inc",
   "dllpaths": {
     "win32": [ "cufft.dll" ],
     "linux": [ "libcufft.so", "/usr/local/cuda/lib64/libcufft.so"]
   },
   "includes": [ "cuew_cudart.h", "cuComplex.h" ],
   "allowedSymbols": {
-    "enum" : [ "libraryPropertyType" ],
+    "enum" : [ ],
     "struct" : [ ],
     "union" : [ ]
   }

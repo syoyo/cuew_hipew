@@ -1,4 +1,5 @@
-#include "cudart.h"
+#include "cuew.h"
+#include "cuew_cudart.h"
 
 #include <stdio.h>
 #include <stdlib.h>
