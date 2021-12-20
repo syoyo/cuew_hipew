@@ -19,19 +19,21 @@ Run `generate_stub.sh`
 
 Config JSON is provided manually. The content will be changed over CUDA versions.
 
-* "prefix": API symbol prefix(e.g. `cufft` for cuFFT)
+Some of important variables.
+
+* "api\_prefix": API symbol prefix(e.g. `cufft` for cuFFT)
 * "lib\_prefix": Specify the library prefix(e.g. `cufft` for cuFFT)
 * "dllpaths": List of dll(`.so`) search path. Key "win32" and "linux" are required.
 * "allowedSymbols" : This list describes allowed symbol names(struct, union, etc) which does not starts with "cuda" prefix(e.g. textureReference).
 
 ## TODO
 
-* [x] enum
 * [x] CUDA runtime API
 * [ ] cuBlas API
   * [ ] NVBLAS API?
 * [ ] cuSOLVER API
 * [ ] cuSPARSE API
+* [ ] cuSPARSELt API
 * [ ] cuRAND API
 * [ ] cuFFT API
   * [x] cuFFT

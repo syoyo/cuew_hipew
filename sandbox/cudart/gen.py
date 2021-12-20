@@ -162,8 +162,6 @@ def emit_header(apiname: str, prologue, epilogue, includes):
     if epilogue is not None:
         s += epilogue
 
-    s += "#endif\n"
-
     return s
 
 
@@ -171,18 +169,7 @@ def emit_footer(suffix: str):
 
     suffix = suffix.upper()
 
-    s = """
-/*
-struct cudaChannelFormatDesc
-{
-    int                        x;
-    int                        y;
-    int                        z;
-    int                        w;
-    enum cudaChannelFormatKind f;
-};
-*/
-"""
+    s = ""
 
     s += "extern int cuewInit{}(void)".format(suffix) + ";\n\n"
 
@@ -191,6 +178,8 @@ struct cudaChannelFormatDesc
     s += "#ifdef __cplusplus\n"
     s += "}\n"
     s += "#endif\n"
+
+    s += "#endif /* CUEW_" + suffix.upper() + "_H_ */\n"
 
     return s
 

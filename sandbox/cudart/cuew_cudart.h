@@ -51,7 +51,6 @@ extern "C" {
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-#endif
 struct cudaChannelFormatDesc;
 struct cudaArray;
 typedef struct cudaArray * cudaArray_t; // id 0x248eda0 
@@ -710,20 +709,10 @@ typedef cudaError_t  CUDAAPI tcudaGetExportTable(const void **, const cudaUUID_t
 extern tcudaGetExportTable *cudaGetExportTable;
 typedef cudaError_t  CUDAAPI tcudaGetFuncBySymbol(cudaFunction_t *, const void *);
 extern tcudaGetFuncBySymbol *cudaGetFuncBySymbol;
-
-/*
-struct cudaChannelFormatDesc
-{
-    int                        x;
-    int                        y;
-    int                        z;
-    int                        w;
-    enum cudaChannelFormatKind f;
-};
-*/
 extern int cuewInitCUDART(void);
 
 
 #ifdef __cplusplus
 }
 #endif
+#endif /* CUEW_CUDART_H_ */

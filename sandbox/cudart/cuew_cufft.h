@@ -45,11 +45,20 @@ extern "C" {
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
 #endif
 
+//
+// Define is not handled gen.py
+//
+#define MAX_CUFFT_ERROR 0x11
+
+// CUFFT transform directions
+#define CUFFT_FORWARD -1 // Forward FFT
+#define CUFFT_INVERSE  1 // Inverse FFT
+
+
 #include "library_types.h"
 
 #ifdef __clang__
 #pragma clang diagnostic pop
-#endif
 #endif
 enum cufftResult_t
 {
@@ -167,20 +176,10 @@ typedef cufftResult  CUDAAPI tcufftGetVersion(int *);
 extern tcufftGetVersion *cufftGetVersion;
 typedef cufftResult  CUDAAPI tcufftGetProperty(libraryPropertyType, int *);
 extern tcufftGetProperty *cufftGetProperty;
-
-/*
-struct cudaChannelFormatDesc
-{
-    int                        x;
-    int                        y;
-    int                        z;
-    int                        w;
-    enum cudaChannelFormatKind f;
-};
-*/
 extern int cuewInitCUFFT(void);
 
 
 #ifdef __cplusplus
 }
 #endif
+#endif /* CUEW_CUFFT_H_ */
