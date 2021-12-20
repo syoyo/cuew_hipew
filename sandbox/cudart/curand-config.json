@@ -1,0 +1,16 @@
+{ "prefix": "curand",
+  "api_prefix": "curand",
+  "lib_prefix": "curand",
+  "0header_prologue": "curand-prologue.inc",
+  "0header_epilogue": "curand-epilogue.inc",
+  "dllpaths": {
+    "win32": [ "curand.dll" ],
+    "linux": [ "libcurand.so", "/usr/local/cuda/lib64/libcurand.so"]
+  },
+  "includes": [ "cuew_cudart.h" ],
+  "allowedSymbols": {
+    "enum" : [ ],
+    "struct" : [ ],
+    "union" : [ ]
+  }
+}

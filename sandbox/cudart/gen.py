@@ -442,6 +442,11 @@ def main():
                 args = ", ".join(argtys)
                 s = "typedef {} (*{})({}); // id {} \n".format(retty, item['name'], args, item['id'])
 
+            elif item['inner'][0]['kind'] == 'ConstantArrayType':
+                ty = item['inner'][0]['inner'][0]['type']['qualType']
+                sz = item['inner'][0]['size']
+
+                s = "typedef {} {}[{}]; // id {} \n".format(ty, item['name'], sz, item['id'])
             else:
                 s = "typedef {} {}; // id {} \n".format(item['type']['qualType'], item['name'], item['id'])
 
