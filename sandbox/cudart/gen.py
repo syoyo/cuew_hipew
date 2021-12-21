@@ -49,12 +49,9 @@ def enum_const_expr(expr):
 
     return s
 
-def emit_enum(item):
-    if not 'name' in item:
-        # anonymous enum. Guess this is from system header(e.g. math.h)
-        return None
+def emit_typedef_enum(tagname, item):
 
-    name = item['name']
+    name = item.get('name', None) # anonymous enum = None
 
     decls = []
     for val in item['inner']:
@@ -98,11 +95,70 @@ def emit_enum(item):
 
     # format
     # TODO: qualifier. e.g. __device_builtin__
-    s = "enum {}\n".format(name)
+    s = "typedef enum \n".format(name)
     s += "{\n"
     s += ",\n".join(map(lambda x: "  " + x, decls)) # append whitespace indent
-    s += "\n};"
+    s += "\n} {};".format(tagname)
     s += " // id {} \n".format(item['id'])
+
+    return s
+
+def emit_enum(is_typedef, tagname, item):
+
+    decls = []
+    for val in item['inner']:
+        if val['kind'] != 'EnumConstantDecl':
+            continue
+
+        constant_name = val['name']
+
+        assert val['type']['qualType'] == 'int'
+
+        # has value?
+        if 'inner' in val:
+            exprs = val['inner']
+
+            if isinstance(exprs, list):
+                expr = list(filter(lambda x: x['kind'] == 'ConstantExpr', exprs))
+
+                if len(expr) == 0:
+                    # Enum without value
+
+                    decls.append(constant_name)
+
+                else:
+
+                    # 'ConstantExpr' appears only once.
+                    assert len(expr) == 1
+
+                    value_expr = enum_const_expr(expr[0])
+
+                    decls.append("{} = {}".format(constant_name, value_expr))
+            else:
+                expr = exprs
+                assert expr['kind'] != "FullComment"
+                enum_const_expr(expr)
+
+        else:
+            decls.append(constant_name)
+
+    #print("enum decls", decls)
+
+    # format
+    # TODO: qualifier. e.g. __device_builtin__
+
+    if is_typedef:
+        s = "typedef enum \n"
+        s += "{\n"
+        s += ",\n".join(map(lambda x: "  " + x, decls)) # append whitespace indent
+        s += "\n} " + tagname + ";"
+        s += " // id {} \n".format(item['id'])
+    else:
+        s = "enum {}\n".format(tagname)
+        s += "{\n"
+        s += ",\n".join(map(lambda x: "  " + x, decls)) # append whitespace indent
+        s += "\n};"
+        s += " // id {} \n".format(item['id'])
 
     return s
 
@@ -370,33 +426,52 @@ def main():
     func_names = []
 
     inner = j['inner']
-    for item in inner:
+    for idx, item in enumerate(inner):
         s = ""
 
         if item['kind'] == "EnumDecl":
+            tagname = None
+            is_typedef = False
+
+            print("enum", item)
+
             if 'name' in item:
+                tagname = item['name']
                 pass
             else:
-                continue
+                # Guess
+                # typedef enum {
+                # ...
+                # } tagname;
+                # => Subsequent inner item has 'TypedefDecl' kind
+                if idx + 1 < len(inner):
+                    print("typedefdecl? ", inner[idx+1])
+                    if inner[idx+1]['kind'] == 'TypedefDecl':
+                        if 'name' in inner[idx+1]:
+                            tagname = inner[idx+1]['name']
+                            is_typedef = True
 
+            if tagname == None:
+                # Gues system types
+                continue
 
             is_allowed = False
 
             if allowedSymbols is not None:
-                if item['name'] in allowedSymbols['enum']:
+                if tagname in allowedSymbols['enum']:
                     # OK
                     is_allowed = True
 
             if not is_allowed:
-                if not item['name'].lower().startswith(api_prefix.lower()):
+                if not tagname.lower().startswith(api_prefix.lower()):
                     # skip
                     continue
 
             if ignoredSymbols is not None:
-                if item['name'] in ignoredSymbols['enum']:
+                if tagname in ignoredSymbols['enum']:
                     continue
 
-            s = emit_enum(item)
+            s = emit_enum(is_typedef, tagname, item)
 
             if s:
                 ss += s
@@ -406,8 +481,10 @@ def main():
 
             is_allowed = False
 
-            # ignore name which does not have `CU`, `cu`, `CUDA` or `cuda` prefix
-            if item['name'].startswith('cu') or item['name'].startswith('CU') or \
+            if item['name'].startswith('api_prefix'):
+                # OK
+                pass
+            elif item['name'].startswith('cu') or item['name'].startswith('CU') or \
                 item['name'].startswith('cuda') or item['name'].startswith('CUDA'):
                 # OK
                 pass

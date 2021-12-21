@@ -30,17 +30,23 @@ Some of important variables.
 
 * [x] CUDA runtime API
 * [ ] cuBlas API
-  * [ ] NVBLAS API?
+  * [ ] cuBLAS
+  * [ ] cuBLASXt
+  * [ ] cuBLASLt
+  * [ ] NVBLAS
 * [ ] cuSOLVER API
+  * [ ] cuSOLVER
+  * [ ] cuSolverMg
 * [ ] cuSPARSE API
-* [ ] cuSPARSELt API
+  * [ ] cuSPARSE
+  * [ ] cuSPARSELt
 * [ ] cuRAND API
 * [ ] cuFFT API
   * [x] cuFFT
   * [ ] cuFFT Xt
   * [ ] cuFFTW
-* [ ] nvJPEG API(depends on CUDA runtime API)
-* [ ] NPP API(depends on CUDA runtime API)
+* [ ] nvJPEG API
+* [ ] NPP API
 
 
 
