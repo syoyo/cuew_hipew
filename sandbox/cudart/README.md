@@ -47,6 +47,7 @@ Some of important variables.
   * [ ] cuFFTW
 * [ ] nvJPEG API
 * [ ] NPP API
+* [ ] nvenc API
 
 
 
