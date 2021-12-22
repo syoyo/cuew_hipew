@@ -7,7 +7,7 @@
     "win32": [ "cudart.dll" ],
     "linux": [ "libcudart.so", "/usr/local/cuda/lib64/libcudart.so"]
   },
-  "includes": [ "driver_types.h", "vector_types.h" ],
+  "includes": [ "driver_types.h", "vector_types.h", "texture_types.h", "surface_types.h" ],
   "allowedSymbols": {
     "struct" : [ "textureReference", "surfaceReference" ],
     "union" : [ ],
@@ -16,6 +16,7 @@
   "ignoredSymbols": {
     "struct": [],
     "union": [],
-    "enum": [ ]
+    "enum": [ ],
+    "typedef": []
   }
 }
