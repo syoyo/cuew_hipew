@@ -2,7 +2,7 @@
   "api_prefix": "nvjpeg",
   "lib_prefix": "nvjpeg",
   "0header_prologue": "nvjpeg-prologue.inc",
-  "0header_epilogue": "nvjpeg-epilogue.inc",
+  "header_epilogue": "nvjpeg-epilogue.inc",
   "dllpaths": {
     "win32": [ "nvjpeg.dll" ],
     "linux": [ "libnvjpeg.so", "/usr/local/cuda/lib64/libnvjpeg.so"]
@@ -12,5 +12,9 @@
     "enum" : [ ],
     "struct" : [ ],
     "union" : [ ]
+  },
+  "ignoredSymbols": {
+    "enum": [ ],
+    "typedef": [ "nvjpegImage_t", "nvjpegDevAllocator_t", "nvjpegPinnedAllocator_t" ]
   }
 }
