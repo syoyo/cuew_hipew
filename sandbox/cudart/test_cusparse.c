@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 
-#define NX 256
-#define BATCH 10
+//#define NX 256
+//#define BATCH 10
 //#define RANK 1
 
 // Assume C11
@@ -19,8 +19,8 @@
 } while (0)
 
 #define CUSPARSE_CHECK(expr) do { \
-  cusparseResult err = (expr); \
-  if (err != CUSPARSE_SUCCESS) { \
+  cusparseStatus_t err = (expr); \
+  if (err != CUSPARSE_STATUS_SUCCESS) { \
     printf("cusparse err at %s:%s:%d. code = %d\n", __FILE__, __func__, __LINE__, err); \
   } \
 } while (0)
@@ -45,7 +45,9 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  cusparseHandle h;
+  cusparseHandle_t h;
+  CUSPARSE_CHECK(cusparseCreate(&h));
+  CUSPARSE_CHECK(cusparseDestroy(h));
 
 #if 0 // TODO
   int new_size = 1024; // FIXME
