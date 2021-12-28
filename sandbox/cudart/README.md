@@ -38,14 +38,14 @@ Some of important variables.
   * [ ] cuSOLVER
   * [ ] cuSolverMg
 * [ ] cuSPARSE API
-  * [ ] cuSPARSE
+  * [ ] cuSPARSE(W.I.P.)
   * [ ] cuSPARSELt
 * [ ] cuRAND API
 * [ ] cuFFT API
   * [x] cuFFT
   * [ ] cuFFT Xt
   * [ ] cuFFTW
-* [ ] nvJPEG API
+* [ ] nvJPEG API(W.I.P)
 * [ ] NPP API
 * [ ] nvenc API
 

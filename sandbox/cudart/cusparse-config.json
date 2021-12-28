@@ -1,0 +1,16 @@
+{ "prefix": "cusparse",
+  "api_prefix": "cusparse",
+  "lib_prefix": "cusparse",
+  "0header_prologue": "cusparse-prologue.inc",
+  "0header_epilogue": "cusparse-epilogue.inc",
+  "dllpaths": {
+    "win32": [ "cusparse.dll" ],
+    "linux": [ "libcusparse.so", "/usr/local/cuda/lib64/libcusparse.so"]
+  },
+  "includes": [ "stdio.h", "cuew_cudart.h", "cuComplex.h" ],
+  "allowedSymbols": {
+    "enum" : [ ],
+    "struct" : [ ],
+    "union" : [ ]
+  }
+}
