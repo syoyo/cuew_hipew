@@ -1,0 +1,16 @@
+{ "prefix": "cublas",
+  "api_prefix": "cublas",
+  "lib_prefix": "cublas",
+  "0header_prologue": "cublas-prologue.inc",
+  "0header_epilogue": "cublas-epilogue.inc",
+  "dllpaths": {
+    "win32": [ "cublas.dll" ],
+    "linux": [ "libcublas.so", "/usr/local/cuda/lib64/libcublas.so"]
+  },
+  "includes": [ "cuew_cudart.h", "cuComplex.h" ],
+  "allowedSymbols": {
+    "enum" : [ ],
+    "struct" : [ ],
+    "union" : [ ]
+  }
+}
