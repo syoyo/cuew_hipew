@@ -50,6 +50,11 @@
 #if !defined(__TEXTURE_TYPES_H__)
 #define __TEXTURE_TYPES_H__
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
+
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -221,5 +226,9 @@ typedef __device_builtin__ unsigned long long cudaTextureObject_t;
 
 /** @} */
 /** @} */ /* END CUDART_TYPES */
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #endif /* !__TEXTURE_TYPES_H__ */
