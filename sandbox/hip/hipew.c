@@ -79,7 +79,7 @@ static DynamicLibrary hip_lib;
 //tcuGetErrorName *cuGetErrorName;
 thipInit *hipInit;
 thipDriverGetVersion *hipDriverGetVersion;
-thipDeviceGetCount *hipDeviceGetCount;
+thipGetDeviceCount *hipGetDeviceCount;
 #if 0
 tcuDeviceGet *cuDeviceGet;
 tcuDeviceGetName *cuDeviceGetName;
@@ -797,7 +797,7 @@ static int hipewHipInit(void) {
   //CUDA_LIBRARY_FIND(cuGetErrorName);
   CUDA_LIBRARY_FIND(hipInit);
   CUDA_LIBRARY_FIND(hipDriverGetVersion);
-  CUDA_LIBRARY_FIND(hipDeviceGetCount);
+  CUDA_LIBRARY_FIND(hipGetDeviceCount);
 #if 0
   CUDA_LIBRARY_FIND(cuDeviceGet);
   CUDA_LIBRARY_FIND(cuDeviceGetName);

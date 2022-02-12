@@ -1,20 +1,16 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "hipew.h"
+//#include <hip/hip_runtime.h>
+#include <hip/device_functions.h>
 
 int main()
 {
-  int ret = hipewInit(0);
-  printf("ret = %d\n", ret);
+  int s = hipInit(0);
+  printf("hipInit = %d\n", s);
 
-  if (ret == 0) {
-    int s = hipInit(0);
-    printf("hipInit = %d\n", s);
-
-    if (s != 0) {
-      return -1;
-    }
+  if (s != 0) {
+    return -1;
   }
 
   int ver;

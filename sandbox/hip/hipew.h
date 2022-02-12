@@ -50,7 +50,7 @@ typedef enum hipError_enum {
 
 typedef HIPresult HIPAPI thipInit(unsigned int Flags);
 typedef HIPresult HIPAPI thipDriverGetVersion(int* driverVersion);
-typedef HIPresult HIPAPI thipDeviceGetCount(int* count);
+typedef HIPresult HIPAPI thipGetDeviceCount(int* count);
 
 
 #if 0
@@ -3092,7 +3092,7 @@ typedef CUresult CUDAAPI tcuGLUnmapBufferObjectAsync(GLuint buffer, CUstream hSt
 //extern thipGetErrorName *cuGetErrorName;
 extern thipInit *hipInit;
 extern thipDriverGetVersion *hipDriverGetVersion;
-extern thipDeviceGetCount *hipDeviceGetCount;
+extern thipGetDeviceCount *hipGetDeviceCount;
 #if 0
 extern tcuDeviceGet *cuDeviceGet;
 extern tcuDeviceGetName *cuDeviceGetName;
