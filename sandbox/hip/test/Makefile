@@ -1,0 +1,2 @@
+all:
+	hipcc test.cc

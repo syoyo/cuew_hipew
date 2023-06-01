@@ -21,6 +21,9 @@
 #if __has_warning("-Wdocumentation-deprecated-sync")
   #pragma clang diagnostic ignored "-Wdocumentation-deprecated-sync"
 #endif
+#if __has_warning("-Wreserved-identifier")
+  #pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
 #endif
 
 #ifndef __CUEW_H__
