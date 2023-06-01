@@ -4,7 +4,7 @@ Currently tested on Ubuntu 20.04 x86-64 and Windows 10 64bit.
 
 ## Changes compared to original version
 
-* Support CUDA 11.5
+* Support CUDA 12.1
   * cuGetProcAddress is not supported.
 * Support CUDNN 8.0.3
 

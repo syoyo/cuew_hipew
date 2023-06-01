@@ -1,0 +1,11 @@
+copy cuda headers to somewhere(e.g. ./local_cuda/)
+
+Modify cuda.h and nvrtc.h
+
+cuda.h
+  - remove alinas qual in CUtensorMap and revert adding it generated cuew.h.t.
+  - manually assign enum value to CU_TARGET_COMPUTE_90A.
+  - CUlanchAttribute : add `pad` manually after cuew.h gen.
+  - Uncomment cuGetProcAddress_v2_ptsz after cuew.h gen.
+
+nvrtc.h : Delete _Deprecated_ API
