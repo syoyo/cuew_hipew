@@ -166,15 +166,12 @@ static int cuewNvrtcInit(void) {
   /* Library paths. */
 #ifdef _WIN32
   /* Expected in c:/windows/system or similar, no path needed. */
-  const char *nvrtc_paths[] = {"nvrtc64_115_0.dll",
-                               "nvrtc64_114_0.dll",
-                               "nvrtc64_110_0.dll",
-                               "nvrtc64_102_0.dll",
+  const char *nvrtc_paths[] = {"nvrtc64_121_0.dll",
+                               "nvrtc64_120_0.dll",
+                               "nvrtc64_118_0.dll",
+                               "nvrtc64_117_0.dll",
                                "nvrtc64_101_0.dll",
                                "nvrtc64_100_0.dll",
-                               "nvrtc64_91.dll",
-                               "nvrtc64_90.dll",
-                               "nvrtc64_80.dll",
                                NULL};
 #elif defined(__APPLE__)
   /* Default installation path. */
@@ -341,14 +338,8 @@ const char *cuewCompilerPath(void) {
   const char *executable = "nvcc.exe";
 #else
   const char *defaultpaths[] = {
-    "/Developer/NVIDIA/CUDA-5.0/bin",
-    "/usr/local/cuda-5.0/bin",
-    "/usr/local/cuda/bin",
-    "/Developer/NVIDIA/CUDA-6.0/bin",
-    "/usr/local/cuda-6.0/bin",
-    "/Developer/NVIDIA/CUDA-5.5/bin",
-    "/usr/local/cuda-5.5/bin",
-    "/usr/local/cuda-11.5/bin",
+    "/usr/local/cuda-11.8/bin",
+    "/usr/local/cuda-12.1/bin",
     NULL};
   const char *executable = "nvcc";
 #endif
