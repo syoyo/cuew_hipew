@@ -88,7 +88,6 @@ extern "C" {
 #endif
 #endif
 #include "cuew_cudart.h"
-#include "library_types.h"
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif

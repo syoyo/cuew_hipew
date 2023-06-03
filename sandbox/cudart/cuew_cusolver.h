@@ -105,7 +105,6 @@ typedef void (*cusolverDnLoggerCallback_t)(
 #endif
 #endif
 #include "cuew_cudart.h"
-#include "library_types.h"
 #include "cuComplex.h"
 #include "cuew_cusparse.h"
 #include "cuew_cublas.h"

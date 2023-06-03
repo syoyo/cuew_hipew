@@ -7,7 +7,7 @@
     "win32": [ "nvjpeg.dll" ],
     "linux": [ "libnvjpeg.so", "/usr/local/cuda/lib64/libnvjpeg.so"]
   },
-  "includes": [ "cuew_cudart.h", "library_types.h" ],
+  "includes": [ "cuew_cudart.h" ],
   "allowedSymbols": {
     "enum" : [ ],
     "struct" : [ ],

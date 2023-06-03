@@ -7,7 +7,7 @@
     "win32": [ "cusolver.dll" ],
     "linux": [ "libcusolver.so", "/usr/local/cuda/lib64/libcusolver.so"]
   },
-  "includes": [ "cuew_cudart.h", "library_types.h", "cuComplex.h", "cuew_cusparse.h", "cuew_cublas.h" ],
+  "includes": [ "cuew_cudart.h", "cuComplex.h", "cuew_cusparse.h", "cuew_cublas.h" ],
   "allowedSymbols": {
     "enum" : [ ],
     "struct" : [ ],
