@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2017 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2022 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -196,6 +196,11 @@
 
 #endif /* __CUDACC__ || __CUDA_LIBDEVICE__ || __GNUC__  || _WIN64 */
 
+#if defined(__CUDACC__) || !defined(__grid_constant__)
+#define __grid_constant__ \
+        __location__(grid_constant)
+#endif /* defined(__CUDACC__) || !defined(__grid_constant__) */
+        
 #if defined(__CUDACC__) || !defined(__host__)
 #define __host__ \
         __location__(host)
@@ -237,6 +242,18 @@
         __location__(cudart_builtin)
 #endif /* !defined(__CUDACC__) */
 
+#if defined(__CUDACC__) || !defined(__cluster_dims__)
+#if defined(_MSC_VER)        
+#define __cluster_dims__(...) \
+        __declspec(__cluster_dims__(__VA_ARGS__))
+        
+#else  /* !defined(_MSC_VER) */
+#define __cluster_dims__(...) \
+        __attribute__((cluster_dims(__VA_ARGS__)))
+#endif  /* defined(_MSC_VER) */
+#endif  /* defined(__CUDACC__) || !defined(__cluster_dims__) */
+
+#define __CUDA_ARCH_HAS_FEATURE__(_FEAT) __CUDA_ARCH_FEAT_##_FEAT
 
 #endif /* !__HOST_DEFINES_H__ */
 

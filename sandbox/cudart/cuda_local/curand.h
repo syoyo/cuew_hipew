@@ -56,8 +56,7 @@
  * @{
  */
 #ifndef __CUDACC_RTC__
-/* cuew mod */
-/*#include <cuda_runtime.h> */
+#include <cuda_runtime.h>
 #endif
 
 #ifndef CURANDAPI
@@ -73,9 +72,9 @@ extern "C" {
 #endif /* __cplusplus */
 
 #define CURAND_VER_MAJOR 10
-#define CURAND_VER_MINOR 2
-#define CURAND_VER_PATCH 7
-#define CURAND_VER_BUILD 107
+#define CURAND_VER_MINOR 3
+#define CURAND_VER_PATCH 2
+#define CURAND_VER_BUILD 106
 #define CURAND_VERSION (CURAND_VER_MAJOR * 1000 + \
                         CURAND_VER_MINOR *  100 + \
                         CURAND_VER_PATCH)

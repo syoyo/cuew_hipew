@@ -60,6 +60,7 @@
 #ifndef __CUDACC_RTC__
 #include <math.h>
 #endif // __CUDACC_RTC__
+#include <nv/target>
 
 #include "curand_mrg32k3a.h"
 #include "curand_mtgp32_kernel.h"
@@ -71,14 +72,15 @@ QUALIFIERS float2 _curand_box_muller(unsigned int x, unsigned int y)
     float2 result;
     float u = x * CURAND_2POW32_INV + (CURAND_2POW32_INV/2);
     float v = y * CURAND_2POW32_INV_2PI + (CURAND_2POW32_INV_2PI/2);
-#if __CUDA_ARCH__ > 0
-    float s = sqrtf(-2.0f * logf(u));
+    float s;
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
+    s = sqrtf(-2.0f * logf(u));
     __sincosf(v, &result.x, &result.y);
-#else
-    float s = sqrtf(-2.0f * logf(u));
+,
+    s = sqrtf(-2.0f * logf(u));
     result.x = sinf(v);
     result.y = cosf(v);
-#endif
+)
     result.x *= s;
     result.y *= s;
     return result;
@@ -90,14 +92,15 @@ QUALIFIERS float2 curand_box_muller_mrg(curandStateMRG32k3a_t * state)
     x = curand_uniform(state);
     y = curand_uniform(state) * CURAND_2PI;
     float2 result;
-#if __CUDA_ARCH__ > 0
-    float s = sqrtf(-2.0f * logf(x));
+    float s;
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
+    s = sqrtf(-2.0f * logf(x));
     __sincosf(y, &result.x, &result.y);
-#else
-    float s = sqrtf(-2.0f * logf(x));
+,
+    s = sqrtf(-2.0f * logf(x));
     result.x = sinf(y);
     result.y = cosf(y);
-#endif
+)
     result.x *= s;
     result.y *= s;
     return result;
@@ -116,12 +119,12 @@ _curand_box_muller_double(unsigned int x0, unsigned int x1,
     double v = zy * (CURAND_2POW53_INV_DOUBLE*2.0) + CURAND_2POW53_INV_DOUBLE;
     double s = sqrt(-2.0 * log(u));
 
-#if __CUDA_ARCH__ > 0
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     sincospi(v, &result.x, &result.y);
-#else
+,
     result.x = sin(v*CURAND_PI_DOUBLE);
     result.y = cos(v*CURAND_PI_DOUBLE);
-#endif
+)
     result.x *= s;
     result.y *= s;
 
@@ -137,12 +140,12 @@ curand_box_muller_mrg_double(curandStateMRG32k3a_t * state)
     y = curand_uniform_double(state) * 2.0;
 
     double s = sqrt(-2.0 * log(x));
-#if __CUDA_ARCH__ > 0
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     sincospi(y, &result.x, &result.y);
-#else
+,
     result.x = sin(y*CURAND_PI_DOUBLE);
     result.y = cos(y*CURAND_PI_DOUBLE);
-#endif
+)
     result.x *= s;
     result.y *= s;
     return result;

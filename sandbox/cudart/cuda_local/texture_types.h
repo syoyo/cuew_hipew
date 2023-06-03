@@ -50,11 +50,6 @@
 #if !defined(__TEXTURE_TYPES_H__)
 #define __TEXTURE_TYPES_H__
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -113,58 +108,6 @@ enum __device_builtin__ cudaTextureReadMode
 };
 
 /**
- * CUDA texture reference
- */
-struct __device_builtin__ textureReference
-{
-    /**
-     * Indicates whether texture reads are normalized or not
-     */
-    int                          normalized;
-    /**
-     * Texture filter mode
-     */
-    enum cudaTextureFilterMode   filterMode;
-    /**
-     * Texture address mode for up to 3 dimensions
-     */
-    enum cudaTextureAddressMode  addressMode[3];
-    /**
-     * Channel descriptor for the texture reference
-     */
-    struct cudaChannelFormatDesc channelDesc;
-    /**
-     * Perform sRGB->linear conversion during texture read
-     */
-    int                          sRGB;
-    /**
-     * Limit to the anisotropy ratio
-     */
-    unsigned int                 maxAnisotropy;
-    /**
-     * Mipmap filter mode
-     */
-    enum cudaTextureFilterMode   mipmapFilterMode;
-    /**
-     * Offset applied to the supplied mipmap level
-     */
-    float                        mipmapLevelBias;
-    /**
-     * Lower end of the mipmap level range to clamp access to
-     */
-    float                        minMipmapLevelClamp;
-    /**
-     * Upper end of the mipmap level range to clamp access to
-     */
-    float                        maxMipmapLevelClamp;
-    /**
-     * Disable any trilinear filtering optimizations.
-     */
-    int                          disableTrilinearOptimization;
-    int                          __cudaReserved[14];
-};
-
-/**
  * CUDA texture descriptor
  */
 struct __device_builtin__ cudaTextureDesc
@@ -217,6 +160,10 @@ struct __device_builtin__ cudaTextureDesc
      * Disable any trilinear filtering optimizations.
      */
     int                         disableTrilinearOptimization;
+    /**
+     * Enable seamless cube map filtering.
+     */
+    int                         seamlessCubemap;
 };
 
 /**
@@ -226,9 +173,5 @@ typedef __device_builtin__ unsigned long long cudaTextureObject_t;
 
 /** @} */
 /** @} */ /* END CUDART_TYPES */
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 
 #endif /* !__TEXTURE_TYPES_H__ */

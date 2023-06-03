@@ -1,11 +1,15 @@
-Dump ast to JSON using clang.
-Parse JSON and emit stub file in python.
+Dump CUDA C/C++ header AST to JSON using clang.
+Parse JSON and emit stub loader file in python.
 
 ## Requirements
 
 * Python 3.8+
 
-## Dump ast
+## CUDA version
+
+- 12.1
+
+## Dump ast of CUDA header file.
 
 Run `generate_json.sh`.
 
@@ -28,19 +32,19 @@ Some of important variables.
 
 ## TODO
 
-* [x] CUDA runtime API
+* [x] cudart CUDA runtime API
 * [ ] cuBlas API
-  * [ ] cuBLAS
+  * [x] cuBLAS
   * [ ] cuBLASXt
   * [ ] cuBLASLt
   * [ ] NVBLAS
 * [ ] cuSOLVER API
-  * [ ] cuSOLVER
+  * [x] cuSOLVER
   * [ ] cuSolverMg
 * [ ] cuSPARSE API
   * [ ] cuSPARSE(W.I.P.)
   * [ ] cuSPARSELt
-* [ ] cuRAND API
+* [x] cuRAND API
 * [ ] cuFFT API
   * [x] cuFFT
   * [ ] cuFFT Xt
@@ -48,7 +52,6 @@ Some of important variables.
 * [ ] nvJPEG API(W.I.P)
 * [ ] NPP API
 * [ ] nvenc API
-
 
 
 EoL.

@@ -61,6 +61,16 @@
 #define QUALIFIERS static __forceinline__ __device__
 #endif
 
+/* To prevent unused parameter warnings */
+#if !defined(GCC_UNUSED_PARAMETER)
+#if defined(__GNUC__)
+#define GCC_UNUSED_PARAMETER __attribute__((unused))
+#else
+#define GCC_UNUSED_PARAMETER
+#endif /* defined(__GNUC__) */
+#endif /* !defined(GCC_UNUSED_PARAMETER) */
+
+#include <nv/target>
 
 #ifdef __CUDACC_RTC__
 #define CURAND_DETAIL_USE_CUDA_STL
@@ -594,24 +604,24 @@ QUALIFIERS void _skipahead_scratch(unsigned long long x, T *state, unsigned int 
     int matrix_num = 0;
     while(p && (matrix_num < PRECALC_NUM_MATRICES - 1)) {
         for(unsigned int t = 0; t < (p & PRECALC_BLOCK_MASK); t++) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
             __curand_matvec(vector, precalc_xorwow_offset_matrix[matrix_num], result, n);
-#else
+,
             __curand_matvec(vector, precalc_xorwow_offset_matrix_host[matrix_num], result, n);
-#endif
+)
             __curand_veccopy(vector, result, n);
         }
         p >>= PRECALC_BLOCK_SIZE;
         matrix_num++;
     }
     if(p) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
         __curand_matcopy(matrix, precalc_xorwow_offset_matrix[PRECALC_NUM_MATRICES - 1], n);
         __curand_matcopy(matrixA, precalc_xorwow_offset_matrix[PRECALC_NUM_MATRICES - 1], n);
-#else
+,
         __curand_matcopy(matrix, precalc_xorwow_offset_matrix_host[PRECALC_NUM_MATRICES - 1], n);
         __curand_matcopy(matrixA, precalc_xorwow_offset_matrix_host[PRECALC_NUM_MATRICES - 1], n);
-#endif
+)
     }
     while(p) {
         for(unsigned int t = 0; t < (p & SKIPAHEAD_MASK); t++) {
@@ -650,24 +660,24 @@ QUALIFIERS void _skipahead_sequence_scratch(unsigned long long x, T *state, unsi
     int matrix_num = 0;
     while(p && matrix_num < PRECALC_NUM_MATRICES - 1) {
         for(unsigned int t = 0; t < (p & PRECALC_BLOCK_MASK); t++) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
             __curand_matvec(vector, precalc_xorwow_matrix[matrix_num], result, n);
-#else
+,
             __curand_matvec(vector, precalc_xorwow_matrix_host[matrix_num], result, n);
-#endif
+)
             __curand_veccopy(vector, result, n);
         }
         p >>= PRECALC_BLOCK_SIZE;
         matrix_num++;
     }
     if(p) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
         __curand_matcopy(matrix, precalc_xorwow_matrix[PRECALC_NUM_MATRICES - 1], n);
         __curand_matcopy(matrixA, precalc_xorwow_matrix[PRECALC_NUM_MATRICES - 1], n);
-#else
+,
         __curand_matcopy(matrix, precalc_xorwow_matrix_host[PRECALC_NUM_MATRICES - 1], n);
         __curand_matcopy(matrixA, precalc_xorwow_matrix_host[PRECALC_NUM_MATRICES - 1], n);
-#endif
+)
     }
     while(p) {
         for(unsigned int t = 0; t < (p & SKIPAHEAD_MASK); t++) {
@@ -695,11 +705,11 @@ QUALIFIERS void _skipahead_inplace(const unsigned long long x, T *state)
     int matrix_num = 0;
     while(p) {
         for(unsigned int t = 0; t < (p & PRECALC_BLOCK_MASK); t++) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
             __curand_matvec_inplace<N>(state->v, precalc_xorwow_offset_matrix[matrix_num]);
-#else
+,
             __curand_matvec_inplace<N>(state->v, precalc_xorwow_offset_matrix_host[matrix_num]);
-#endif
+)
         }
         p >>= PRECALC_BLOCK_SIZE;
         matrix_num++;
@@ -713,11 +723,11 @@ QUALIFIERS void _skipahead_sequence_inplace(unsigned long long x, T *state)
     int matrix_num = 0;
     while(x) {
         for(unsigned int t = 0; t < (x & PRECALC_BLOCK_MASK); t++) {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
             __curand_matvec_inplace<N>(state->v, precalc_xorwow_matrix[matrix_num]);
-#else
+,
             __curand_matvec_inplace<N>(state->v, precalc_xorwow_matrix_host[matrix_num]);
-#endif
+)
         }
         x >>= PRECALC_BLOCK_SIZE;
         matrix_num++;
@@ -1030,24 +1040,27 @@ QUALIFIERS void curand_init(unsigned long long seed,
 /* MRG32k3a RNG */
 
 /* Base generator for MRG32k3a                                              */
-#if __CUDA_ARCH__ > 600
-QUALIFIERS unsigned long long __curand_umad(unsigned int a, unsigned int b, unsigned long long c)
+QUALIFIERS unsigned long long __curand_umad(GCC_UNUSED_PARAMETER unsigned int a, GCC_UNUSED_PARAMETER unsigned int b, GCC_UNUSED_PARAMETER unsigned long long c)
 {
-    unsigned long long r;
+    unsigned long long r = 0;
+NV_IF_TARGET(NV_PROVIDES_SM_61,
     asm("mad.wide.u32 %0, %1, %2, %3;"
         : "=l"(r) : "r"(a), "r"(b), "l"(c));
+)
     return r;
 }
-QUALIFIERS unsigned long long __curand_umul(unsigned int a, unsigned int b)
+QUALIFIERS unsigned long long __curand_umul(GCC_UNUSED_PARAMETER unsigned int a, GCC_UNUSED_PARAMETER unsigned int b)
 {
-    unsigned long long r;
+    unsigned long long r = 0;
+NV_IF_TARGET(NV_PROVIDES_SM_61,
     asm("mul.wide.u32 %0, %1, %2;"
         : "=l"(r) : "r"(a), "r"(b));
+)
     return r;
 }
-
 QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
 {
+NV_IF_TARGET(NV_PROVIDES_SM_61,
     const unsigned int m1  = 4294967087u;
     const unsigned int m2  = 4294944443u;
     const unsigned int m1c = 209u;
@@ -1057,7 +1070,8 @@ QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
     const unsigned int a21  = 527612u;
     const unsigned int a23n = 1370589u;
 
-    unsigned long long p1, p2;
+    unsigned long long p1;
+    unsigned long long p2;
     const unsigned long long p3 = __curand_umul(a13n, m1 - state->s1[0]);
     p1 = __curand_umad(a12, state->s1[1], p3);
 
@@ -1081,11 +1095,9 @@ QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
     const unsigned int p5 = (unsigned int)p1 - (unsigned int)p2;
     if(p1 <= p2) return p5 + m1;
     return p5;
-}
-#elif __CUDA_ARCH__ > 0
+)
+NV_IF_TARGET(NV_IS_DEVICE,
 /*  nj's implementation */
-QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
-{
     const double m1 = 4294967087.;
     const double m2 = 4294944443.;
     const double a12  = 1403580.;
@@ -1098,7 +1110,9 @@ QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
     const double rh2 =  2.3283188252407387e-010;  /* (1.0 / m2)__hi */
     const double rl2 =  2.4081018096503646e-026;  /* (1.0 / m2)__lo */
 
-    double q, p1, p2;
+    double q;
+    double p1;
+    double p2;
     p1 = a12 * state->s1[1] - a13n * state->s1[0];
     q = trunc (fma (p1, rh1, p1 * rl1));
     p1 -= q * m1;
@@ -1111,12 +1125,11 @@ QUALIFIERS double curand_MRG32k3a (curandStateMRG32k3a_t *state)
     state->s2[0] = state->s2[1];   state->s2[1] = state->s2[2];   state->s2[2] = (unsigned int)p2;
     if (p1 <= p2) return (p1 - p2 + m1);
     else return (p1 - p2);
-}
+)
 /* end nj's implementation */
-#else
-QUALIFIERS double curand_MRG32k3a(curandStateMRG32k3a_t *state)
-{
-    double p1,p2,r;
+    double p1;
+    double p2;
+    double r;
     p1 = (MRG32K3A_A12 * state->s1[1]) - (MRG32K3A_A13N * state->s1[0]);
     p1 = curand_MRGmod(p1, MRG32K3A_MOD1);
     if (p1 < 0.0) p1 += MRG32K3A_MOD1;
@@ -1133,7 +1146,6 @@ QUALIFIERS double curand_MRG32k3a(curandStateMRG32k3a_t *state)
     if (r <= 0) r += MRG32K3A_MOD1;
     return r;
 }
-#endif
 
 
 /**
@@ -1169,17 +1181,17 @@ QUALIFIERS unsigned int curand(curandStateMRG32k3a_t *state)
 QUALIFIERS void skipahead(unsigned long long n, curandStateMRG32k3a_t *state)
 {
     unsigned int t[3][3];
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     curand_MRGmatPow3x3( mrg32k3aM1, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3(mrg32k3aM2, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#else
+,
     curand_MRGmatPow3x3( mrg32k3aM1Host, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3(mrg32k3aM2Host, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#endif
+)
 }
 
 /**
@@ -1199,17 +1211,17 @@ QUALIFIERS void skipahead(unsigned long long n, curandStateMRG32k3a_t *state)
 QUALIFIERS void skipahead_subsequence(unsigned long long n, curandStateMRG32k3a_t *state)
 {
     unsigned int t[3][3];
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     curand_MRGmatPow3x3( mrg32k3aM1SubSeq, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3( mrg32k3aM2SubSeq, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#else
+,
     curand_MRGmatPow3x3( mrg32k3aM1SubSeqHost, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3( mrg32k3aM2SubSeqHost, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#endif
+)
 }
 
 /**
@@ -1228,17 +1240,17 @@ QUALIFIERS void skipahead_subsequence(unsigned long long n, curandStateMRG32k3a_
 QUALIFIERS void skipahead_sequence(unsigned long long n, curandStateMRG32k3a_t *state)
 {
     unsigned int t[3][3];
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     curand_MRGmatPow3x3( mrg32k3aM1Seq, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3(  mrg32k3aM2Seq, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#else
+,
     curand_MRGmatPow3x3( mrg32k3aM1SeqHost, t, MRG32K3A_MOD1, n);
     curand_MRGmatVecMul3x3( t, state->s1, MRG32K3A_MOD1);
     curand_MRGmatPow3x3(  mrg32k3aM2SeqHost, t, MRG32K3A_MOD2, n);
     curand_MRGmatVecMul3x3( t, state->s2, MRG32K3A_MOD2);
-#endif
+)
 }
 
 
@@ -1400,12 +1412,12 @@ QUALIFIERS void curand_init(curandDirectionVectors32_t direction_vectors,
 
 QUALIFIERS int __curand_find_trailing_zero(unsigned int x)
 {
-#if __CUDA_ARCH__ > 0
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     int y = __ffs(~x);
     if(y)
         return y - 1;
     return 31;
-#else
+,
     int i = 1;
     while(x & 1) {
         i++;
@@ -1413,17 +1425,17 @@ QUALIFIERS int __curand_find_trailing_zero(unsigned int x)
     }
     i = i - 1;
     return i == 32 ? 31 : i;
-#endif
+)
 }
 
 QUALIFIERS int __curand_find_trailing_zero(unsigned long long x)
 {
-#if __CUDA_ARCH__ > 0
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     int y = __ffsll(~x);
     if(y)
         return y - 1;
     return 63;
-#else
+,
     int i = 1;
     while(x & 1) {
         i++;
@@ -1431,7 +1443,7 @@ QUALIFIERS int __curand_find_trailing_zero(unsigned long long x)
     }
     i = i - 1;
     return i == 64 ? 63 : i;
-#endif
+)
 }
 
 /**

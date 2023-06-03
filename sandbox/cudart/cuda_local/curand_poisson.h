@@ -61,6 +61,8 @@
 #include <math.h>
 #endif // __CUDACC_RTC__
 
+#include <nv/target>
+
 #include "curand_mrg32k3a.h"
 #include "curand_mtgp32_kernel.h"
 #include "curand_philox4x32_x.h"
@@ -71,43 +73,43 @@
 
 QUALIFIERS float __cr_rsqrt(float a)
 {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     asm ("rsqrt.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
-#else
+,
     a = 1.0f / sqrtf (a);
-#endif
+)
     return a;
 }
 
 QUALIFIERS float __cr_exp (float a)
 {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     a = a * 1.4426950408889634074;
     asm ("ex2.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
-#else
+,
     a = expf (a);
-#endif
+)
     return a;
 }
 
 QUALIFIERS float __cr_log (float a)
 {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     asm ("lg2.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
     a = a * 0.69314718055994530942;
-#else
+,
     a = logf (a);
-#endif
+)
     return a;
 }
 
 QUALIFIERS float __cr_rcp (float a)
 {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
     asm ("rcp.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
-#else
+,
     a = 1.0f / a;
-#endif
+)
     return a;
 }
 
@@ -222,9 +224,9 @@ QUALIFIERS double __cr_lgamma_integer(int a)
         t = t + s;
         return t;
     } else {
-#ifdef __CUDA_ARCH__
+NV_IF_ELSE_TARGET(NV_IS_DEVICE,
         return __cr_lgamma_table [(int) fa-1];
-#else
+,
         switch(a) {
             case 1: return 0.000000000000000000e-1;
             case 2: return 0.000000000000000000e-1;
@@ -236,7 +238,7 @@ QUALIFIERS double __cr_lgamma_integer(int a)
             case 8: return 8.525161361065414300e0;
             default: return 1.060460290274525023e1;
         }
-#endif
+)
     }
 }
 
@@ -292,14 +294,15 @@ QUALIFIERS unsigned int _curand_M2_double(T x, curandDistributionM2Shift_t distr
     double u = _curand_uniform_double(x);
     int j = (int) floor(distributionM2->length*u);
 
-
-#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 350)
-    double histogramVj = __ldg( &(distributionM2->histogram->V[j]));
-    unsigned int histogramKj = __ldg( &(distributionM2->histogram->K[j]));
-#else
-    double histogramVj = distributionM2->histogram->V[j];
-    unsigned int histogramKj = distributionM2->histogram->K[j];
-#endif
+    double histogramVj;
+    unsigned int histogramKj;
+NV_IF_ELSE_TARGET(NV_PROVIDES_SM_35,
+    histogramVj = __ldg( &(distributionM2->histogram->V[j]));
+    histogramKj = __ldg( &(distributionM2->histogram->K[j]));
+,
+    histogramVj = distributionM2->histogram->V[j];
+    histogramKj = distributionM2->histogram->K[j];
+)
     //if (u < distributionM2->histogram->V[j]) return distributionM2->shift + j;
     //return distributionM2->shift + distributionM2->histogram->K[j];
     if (u < histogramVj) return distributionM2->shift + j;
@@ -326,27 +329,35 @@ QUALIFIERS uint4 _curand_M2_double4(T x, curandDistributionM2Shift_t distributio
     j.w = (int) floor(distributionM2->length*u.w);
 //    int result;
 
-#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 350)
-    double histogramVjx =  __ldg( &(distributionM2->histogram->V[j.x]));
-    double histogramVjy =  __ldg( &(distributionM2->histogram->V[j.y]));
-    double histogramVjz =  __ldg( &(distributionM2->histogram->V[j.z]));
-    double histogramVjw =  __ldg( &(distributionM2->histogram->V[j.w]));
+    double histogramVjx;
+    double histogramVjy;
+    double histogramVjz;
+    double histogramVjw;
+    unsigned int histogramKjx;
+    unsigned int histogramKjy;
+    unsigned int histogramKjz;
+    unsigned int histogramKjw;
+NV_IF_ELSE_TARGET(NV_PROVIDES_SM_35,
+    histogramVjx =  __ldg( &(distributionM2->histogram->V[j.x]));
+    histogramVjy =  __ldg( &(distributionM2->histogram->V[j.y]));
+    histogramVjz =  __ldg( &(distributionM2->histogram->V[j.z]));
+    histogramVjw =  __ldg( &(distributionM2->histogram->V[j.w]));
 
-    unsigned int histogramKjx = __ldg( &(distributionM2->histogram->K[j.x]));
-    unsigned int histogramKjy = __ldg( &(distributionM2->histogram->K[j.y]));
-    unsigned int histogramKjz = __ldg( &(distributionM2->histogram->K[j.z]));
-    unsigned int histogramKjw = __ldg( &(distributionM2->histogram->K[j.w]));
-#else
-    double histogramVjx =  distributionM2->histogram->V[j.x];
-    double histogramVjy =  distributionM2->histogram->V[j.y];
-    double histogramVjz =  distributionM2->histogram->V[j.z];
-    double histogramVjw =  distributionM2->histogram->V[j.w];
+    histogramKjx = __ldg( &(distributionM2->histogram->K[j.x]));
+    histogramKjy = __ldg( &(distributionM2->histogram->K[j.y]));
+    histogramKjz = __ldg( &(distributionM2->histogram->K[j.z]));
+    histogramKjw = __ldg( &(distributionM2->histogram->K[j.w]));
+,
+    histogramVjx =  distributionM2->histogram->V[j.x];
+    histogramVjy =  distributionM2->histogram->V[j.y];
+    histogramVjz =  distributionM2->histogram->V[j.z];
+    histogramVjw =  distributionM2->histogram->V[j.w];
 
-    unsigned int histogramKjx = distributionM2->histogram->K[j.x];
-    unsigned int histogramKjy = distributionM2->histogram->K[j.y];
-    unsigned int histogramKjz = distributionM2->histogram->K[j.z];
-    unsigned int histogramKjw = distributionM2->histogram->K[j.w];
-#endif
+    histogramKjx = distributionM2->histogram->K[j.x];
+    histogramKjy = distributionM2->histogram->K[j.y];
+    histogramKjz = distributionM2->histogram->K[j.z];
+    histogramKjw = distributionM2->histogram->K[j.w];
+)
 
     if (u.x < histogramVjx){ result.x = distributionM2->shift + j.x; flag.x = 0; }
     if (u.y < histogramVjy){ result.y = distributionM2->shift + j.y; flag.y = 0; }
@@ -383,11 +394,12 @@ QUALIFIERS unsigned int _curand_binary_search_double(T x, curandDistributionShif
     int max = distribution->length-1;
     do{
         int mid = (max + min)/2;
-#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 350)
-        double probability_mid = __ldg( &(distribution->probability[mid]));
-#else
-        double probability_mid = distribution->probability[mid];
-#endif
+        double probability_mid;
+NV_IF_ELSE_TARGET(NV_PROVIDES_SM_35,
+        probability_mid = __ldg( &(distribution->probability[mid]));
+,
+        probability_mid = distribution->probability[mid];
+)
         if (u <= probability_mid){
             max = mid;
         }else{

@@ -102,7 +102,7 @@
 #define QUALIFIERS static inline __device__
 #endif
 
-#include <cuda.h>
+#include <cuda_runtime.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>

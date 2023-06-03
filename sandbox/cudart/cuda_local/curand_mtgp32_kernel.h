@@ -103,11 +103,12 @@
 #endif
 
 #ifndef __CUDACC_RTC__
-#include <cuda.h>
+#include <cuda_runtime.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
 #endif // ifndef __CUDACC_RTC__
+#include <nv/target>
 #include "curand.h"
 #include "curand_mtgp32.h"
 
@@ -212,16 +213,16 @@ QUALIFIERS unsigned int curand(curandStateMtgp32_t *state)
     o = temper(state->k, r,
            state->s[(t + state->offset + pos -1) & MTGP32_STATE_MASK],
            state->pIdx);
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     if (t == 0)
     {
         state->offset = (state->offset + d) & MTGP32_STATE_MASK;
     }
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     return o;
 
 }
@@ -260,16 +261,16 @@ QUALIFIERS unsigned int curand_mtgp32_specific(curandStateMtgp32_t *state, unsig
     o = temper(state->k, r,
            state->s[(t + state->offset + pos -1) & MTGP32_STATE_MASK],
            state->pIdx);
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     if (index == 0)
     {
         state->offset = (state->offset + n) & MTGP32_STATE_MASK;
     }
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     return o;
 }
 /**
@@ -310,16 +311,16 @@ QUALIFIERS float curand_mtgp32_single(curandStateMtgp32_t *state)
     o_u = temper_single(state->k, r,
                         state->s[(t + state->offset + pos -1) & MTGP32_STATE_MASK],
                         state->pIdx);
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     if (threadIdx.x == 0)
     {
         state->offset = (state->offset + d) & MTGP32_STATE_MASK;
     }
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     memcpy(&o_f, &o_u, sizeof(o_u));
     return o_f;
 }
@@ -366,16 +367,16 @@ QUALIFIERS float curand_mtgp32_single_specific(curandStateMtgp32_t *state, unsig
     o_u = temper_single(state->k, r,
                         state->s[(t + state->offset + pos -1) & MTGP32_STATE_MASK],
                         state->pIdx);
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     if (threadIdx.x == 0)
     {
         state->offset = (state->offset + n) & MTGP32_STATE_MASK;
     }
-#if __CUDA_ARCH__ != 0
+NV_IF_TARGET(NV_IS_DEVICE,
     __syncthreads();
-#endif
+)
     memcpy(&o_f, &o_u, sizeof(o_u));
     return o_f;
 }
