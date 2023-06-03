@@ -18,9 +18,19 @@ Currently tested on Ubuntu 20.04 x86-64 and Windows 10 64bit.
 
 ## Experimental
 
-* cudart(CUDA runtime API), cuBLAS, ...
-  * `sandbox/cudart/`
-* ROCm HIP
+See `experimental/cudart`.
+
+* [x] cudart(CUDA runtime API)
+* [x] cuBLAS
+* [x] cuFFT
+* [ ] cuRAND
+  * [x] Host API
+  * [ ] Device API
+* [x] cuSparse
+* [x] cuSolver
+* [ ] nvJPEG
+
+* [ ] ROCm HIP
   * `sandbox/hip/`
 
 ## Buld tests

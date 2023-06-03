@@ -15,8 +15,8 @@
 } while (0)
 
 #define CURAND_CHECK(expr) do { \
-  curandResult err = (expr); \
-  if (err != CUFFT_SUCCESS) { \
+  curandStatus_t err = (expr); \
+  if (err != CURAND_STATUS_SUCCESS) { \
     printf("curand err at %s:%s:%d. code = %d\n", __FILE__, __func__, __LINE__, err); \
   } \
 } while (0)
@@ -41,8 +41,10 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  curandState *devstate;
   curandGenerator_t gen;
+
+  CURAND_CHECK(curandCreateGenerator(&gen,
+                CURAND_RNG_PSEUDO_DEFAULT));
 
   printf("curand OK!\n");
 
