@@ -100,7 +100,7 @@ tcurandGetScrambleConstants32 *curandGetScrambleConstants32;
 tcurandGetDirectionVectors64 *curandGetDirectionVectors64;
 tcurandGetScrambleConstants64 *curandGetScrambleConstants64;
 
-int cuewInitCURAND() {
+int cuewInitCURAND(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "curand.dll",
@@ -128,6 +128,11 @@ NULL};
     return result;
   }
   curand_lib = dynamic_library_open_find(paths);
+  if (curand_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      curand_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (curand_lib == NULL) { result = -1; return result; }
 
   CURAND_LIBRARY_FIND(curandCreateGenerator)

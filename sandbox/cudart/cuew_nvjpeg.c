@@ -75,11 +75,13 @@ tnvjpegGetCudartProperty *nvjpegGetCudartProperty;
 tnvjpegCreate *nvjpegCreate;
 tnvjpegCreateSimple *nvjpegCreateSimple;
 tnvjpegCreateEx *nvjpegCreateEx;
+tnvjpegCreateExV2 *nvjpegCreateExV2;
 tnvjpegDestroy *nvjpegDestroy;
 tnvjpegSetDeviceMemoryPadding *nvjpegSetDeviceMemoryPadding;
 tnvjpegGetDeviceMemoryPadding *nvjpegGetDeviceMemoryPadding;
 tnvjpegSetPinnedMemoryPadding *nvjpegSetPinnedMemoryPadding;
 tnvjpegGetPinnedMemoryPadding *nvjpegGetPinnedMemoryPadding;
+tnvjpegGetHardwareDecoderInfo *nvjpegGetHardwareDecoderInfo;
 tnvjpegJpegStateCreate *nvjpegJpegStateCreate;
 tnvjpegJpegStateDestroy *nvjpegJpegStateDestroy;
 tnvjpegGetImageInfo *nvjpegGetImageInfo;
@@ -87,6 +89,7 @@ tnvjpegDecode *nvjpegDecode;
 tnvjpegDecodeBatchedInitialize *nvjpegDecodeBatchedInitialize;
 tnvjpegDecodeBatched *nvjpegDecodeBatched;
 tnvjpegDecodeBatchedPreAllocate *nvjpegDecodeBatchedPreAllocate;
+tnvjpegDecodeBatchedParseJpegTables *nvjpegDecodeBatchedParseJpegTables;
 tnvjpegEncoderStateCreate *nvjpegEncoderStateCreate;
 tnvjpegEncoderStateDestroy *nvjpegEncoderStateDestroy;
 tnvjpegEncoderParamsCreate *nvjpegEncoderParamsCreate;
@@ -101,8 +104,10 @@ tnvjpegEncodeImage *nvjpegEncodeImage;
 tnvjpegEncodeRetrieveBitstreamDevice *nvjpegEncodeRetrieveBitstreamDevice;
 tnvjpegEncodeRetrieveBitstream *nvjpegEncodeRetrieveBitstream;
 tnvjpegBufferPinnedCreate *nvjpegBufferPinnedCreate;
+tnvjpegBufferPinnedCreateV2 *nvjpegBufferPinnedCreateV2;
 tnvjpegBufferPinnedDestroy *nvjpegBufferPinnedDestroy;
 tnvjpegBufferDeviceCreate *nvjpegBufferDeviceCreate;
+tnvjpegBufferDeviceCreateV2 *nvjpegBufferDeviceCreateV2;
 tnvjpegBufferDeviceDestroy *nvjpegBufferDeviceDestroy;
 tnvjpegBufferPinnedRetrieve *nvjpegBufferPinnedRetrieve;
 tnvjpegBufferDeviceRetrieve *nvjpegBufferDeviceRetrieve;
@@ -112,10 +117,13 @@ tnvjpegJpegStreamCreate *nvjpegJpegStreamCreate;
 tnvjpegJpegStreamDestroy *nvjpegJpegStreamDestroy;
 tnvjpegJpegStreamParse *nvjpegJpegStreamParse;
 tnvjpegJpegStreamParseHeader *nvjpegJpegStreamParseHeader;
+tnvjpegJpegStreamParseTables *nvjpegJpegStreamParseTables;
 tnvjpegJpegStreamGetJpegEncoding *nvjpegJpegStreamGetJpegEncoding;
 tnvjpegJpegStreamGetFrameDimensions *nvjpegJpegStreamGetFrameDimensions;
 tnvjpegJpegStreamGetComponentsNum *nvjpegJpegStreamGetComponentsNum;
 tnvjpegJpegStreamGetComponentDimensions *nvjpegJpegStreamGetComponentDimensions;
+tnvjpegJpegStreamGetExifOrientation *nvjpegJpegStreamGetExifOrientation;
+tnvjpegJpegStreamGetSamplePrecision *nvjpegJpegStreamGetSamplePrecision;
 tnvjpegJpegStreamGetChromaSubsampling *nvjpegJpegStreamGetChromaSubsampling;
 tnvjpegDecodeParamsCreate *nvjpegDecodeParamsCreate;
 tnvjpegDecodeParamsDestroy *nvjpegDecodeParamsDestroy;
@@ -123,6 +131,7 @@ tnvjpegDecodeParamsSetOutputFormat *nvjpegDecodeParamsSetOutputFormat;
 tnvjpegDecodeParamsSetROI *nvjpegDecodeParamsSetROI;
 tnvjpegDecodeParamsSetAllowCMYK *nvjpegDecodeParamsSetAllowCMYK;
 tnvjpegDecodeParamsSetScaleFactor *nvjpegDecodeParamsSetScaleFactor;
+tnvjpegDecodeParamsSetExifOrientation *nvjpegDecodeParamsSetExifOrientation;
 tnvjpegDecoderCreate *nvjpegDecoderCreate;
 tnvjpegDecoderDestroy *nvjpegDecoderDestroy;
 tnvjpegDecoderJpegSupported *nvjpegDecoderJpegSupported;
@@ -138,7 +147,7 @@ tnvjpegEncoderParamsCopyMetadata *nvjpegEncoderParamsCopyMetadata;
 tnvjpegEncoderParamsCopyQuantizationTables *nvjpegEncoderParamsCopyQuantizationTables;
 tnvjpegEncoderParamsCopyHuffmanTables *nvjpegEncoderParamsCopyHuffmanTables;
 
-int cuewInitNVJPEG() {
+int cuewInitNVJPEG(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "nvjpeg.dll",
@@ -166,6 +175,11 @@ NULL};
     return result;
   }
   nvjpeg_lib = dynamic_library_open_find(paths);
+  if (nvjpeg_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      nvjpeg_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (nvjpeg_lib == NULL) { result = -1; return result; }
 
   NVJPEG_LIBRARY_FIND(nvjpegGetProperty)
@@ -173,11 +187,13 @@ NULL};
   NVJPEG_LIBRARY_FIND(nvjpegCreate)
   NVJPEG_LIBRARY_FIND(nvjpegCreateSimple)
   NVJPEG_LIBRARY_FIND(nvjpegCreateEx)
+  NVJPEG_LIBRARY_FIND(nvjpegCreateExV2)
   NVJPEG_LIBRARY_FIND(nvjpegDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegSetDeviceMemoryPadding)
   NVJPEG_LIBRARY_FIND(nvjpegGetDeviceMemoryPadding)
   NVJPEG_LIBRARY_FIND(nvjpegSetPinnedMemoryPadding)
   NVJPEG_LIBRARY_FIND(nvjpegGetPinnedMemoryPadding)
+  NVJPEG_LIBRARY_FIND(nvjpegGetHardwareDecoderInfo)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStateCreate)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStateDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegGetImageInfo)
@@ -185,6 +201,7 @@ NULL};
   NVJPEG_LIBRARY_FIND(nvjpegDecodeBatchedInitialize)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeBatched)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeBatchedPreAllocate)
+  NVJPEG_LIBRARY_FIND(nvjpegDecodeBatchedParseJpegTables)
   NVJPEG_LIBRARY_FIND(nvjpegEncoderStateCreate)
   NVJPEG_LIBRARY_FIND(nvjpegEncoderStateDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegEncoderParamsCreate)
@@ -199,8 +216,10 @@ NULL};
   NVJPEG_LIBRARY_FIND(nvjpegEncodeRetrieveBitstreamDevice)
   NVJPEG_LIBRARY_FIND(nvjpegEncodeRetrieveBitstream)
   NVJPEG_LIBRARY_FIND(nvjpegBufferPinnedCreate)
+  NVJPEG_LIBRARY_FIND(nvjpegBufferPinnedCreateV2)
   NVJPEG_LIBRARY_FIND(nvjpegBufferPinnedDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegBufferDeviceCreate)
+  NVJPEG_LIBRARY_FIND(nvjpegBufferDeviceCreateV2)
   NVJPEG_LIBRARY_FIND(nvjpegBufferDeviceDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegBufferPinnedRetrieve)
   NVJPEG_LIBRARY_FIND(nvjpegBufferDeviceRetrieve)
@@ -210,10 +229,13 @@ NULL};
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamParse)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamParseHeader)
+  NVJPEG_LIBRARY_FIND(nvjpegJpegStreamParseTables)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetJpegEncoding)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetFrameDimensions)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetComponentsNum)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetComponentDimensions)
+  NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetExifOrientation)
+  NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetSamplePrecision)
   NVJPEG_LIBRARY_FIND(nvjpegJpegStreamGetChromaSubsampling)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsCreate)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsDestroy)
@@ -221,6 +243,7 @@ NULL};
   NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsSetROI)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsSetAllowCMYK)
   NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsSetScaleFactor)
+  NVJPEG_LIBRARY_FIND(nvjpegDecodeParamsSetExifOrientation)
   NVJPEG_LIBRARY_FIND(nvjpegDecoderCreate)
   NVJPEG_LIBRARY_FIND(nvjpegDecoderDestroy)
   NVJPEG_LIBRARY_FIND(nvjpegDecoderJpegSupported)

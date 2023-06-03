@@ -4,7 +4,7 @@
 
 
 /*
- * Copyright 1993-2018 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2022 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -91,6 +91,11 @@ typedef struct csrqrInfo *csrqrInfo_t;
 struct csrqrInfoHost;
 typedef struct csrqrInfoHost *csrqrInfoHost_t;
 
+typedef void (*cusolverDnLoggerCallback_t)(
+      int         logLevel,
+      const char *functionName,
+      const char *message);
+
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
@@ -100,13 +105,14 @@ typedef struct csrqrInfoHost *csrqrInfoHost_t;
 #endif
 #endif
 #include "cuew_cudart.h"
+#include "library_types.h"
 #include "cuComplex.h"
 #include "cuew_cusparse.h"
 #include "cuew_cublas.h"
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-typedef int cusolver_int_t; // id 0x1255d10 
+typedef int cusolver_int_t; // id 0x563c55c424a8 
 
 typedef enum 
 {
@@ -135,27 +141,27 @@ typedef enum
   CUSOLVER_STATUS_IRS_INFOS_NOT_DESTROYED = 26,
   CUSOLVER_STATUS_IRS_MATRIX_SINGULAR = 30,
   CUSOLVER_STATUS_INVALID_WORKSPACE = 31
-} cusolverStatus_t; // id 0x1255d68 
+} cusolverStatus_t; // id 0x563c55c42500 
 
 typedef enum 
 {
   CUSOLVER_EIG_TYPE_1 = 1,
   CUSOLVER_EIG_TYPE_2 = 2,
   CUSOLVER_EIG_TYPE_3 = 3
-} cusolverEigType_t; // id 0x126bac8 
+} cusolverEigType_t; // id 0x563c55c43498 
 
 typedef enum 
 {
   CUSOLVER_EIG_MODE_NOVECTOR = 0,
   CUSOLVER_EIG_MODE_VECTOR = 1
-} cusolverEigMode_t; // id 0x126bdf8 
+} cusolverEigMode_t; // id 0x563c55c437d8 
 
 typedef enum 
 {
   CUSOLVER_EIG_RANGE_ALL = 1001,
   CUSOLVER_EIG_RANGE_I = 1002,
   CUSOLVER_EIG_RANGE_V = 1003
-} cusolverEigRange_t; // id 0x126c098 
+} cusolverEigRange_t; // id 0x563c55c43a88 
 
 typedef enum 
 {
@@ -163,7 +169,7 @@ typedef enum
   CUSOLVER_MAX_NORM = 105,
   CUSOLVER_ONE_NORM = 106,
   CUSOLVER_FRO_NORM = 107
-} cusolverNorm_t; // id 0x126c3c8 
+} cusolverNorm_t; // id 0x563c55c43dc8 
 
 typedef enum 
 {
@@ -177,7 +183,7 @@ typedef enum
   CUSOLVER_PREC_DD = 1150,
   CUSOLVER_PREC_SS = 1151,
   CUSOLVER_PREC_SHT = 1152
-} cusolverIRSRefinement_t; // id 0x126c778 
+} cusolverIRSRefinement_t; // id 0x563c55c44198 
 
 typedef enum 
 {
@@ -197,26 +203,26 @@ typedef enum
   CUSOLVER_C_16BF = 1216,
   CUSOLVER_C_TF32 = 1217,
   CUSOLVER_C_AP = 1218
-} cusolverPrecType_t; // id 0x126e2b8 
+} cusolverPrecType_t; // id 0x563c55c46908 
 
 typedef enum 
 {
   CUSOLVER_ALG_0 = 0,
   CUSOLVER_ALG_1 = 1,
   CUSOLVER_ALG_2 = 2
-} cusolverAlgMode_t; // id 0x126ecc8 
+} cusolverAlgMode_t; // id 0x563c55c47398 
 
 typedef enum 
 {
   CUBLAS_STOREV_COLUMNWISE = 0,
   CUBLAS_STOREV_ROWWISE = 1
-} cusolverStorevMode_t; // id 0x126eff8 
+} cusolverStorevMode_t; // id 0x563c55c476d8 
 
 typedef enum 
 {
   CUBLAS_DIRECT_FORWARD = 0,
   CUBLAS_DIRECT_BACKWARD = 1
-} cusolverDirectMode_t; // id 0x126f298 
+} cusolverDirectMode_t; // id 0x563c55c47988 
 
 typedef cusolverStatus_t  CUDAAPI tcusolverGetProperty(libraryPropertyType, int *);
 extern tcusolverGetProperty *cusolverGetProperty;
@@ -226,13 +232,13 @@ typedef enum
 {
   CUSOLVERRF_RESET_VALUES_FAST_MODE_OFF = 0,
   CUSOLVERRF_RESET_VALUES_FAST_MODE_ON = 1
-} cusolverRfResetValuesFastMode_t; // id 0x126f990 
+} cusolverRfResetValuesFastMode_t; // id 0x563c55c48090 
 
 typedef enum 
 {
   CUSOLVERRF_MATRIX_FORMAT_CSR = 0,
   CUSOLVERRF_MATRIX_FORMAT_CSC = 1
-} cusolverRfMatrixFormat_t; // id 0x126fc28 
+} cusolverRfMatrixFormat_t; // id 0x563c55c48338 
 
 typedef enum 
 {
@@ -240,30 +246,30 @@ typedef enum
   CUSOLVERRF_UNIT_DIAGONAL_STORED_U = 1,
   CUSOLVERRF_UNIT_DIAGONAL_ASSUMED_L = 2,
   CUSOLVERRF_UNIT_DIAGONAL_ASSUMED_U = 3
-} cusolverRfUnitDiagonal_t; // id 0x126fec8 
+} cusolverRfUnitDiagonal_t; // id 0x563c55c49608 
 
 typedef enum 
 {
   CUSOLVERRF_FACTORIZATION_ALG0 = 0,
   CUSOLVERRF_FACTORIZATION_ALG1 = 1,
   CUSOLVERRF_FACTORIZATION_ALG2 = 2
-} cusolverRfFactorization_t; // id 0x12702c8 
+} cusolverRfFactorization_t; // id 0x563c55c499d8 
 
 typedef enum 
 {
   CUSOLVERRF_TRIANGULAR_SOLVE_ALG1 = 1,
   CUSOLVERRF_TRIANGULAR_SOLVE_ALG2 = 2,
   CUSOLVERRF_TRIANGULAR_SOLVE_ALG3 = 3
-} cusolverRfTriangularSolve_t; // id 0x12705f8 
+} cusolverRfTriangularSolve_t; // id 0x563c55c49d18 
 
 typedef enum 
 {
   CUSOLVERRF_NUMERIC_BOOST_NOT_USED = 0,
   CUSOLVERRF_NUMERIC_BOOST_USED = 1
-} cusolverRfNumericBoostReport_t; // id 0x1270928 
+} cusolverRfNumericBoostReport_t; // id 0x563c55c4a058 
 
 struct cusolverRfCommon;
-typedef struct cusolverRfCommon * cusolverRfHandle_t; // id 0x1270d20 
+typedef struct cusolverRfCommon * cusolverRfHandle_t; // id 0x563c55c4a460 
 
 typedef cusolverStatus_t  CUDAAPI tcusolverRfCreate(cusolverRfHandle_t *);
 extern tcusolverRfCreate *cusolverRfCreate;
@@ -318,7 +324,7 @@ extern tcusolverRfBatchSolve *cusolverRfBatchSolve;
 typedef cusolverStatus_t  CUDAAPI tcusolverRfBatchZeroPivot(cusolverRfHandle_t, int *);
 extern tcusolverRfBatchZeroPivot *cusolverRfBatchZeroPivot;
 struct cusolverSpContext;
-typedef struct cusolverSpContext * cusolverSpHandle_t; // id 0x143dc30 
+typedef struct cusolverSpContext * cusolverSpHandle_t; // id 0x563c55ec49b0 
 
 typedef cusolverStatus_t  CUDAAPI tcusolverSpCreate(cusolverSpHandle_t *);
 extern tcusolverSpCreate *cusolverSpCreate;
@@ -445,22 +451,22 @@ extern tcusolverSpCcsrqrsvBatched *cusolverSpCcsrqrsvBatched;
 typedef cusolverStatus_t  CUDAAPI tcusolverSpZcsrqrsvBatched(cusolverSpHandle_t, int, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, const cuDoubleComplex *, cuDoubleComplex *, int, csrqrInfo_t, void *);
 extern tcusolverSpZcsrqrsvBatched *cusolverSpZcsrqrsvBatched;
 struct cusolverDnContext;
-typedef struct cusolverDnContext * cusolverDnHandle_t; // id 0x1469eb0 
+typedef struct cusolverDnContext * cusolverDnHandle_t; // id 0x563c55ef6bc0 
 
 struct cusolverDnIRSParams;
-typedef struct cusolverDnIRSParams * cusolverDnIRSParams_t; // id 0x146a3c0 
+typedef struct cusolverDnIRSParams * cusolverDnIRSParams_t; // id 0x563c55ef7140 
 
 struct cusolverDnIRSInfos;
-typedef struct cusolverDnIRSInfos * cusolverDnIRSInfos_t; // id 0x146a570 
+typedef struct cusolverDnIRSInfos * cusolverDnIRSInfos_t; // id 0x563c55ef72f0 
 
 struct cusolverDnParams;
-typedef struct cusolverDnParams * cusolverDnParams_t; // id 0x146a720 
+typedef struct cusolverDnParams * cusolverDnParams_t; // id 0x563c55ef74a0 
 
 typedef enum 
 {
   CUSOLVERDN_GETRF = 0,
   CUSOLVERDN_POTRF = 1
-} cusolverDnFunction_t; // id 0x146a778 
+} cusolverDnFunction_t; // id 0x563c55ef74f8 
 
 typedef cusolverStatus_t  CUDAAPI tcusolverDnCreate(cusolverDnHandle_t *);
 extern tcusolverDnCreate *cusolverDnCreate;
@@ -1208,7 +1214,19 @@ typedef cusolverStatus_t  CUDAAPI tcusolverDnXgesvdr_bufferSize(cusolverDnHandle
 extern tcusolverDnXgesvdr_bufferSize *cusolverDnXgesvdr_bufferSize;
 typedef cusolverStatus_t  CUDAAPI tcusolverDnXgesvdr(cusolverDnHandle_t, cusolverDnParams_t, signed char, signed char, int64_t, int64_t, int64_t, int64_t, int64_t, cudaDataType, void *, int64_t, cudaDataType, void *, cudaDataType, void *, int64_t, cudaDataType, void *, int64_t, cudaDataType, void *, size_t, void *, size_t, int *);
 extern tcusolverDnXgesvdr *cusolverDnXgesvdr;
-extern int cuewInitCUSOLVER(void);
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerSetCallback(cusolverDnLoggerCallback_t);
+extern tcusolverDnLoggerSetCallback *cusolverDnLoggerSetCallback;
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerSetFile(FILE *);
+extern tcusolverDnLoggerSetFile *cusolverDnLoggerSetFile;
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerOpenFile(const char *);
+extern tcusolverDnLoggerOpenFile *cusolverDnLoggerOpenFile;
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerSetLevel(int);
+extern tcusolverDnLoggerSetLevel *cusolverDnLoggerSetLevel;
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerSetMask(int);
+extern tcusolverDnLoggerSetMask *cusolverDnLoggerSetMask;
+typedef cusolverStatus_t  CUDAAPI tcusolverDnLoggerForceDisable();
+extern tcusolverDnLoggerForceDisable *cusolverDnLoggerForceDisable;
+extern int cuewInitCUSOLVER(const char **extra_dll_search_paths);
 
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
 
 
 /*
- * Copyright 1993-2018 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2022 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -156,8 +156,24 @@ typedef enum
   NVJPEG_STATUS_EXECUTION_FAILED = 6,
   NVJPEG_STATUS_ARCH_MISMATCH = 7,
   NVJPEG_STATUS_INTERNAL_ERROR = 8,
-  NVJPEG_STATUS_IMPLEMENTATION_NOT_SUPPORTED = 9
-} nvjpegStatus_t; // id 0xe78fe0 
+  NVJPEG_STATUS_IMPLEMENTATION_NOT_SUPPORTED = 9,
+  NVJPEG_STATUS_INCOMPLETE_BITSTREAM = 10
+} nvjpegStatus_t; // id 0x55cd8428a7b8 
+
+enum nvjpegExifOrientation
+{
+  NVJPEG_ORIENTATION_UNKNOWN = 0,
+  NVJPEG_ORIENTATION_NORMAL = 1,
+  NVJPEG_ORIENTATION_FLIP_HORIZONTAL = 2,
+  NVJPEG_ORIENTATION_ROTATE_180 = 3,
+  NVJPEG_ORIENTATION_FLIP_VERTICAL = 4,
+  NVJPEG_ORIENTATION_TRANSPOSE = 5,
+  NVJPEG_ORIENTATION_ROTATE_90 = 6,
+  NVJPEG_ORIENTATION_TRANSVERSE = 7,
+  NVJPEG_ORIENTATION_ROTATE_270 = 8
+}; // id 0x55cd8428fff8 
+
+typedef enum nvjpegExifOrientation nvjpegExifOrientation_t; // id 0x55cd84290628 
 
 typedef enum 
 {
@@ -170,7 +186,7 @@ typedef enum
   NVJPEG_CSS_GRAY = 6,
   NVJPEG_CSS_410V = 7,
   NVJPEG_CSS_UNKNOWN = -1
-} nvjpegChromaSubsampling_t; // id 0xe796b8 
+} nvjpegChromaSubsampling_t; // id 0x55cd84290698 
 
 typedef enum 
 {
@@ -181,8 +197,9 @@ typedef enum
   NVJPEG_OUTPUT_BGR = 4,
   NVJPEG_OUTPUT_RGBI = 5,
   NVJPEG_OUTPUT_BGRI = 6,
-  NVJPEG_OUTPUT_FORMAT_MAX = 6
-} nvjpegOutputFormat_t; // id 0xe79d28 
+  NVJPEG_OUTPUT_UNCHANGEDI_U16 = 7,
+  NVJPEG_OUTPUT_FORMAT_MAX = 7
+} nvjpegOutputFormat_t; // id 0x55cd84290d58 
 
 typedef enum 
 {
@@ -190,23 +207,27 @@ typedef enum
   NVJPEG_INPUT_BGR = 4,
   NVJPEG_INPUT_RGBI = 5,
   NVJPEG_INPUT_BGRI = 6
-} nvjpegInputFormat_t; // id 0xe7a328 
+} nvjpegInputFormat_t; // id 0x55cd84291418 
 
 typedef enum 
 {
   NVJPEG_BACKEND_DEFAULT = 0,
   NVJPEG_BACKEND_HYBRID = 1,
   NVJPEG_BACKEND_GPU_HYBRID = 2,
-  NVJPEG_BACKEND_HARDWARE = 3
-} nvjpegBackend_t; // id 0xe7a6d8 
+  NVJPEG_BACKEND_HARDWARE = 3,
+  NVJPEG_BACKEND_GPU_HYBRID_DEVICE = 4,
+  NVJPEG_BACKEND_HARDWARE_DEVICE = 5,
+  NVJPEG_BACKEND_LOSSLESS_JPEG = 6
+} nvjpegBackend_t; // id 0x55cd842917e8 
 
 typedef enum 
 {
   NVJPEG_ENCODING_UNKNOWN = 0,
   NVJPEG_ENCODING_BASELINE_DCT = 192,
   NVJPEG_ENCODING_EXTENDED_SEQUENTIAL_DCT_HUFFMAN = 193,
-  NVJPEG_ENCODING_PROGRESSIVE_DCT_HUFFMAN = 194
-} nvjpegJpegEncoding_t; // id 0xe7aa88 
+  NVJPEG_ENCODING_PROGRESSIVE_DCT_HUFFMAN = 194,
+  NVJPEG_ENCODING_LOSSLESS_HUFFMAN = 195
+} nvjpegJpegEncoding_t; // id 0x55cd84291d68 
 
 typedef enum 
 {
@@ -214,13 +235,13 @@ typedef enum
   NVJPEG_SCALE_1_BY_2 = 1,
   NVJPEG_SCALE_1_BY_4 = 2,
   NVJPEG_SCALE_1_BY_8 = 3
-} nvjpegScaleFactor_t; // id 0xe7ae38 
+} nvjpegScaleFactor_t; // id 0x55cd842921e8 
 
 struct nvjpegHandle;
-typedef struct nvjpegHandle * nvjpegHandle_t; // id 0xe7d500 
+typedef struct nvjpegHandle * nvjpegHandle_t; // id 0x55cd84297360 
 
 struct nvjpegJpegState;
-typedef struct nvjpegJpegState * nvjpegJpegState_t; // id 0xe7d6b0 
+typedef struct nvjpegJpegState * nvjpegJpegState_t; // id 0x55cd84297510 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegGetProperty(libraryPropertyType, int *);
 extern tnvjpegGetProperty *nvjpegGetProperty;
@@ -232,6 +253,8 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegCreateSimple(nvjpegHandle_t *);
 extern tnvjpegCreateSimple *nvjpegCreateSimple;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegCreateEx(nvjpegBackend_t, nvjpegDevAllocator_t *, nvjpegPinnedAllocator_t *, unsigned int, nvjpegHandle_t *);
 extern tnvjpegCreateEx *nvjpegCreateEx;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegCreateExV2(nvjpegBackend_t, nvjpegDevAllocatorV2_t *, nvjpegPinnedAllocatorV2_t *, unsigned int, nvjpegHandle_t *);
+extern tnvjpegCreateExV2 *nvjpegCreateExV2;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegDestroy(nvjpegHandle_t);
 extern tnvjpegDestroy *nvjpegDestroy;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegSetDeviceMemoryPadding(size_t, nvjpegHandle_t);
@@ -242,6 +265,8 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegSetPinnedMemoryPadding(size_t, nvjpegHand
 extern tnvjpegSetPinnedMemoryPadding *nvjpegSetPinnedMemoryPadding;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegGetPinnedMemoryPadding(size_t *, nvjpegHandle_t);
 extern tnvjpegGetPinnedMemoryPadding *nvjpegGetPinnedMemoryPadding;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegGetHardwareDecoderInfo(nvjpegHandle_t, unsigned int *, unsigned int *);
+extern tnvjpegGetHardwareDecoderInfo *nvjpegGetHardwareDecoderInfo;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStateCreate(nvjpegHandle_t, nvjpegJpegState_t *);
 extern tnvjpegJpegStateCreate *nvjpegJpegStateCreate;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStateDestroy(nvjpegJpegState_t);
@@ -256,15 +281,17 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeBatched(nvjpegHandle_t, nvjpegJpegS
 extern tnvjpegDecodeBatched *nvjpegDecodeBatched;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeBatchedPreAllocate(nvjpegHandle_t, nvjpegJpegState_t, int, int, int, nvjpegChromaSubsampling_t, nvjpegOutputFormat_t);
 extern tnvjpegDecodeBatchedPreAllocate *nvjpegDecodeBatchedPreAllocate;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeBatchedParseJpegTables(nvjpegHandle_t, nvjpegJpegState_t, const unsigned char *, const size_t);
+extern tnvjpegDecodeBatchedParseJpegTables *nvjpegDecodeBatchedParseJpegTables;
 struct nvjpegEncoderState;
-typedef struct nvjpegEncoderState * nvjpegEncoderState_t; // id 0xe820c0 
+typedef struct nvjpegEncoderState * nvjpegEncoderState_t; // id 0x55cd8429ba90 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegEncoderStateCreate(nvjpegHandle_t, nvjpegEncoderState_t *, cudaStream_t);
 extern tnvjpegEncoderStateCreate *nvjpegEncoderStateCreate;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegEncoderStateDestroy(nvjpegEncoderState_t);
 extern tnvjpegEncoderStateDestroy *nvjpegEncoderStateDestroy;
 struct nvjpegEncoderParams;
-typedef struct nvjpegEncoderParams * nvjpegEncoderParams_t; // id 0xe82770 
+typedef struct nvjpegEncoderParams * nvjpegEncoderParams_t; // id 0x55cd8429c140 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegEncoderParamsCreate(nvjpegHandle_t, nvjpegEncoderParams_t *, cudaStream_t);
 extern tnvjpegEncoderParamsCreate *nvjpegEncoderParamsCreate;
@@ -289,17 +316,21 @@ extern tnvjpegEncodeRetrieveBitstreamDevice *nvjpegEncodeRetrieveBitstreamDevice
 typedef nvjpegStatus_t  CUDAAPI tnvjpegEncodeRetrieveBitstream(nvjpegHandle_t, nvjpegEncoderState_t, unsigned char *, size_t *, cudaStream_t);
 extern tnvjpegEncodeRetrieveBitstream *nvjpegEncodeRetrieveBitstream;
 struct nvjpegBufferPinned;
-typedef struct nvjpegBufferPinned * nvjpegBufferPinned_t; // id 0xe86290 
+typedef struct nvjpegBufferPinned * nvjpegBufferPinned_t; // id 0x55cd8429fc80 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferPinnedCreate(nvjpegHandle_t, nvjpegPinnedAllocator_t *, nvjpegBufferPinned_t *);
 extern tnvjpegBufferPinnedCreate *nvjpegBufferPinnedCreate;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferPinnedCreateV2(nvjpegHandle_t, nvjpegPinnedAllocatorV2_t *, nvjpegBufferPinned_t *);
+extern tnvjpegBufferPinnedCreateV2 *nvjpegBufferPinnedCreateV2;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferPinnedDestroy(nvjpegBufferPinned_t);
 extern tnvjpegBufferPinnedDestroy *nvjpegBufferPinnedDestroy;
 struct nvjpegBufferDevice;
-typedef struct nvjpegBufferDevice * nvjpegBufferDevice_t; // id 0xe86940 
+typedef struct nvjpegBufferDevice * nvjpegBufferDevice_t; // id 0x55cd842a0610 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferDeviceCreate(nvjpegHandle_t, nvjpegDevAllocator_t *, nvjpegBufferDevice_t *);
 extern tnvjpegBufferDeviceCreate *nvjpegBufferDeviceCreate;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferDeviceCreateV2(nvjpegHandle_t, nvjpegDevAllocatorV2_t *, nvjpegBufferDevice_t *);
+extern tnvjpegBufferDeviceCreateV2 *nvjpegBufferDeviceCreateV2;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferDeviceDestroy(nvjpegBufferDevice_t);
 extern tnvjpegBufferDeviceDestroy *nvjpegBufferDeviceDestroy;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegBufferPinnedRetrieve(nvjpegBufferPinned_t, size_t *, void **);
@@ -311,7 +342,7 @@ extern tnvjpegStateAttachPinnedBuffer *nvjpegStateAttachPinnedBuffer;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegStateAttachDeviceBuffer(nvjpegJpegState_t, nvjpegBufferDevice_t);
 extern tnvjpegStateAttachDeviceBuffer *nvjpegStateAttachDeviceBuffer;
 struct nvjpegJpegStream;
-typedef struct nvjpegJpegStream * nvjpegJpegStream_t; // id 0xe87ae0 
+typedef struct nvjpegJpegStream * nvjpegJpegStream_t; // id 0x55cd842a1aa0 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamCreate(nvjpegHandle_t, nvjpegJpegStream_t *);
 extern tnvjpegJpegStreamCreate *nvjpegJpegStreamCreate;
@@ -321,6 +352,8 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamParse(nvjpegHandle_t, const uns
 extern tnvjpegJpegStreamParse *nvjpegJpegStreamParse;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamParseHeader(nvjpegHandle_t, const unsigned char *, size_t, nvjpegJpegStream_t);
 extern tnvjpegJpegStreamParseHeader *nvjpegJpegStreamParseHeader;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamParseTables(nvjpegHandle_t, const unsigned char *, size_t, nvjpegJpegStream_t);
+extern tnvjpegJpegStreamParseTables *nvjpegJpegStreamParseTables;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetJpegEncoding(nvjpegJpegStream_t, nvjpegJpegEncoding_t *);
 extern tnvjpegJpegStreamGetJpegEncoding *nvjpegJpegStreamGetJpegEncoding;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetFrameDimensions(nvjpegJpegStream_t, unsigned int *, unsigned int *);
@@ -329,10 +362,14 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetComponentsNum(nvjpegJpegStre
 extern tnvjpegJpegStreamGetComponentsNum *nvjpegJpegStreamGetComponentsNum;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetComponentDimensions(nvjpegJpegStream_t, unsigned int, unsigned int *, unsigned int *);
 extern tnvjpegJpegStreamGetComponentDimensions *nvjpegJpegStreamGetComponentDimensions;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetExifOrientation(nvjpegJpegStream_t, nvjpegExifOrientation_t *);
+extern tnvjpegJpegStreamGetExifOrientation *nvjpegJpegStreamGetExifOrientation;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetSamplePrecision(nvjpegJpegStream_t, unsigned int *);
+extern tnvjpegJpegStreamGetSamplePrecision *nvjpegJpegStreamGetSamplePrecision;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegJpegStreamGetChromaSubsampling(nvjpegJpegStream_t, nvjpegChromaSubsampling_t *);
 extern tnvjpegJpegStreamGetChromaSubsampling *nvjpegJpegStreamGetChromaSubsampling;
 struct nvjpegDecodeParams;
-typedef struct nvjpegDecodeParams * nvjpegDecodeParams_t; // id 0xe89780 
+typedef struct nvjpegDecodeParams * nvjpegDecodeParams_t; // id 0x55cd842a4ee0 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeParamsCreate(nvjpegHandle_t, nvjpegDecodeParams_t *);
 extern tnvjpegDecodeParamsCreate *nvjpegDecodeParamsCreate;
@@ -346,8 +383,10 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeParamsSetAllowCMYK(nvjpegDecodePara
 extern tnvjpegDecodeParamsSetAllowCMYK *nvjpegDecodeParamsSetAllowCMYK;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeParamsSetScaleFactor(nvjpegDecodeParams_t, nvjpegScaleFactor_t);
 extern tnvjpegDecodeParamsSetScaleFactor *nvjpegDecodeParamsSetScaleFactor;
+typedef nvjpegStatus_t  CUDAAPI tnvjpegDecodeParamsSetExifOrientation(nvjpegDecodeParams_t, nvjpegExifOrientation_t);
+extern tnvjpegDecodeParamsSetExifOrientation *nvjpegDecodeParamsSetExifOrientation;
 struct nvjpegJpegDecoder;
-typedef struct nvjpegJpegDecoder * nvjpegJpegDecoder_t; // id 0xe8a980 
+typedef struct nvjpegJpegDecoder * nvjpegJpegDecoder_t; // id 0x55cd842a62e0 
 
 typedef nvjpegStatus_t  CUDAAPI tnvjpegDecoderCreate(nvjpegHandle_t, nvjpegBackend_t, nvjpegJpegDecoder_t *);
 extern tnvjpegDecoderCreate *nvjpegDecoderCreate;
@@ -377,7 +416,7 @@ typedef nvjpegStatus_t  CUDAAPI tnvjpegEncoderParamsCopyQuantizationTables(nvjpe
 extern tnvjpegEncoderParamsCopyQuantizationTables *nvjpegEncoderParamsCopyQuantizationTables;
 typedef nvjpegStatus_t  CUDAAPI tnvjpegEncoderParamsCopyHuffmanTables(nvjpegEncoderState_t, nvjpegEncoderParams_t, nvjpegJpegStream_t, cudaStream_t);
 extern tnvjpegEncoderParamsCopyHuffmanTables *nvjpegEncoderParamsCopyHuffmanTables;
-extern int cuewInitNVJPEG(void);
+extern int cuewInitNVJPEG(const char **extra_dll_search_paths);
 
 
 #ifdef __cplusplus

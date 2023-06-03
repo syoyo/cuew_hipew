@@ -87,17 +87,19 @@ typedef enum cudaDataType_t
 } cudaDataType;
 
 
+/* now in cuew.h
 typedef enum libraryPropertyType_t
 {
     MAJOR_VERSION,
     MINOR_VERSION,
     PATCH_LEVEL
 } libraryPropertyType;
+*/
 
 
 #ifndef __cplusplus
 typedef enum cudaDataType_t cudaDataType_t;
-typedef enum libraryPropertyType_t libraryPropertyType_t;
+/*typedef enum libraryPropertyType_t libraryPropertyType_t;*/
 #endif
 
 #endif /* !__LIBRARY_TYPES_H__ */

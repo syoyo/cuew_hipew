@@ -88,7 +88,6 @@ tcusparseLoggerSetMask *cusparseLoggerSetMask;
 tcusparseLoggerForceDisable *cusparseLoggerForceDisable;
 tcusparseCreateMatDescr *cusparseCreateMatDescr;
 tcusparseDestroyMatDescr *cusparseDestroyMatDescr;
-tcusparseCopyMatDescr *cusparseCopyMatDescr;
 tcusparseSetMatType *cusparseSetMatType;
 tcusparseGetMatType *cusparseGetMatType;
 tcusparseSetMatFillMode *cusparseSetMatFillMode;
@@ -97,8 +96,6 @@ tcusparseSetMatDiagType *cusparseSetMatDiagType;
 tcusparseGetMatDiagType *cusparseGetMatDiagType;
 tcusparseSetMatIndexBase *cusparseSetMatIndexBase;
 tcusparseGetMatIndexBase *cusparseGetMatIndexBase;
-tcusparseCreateCsrsv2Info *cusparseCreateCsrsv2Info;
-tcusparseDestroyCsrsv2Info *cusparseDestroyCsrsv2Info;
 tcusparseCreateCsric02Info *cusparseCreateCsric02Info;
 tcusparseDestroyCsric02Info *cusparseDestroyCsric02Info;
 tcusparseCreateBsric02Info *cusparseCreateBsric02Info;
@@ -115,28 +112,8 @@ tcusparseCreateCsru2csrInfo *cusparseCreateCsru2csrInfo;
 tcusparseDestroyCsru2csrInfo *cusparseDestroyCsru2csrInfo;
 tcusparseCreateColorInfo *cusparseCreateColorInfo;
 tcusparseDestroyColorInfo *cusparseDestroyColorInfo;
-tcusparseSetColorAlgs *cusparseSetColorAlgs;
-tcusparseGetColorAlgs *cusparseGetColorAlgs;
 tcusparseCreatePruneInfo *cusparseCreatePruneInfo;
 tcusparseDestroyPruneInfo *cusparseDestroyPruneInfo;
-tcusparseSaxpyi *cusparseSaxpyi;
-tcusparseDaxpyi *cusparseDaxpyi;
-tcusparseCaxpyi *cusparseCaxpyi;
-tcusparseZaxpyi *cusparseZaxpyi;
-tcusparseSgthr *cusparseSgthr;
-tcusparseDgthr *cusparseDgthr;
-tcusparseCgthr *cusparseCgthr;
-tcusparseZgthr *cusparseZgthr;
-tcusparseSgthrz *cusparseSgthrz;
-tcusparseDgthrz *cusparseDgthrz;
-tcusparseCgthrz *cusparseCgthrz;
-tcusparseZgthrz *cusparseZgthrz;
-tcusparseSsctr *cusparseSsctr;
-tcusparseDsctr *cusparseDsctr;
-tcusparseCsctr *cusparseCsctr;
-tcusparseZsctr *cusparseZsctr;
-tcusparseSroti *cusparseSroti;
-tcusparseDroti *cusparseDroti;
 tcusparseSgemvi *cusparseSgemvi;
 tcusparseSgemvi_bufferSize *cusparseSgemvi_bufferSize;
 tcusparseDgemvi *cusparseDgemvi;
@@ -145,8 +122,6 @@ tcusparseCgemvi *cusparseCgemvi;
 tcusparseCgemvi_bufferSize *cusparseCgemvi_bufferSize;
 tcusparseZgemvi *cusparseZgemvi;
 tcusparseZgemvi_bufferSize *cusparseZgemvi_bufferSize;
-tcusparseCsrmvEx_bufferSize *cusparseCsrmvEx_bufferSize;
-tcusparseCsrmvEx *cusparseCsrmvEx;
 tcusparseSbsrmv *cusparseSbsrmv;
 tcusparseDbsrmv *cusparseDbsrmv;
 tcusparseCbsrmv *cusparseCbsrmv;
@@ -155,23 +130,6 @@ tcusparseSbsrxmv *cusparseSbsrxmv;
 tcusparseDbsrxmv *cusparseDbsrxmv;
 tcusparseCbsrxmv *cusparseCbsrxmv;
 tcusparseZbsrxmv *cusparseZbsrxmv;
-tcusparseXcsrsv2_zeroPivot *cusparseXcsrsv2_zeroPivot;
-tcusparseScsrsv2_bufferSize *cusparseScsrsv2_bufferSize;
-tcusparseDcsrsv2_bufferSize *cusparseDcsrsv2_bufferSize;
-tcusparseCcsrsv2_bufferSize *cusparseCcsrsv2_bufferSize;
-tcusparseZcsrsv2_bufferSize *cusparseZcsrsv2_bufferSize;
-tcusparseScsrsv2_bufferSizeExt *cusparseScsrsv2_bufferSizeExt;
-tcusparseDcsrsv2_bufferSizeExt *cusparseDcsrsv2_bufferSizeExt;
-tcusparseCcsrsv2_bufferSizeExt *cusparseCcsrsv2_bufferSizeExt;
-tcusparseZcsrsv2_bufferSizeExt *cusparseZcsrsv2_bufferSizeExt;
-tcusparseScsrsv2_analysis *cusparseScsrsv2_analysis;
-tcusparseDcsrsv2_analysis *cusparseDcsrsv2_analysis;
-tcusparseCcsrsv2_analysis *cusparseCcsrsv2_analysis;
-tcusparseZcsrsv2_analysis *cusparseZcsrsv2_analysis;
-tcusparseScsrsv2_solve *cusparseScsrsv2_solve;
-tcusparseDcsrsv2_solve *cusparseDcsrsv2_solve;
-tcusparseCcsrsv2_solve *cusparseCcsrsv2_solve;
-tcusparseZcsrsv2_solve *cusparseZcsrsv2_solve;
 tcusparseXbsrsv2_zeroPivot *cusparseXbsrsv2_zeroPivot;
 tcusparseSbsrsv2_bufferSize *cusparseSbsrsv2_bufferSize;
 tcusparseDbsrsv2_bufferSize *cusparseDbsrsv2_bufferSize;
@@ -193,25 +151,6 @@ tcusparseSbsrmm *cusparseSbsrmm;
 tcusparseDbsrmm *cusparseDbsrmm;
 tcusparseCbsrmm *cusparseCbsrmm;
 tcusparseZbsrmm *cusparseZbsrmm;
-tcusparseSgemmi *cusparseSgemmi;
-tcusparseDgemmi *cusparseDgemmi;
-tcusparseCgemmi *cusparseCgemmi;
-tcusparseZgemmi *cusparseZgemmi;
-tcusparseCreateCsrsm2Info *cusparseCreateCsrsm2Info;
-tcusparseDestroyCsrsm2Info *cusparseDestroyCsrsm2Info;
-tcusparseXcsrsm2_zeroPivot *cusparseXcsrsm2_zeroPivot;
-tcusparseScsrsm2_bufferSizeExt *cusparseScsrsm2_bufferSizeExt;
-tcusparseDcsrsm2_bufferSizeExt *cusparseDcsrsm2_bufferSizeExt;
-tcusparseCcsrsm2_bufferSizeExt *cusparseCcsrsm2_bufferSizeExt;
-tcusparseZcsrsm2_bufferSizeExt *cusparseZcsrsm2_bufferSizeExt;
-tcusparseScsrsm2_analysis *cusparseScsrsm2_analysis;
-tcusparseDcsrsm2_analysis *cusparseDcsrsm2_analysis;
-tcusparseCcsrsm2_analysis *cusparseCcsrsm2_analysis;
-tcusparseZcsrsm2_analysis *cusparseZcsrsm2_analysis;
-tcusparseScsrsm2_solve *cusparseScsrsm2_solve;
-tcusparseDcsrsm2_solve *cusparseDcsrsm2_solve;
-tcusparseCcsrsm2_solve *cusparseCcsrsm2_solve;
-tcusparseZcsrsm2_solve *cusparseZcsrsm2_solve;
 tcusparseXbsrsm2_zeroPivot *cusparseXbsrsm2_zeroPivot;
 tcusparseSbsrsm2_bufferSize *cusparseSbsrsm2_bufferSize;
 tcusparseDbsrsm2_bufferSize *cusparseDbsrsm2_bufferSize;
@@ -345,17 +284,6 @@ tcusparseSgpsvInterleavedBatch *cusparseSgpsvInterleavedBatch;
 tcusparseDgpsvInterleavedBatch *cusparseDgpsvInterleavedBatch;
 tcusparseCgpsvInterleavedBatch *cusparseCgpsvInterleavedBatch;
 tcusparseZgpsvInterleavedBatch *cusparseZgpsvInterleavedBatch;
-tcusparseCreateCsrgemm2Info *cusparseCreateCsrgemm2Info;
-tcusparseDestroyCsrgemm2Info *cusparseDestroyCsrgemm2Info;
-tcusparseScsrgemm2_bufferSizeExt *cusparseScsrgemm2_bufferSizeExt;
-tcusparseDcsrgemm2_bufferSizeExt *cusparseDcsrgemm2_bufferSizeExt;
-tcusparseCcsrgemm2_bufferSizeExt *cusparseCcsrgemm2_bufferSizeExt;
-tcusparseZcsrgemm2_bufferSizeExt *cusparseZcsrgemm2_bufferSizeExt;
-tcusparseXcsrgemm2Nnz *cusparseXcsrgemm2Nnz;
-tcusparseScsrgemm2 *cusparseScsrgemm2;
-tcusparseDcsrgemm2 *cusparseDcsrgemm2;
-tcusparseCcsrgemm2 *cusparseCcsrgemm2;
-tcusparseZcsrgemm2 *cusparseZcsrgemm2;
 tcusparseScsrgeam2_bufferSizeExt *cusparseScsrgeam2_bufferSizeExt;
 tcusparseDcsrgeam2_bufferSizeExt *cusparseDcsrgeam2_bufferSizeExt;
 tcusparseCcsrgeam2_bufferSizeExt *cusparseCcsrgeam2_bufferSizeExt;
@@ -381,22 +309,6 @@ tcusparseScsr2csr_compress *cusparseScsr2csr_compress;
 tcusparseDcsr2csr_compress *cusparseDcsr2csr_compress;
 tcusparseCcsr2csr_compress *cusparseCcsr2csr_compress;
 tcusparseZcsr2csr_compress *cusparseZcsr2csr_compress;
-tcusparseSdense2csr *cusparseSdense2csr;
-tcusparseDdense2csr *cusparseDdense2csr;
-tcusparseCdense2csr *cusparseCdense2csr;
-tcusparseZdense2csr *cusparseZdense2csr;
-tcusparseScsr2dense *cusparseScsr2dense;
-tcusparseDcsr2dense *cusparseDcsr2dense;
-tcusparseCcsr2dense *cusparseCcsr2dense;
-tcusparseZcsr2dense *cusparseZcsr2dense;
-tcusparseSdense2csc *cusparseSdense2csc;
-tcusparseDdense2csc *cusparseDdense2csc;
-tcusparseCdense2csc *cusparseCdense2csc;
-tcusparseZdense2csc *cusparseZdense2csc;
-tcusparseScsc2dense *cusparseScsc2dense;
-tcusparseDcsc2dense *cusparseDcsc2dense;
-tcusparseCcsc2dense *cusparseCcsc2dense;
-tcusparseZcsc2dense *cusparseZcsc2dense;
 tcusparseXcoo2csr *cusparseXcoo2csr;
 tcusparseXcsr2coo *cusparseXcsr2coo;
 tcusparseXcsr2bsrNnz *cusparseXcsr2bsrNnz;
@@ -498,44 +410,65 @@ tcusparseDpruneCsr2csrByPercentage *cusparseDpruneCsr2csrByPercentage;
 tcusparseCsr2cscEx2 *cusparseCsr2cscEx2;
 tcusparseCsr2cscEx2_bufferSize *cusparseCsr2cscEx2_bufferSize;
 tcusparseCreateSpVec *cusparseCreateSpVec;
+tcusparseCreateConstSpVec *cusparseCreateConstSpVec;
 tcusparseDestroySpVec *cusparseDestroySpVec;
 tcusparseSpVecGet *cusparseSpVecGet;
+tcusparseConstSpVecGet *cusparseConstSpVecGet;
 tcusparseSpVecGetIndexBase *cusparseSpVecGetIndexBase;
 tcusparseSpVecGetValues *cusparseSpVecGetValues;
+tcusparseConstSpVecGetValues *cusparseConstSpVecGetValues;
 tcusparseSpVecSetValues *cusparseSpVecSetValues;
 tcusparseCreateDnVec *cusparseCreateDnVec;
+tcusparseCreateConstDnVec *cusparseCreateConstDnVec;
 tcusparseDestroyDnVec *cusparseDestroyDnVec;
 tcusparseDnVecGet *cusparseDnVecGet;
+tcusparseConstDnVecGet *cusparseConstDnVecGet;
 tcusparseDnVecGetValues *cusparseDnVecGetValues;
+tcusparseConstDnVecGetValues *cusparseConstDnVecGetValues;
 tcusparseDnVecSetValues *cusparseDnVecSetValues;
 tcusparseDestroySpMat *cusparseDestroySpMat;
 tcusparseSpMatGetFormat *cusparseSpMatGetFormat;
 tcusparseSpMatGetIndexBase *cusparseSpMatGetIndexBase;
 tcusparseSpMatGetValues *cusparseSpMatGetValues;
+tcusparseConstSpMatGetValues *cusparseConstSpMatGetValues;
 tcusparseSpMatSetValues *cusparseSpMatSetValues;
 tcusparseSpMatGetSize *cusparseSpMatGetSize;
-tcusparseSpMatSetStridedBatch *cusparseSpMatSetStridedBatch;
 tcusparseSpMatGetStridedBatch *cusparseSpMatGetStridedBatch;
 tcusparseCooSetStridedBatch *cusparseCooSetStridedBatch;
 tcusparseCsrSetStridedBatch *cusparseCsrSetStridedBatch;
+tcusparseBsrSetStridedBatch *cusparseBsrSetStridedBatch;
 tcusparseSpMatGetAttribute *cusparseSpMatGetAttribute;
 tcusparseSpMatSetAttribute *cusparseSpMatSetAttribute;
 tcusparseCreateCsr *cusparseCreateCsr;
+tcusparseCreateConstCsr *cusparseCreateConstCsr;
 tcusparseCreateCsc *cusparseCreateCsc;
+tcusparseCreateConstCsc *cusparseCreateConstCsc;
 tcusparseCsrGet *cusparseCsrGet;
+tcusparseConstCsrGet *cusparseConstCsrGet;
+tcusparseCscGet *cusparseCscGet;
+tcusparseConstCscGet *cusparseConstCscGet;
 tcusparseCsrSetPointers *cusparseCsrSetPointers;
 tcusparseCscSetPointers *cusparseCscSetPointers;
+tcusparseCreateBsr *cusparseCreateBsr;
+tcusparseCreateConstBsr *cusparseCreateConstBsr;
 tcusparseCreateCoo *cusparseCreateCoo;
-tcusparseCreateCooAoS *cusparseCreateCooAoS;
+tcusparseCreateConstCoo *cusparseCreateConstCoo;
 tcusparseCooGet *cusparseCooGet;
-tcusparseCooAoSGet *cusparseCooAoSGet;
+tcusparseConstCooGet *cusparseConstCooGet;
 tcusparseCooSetPointers *cusparseCooSetPointers;
 tcusparseCreateBlockedEll *cusparseCreateBlockedEll;
+tcusparseCreateConstBlockedEll *cusparseCreateConstBlockedEll;
 tcusparseBlockedEllGet *cusparseBlockedEllGet;
+tcusparseConstBlockedEllGet *cusparseConstBlockedEllGet;
+tcusparseCreateSlicedEll *cusparseCreateSlicedEll;
+tcusparseCreateConstSlicedEll *cusparseCreateConstSlicedEll;
 tcusparseCreateDnMat *cusparseCreateDnMat;
+tcusparseCreateConstDnMat *cusparseCreateConstDnMat;
 tcusparseDestroyDnMat *cusparseDestroyDnMat;
 tcusparseDnMatGet *cusparseDnMatGet;
+tcusparseConstDnMatGet *cusparseConstDnMatGet;
 tcusparseDnMatGetValues *cusparseDnMatGetValues;
+tcusparseConstDnMatGetValues *cusparseConstDnMatGetValues;
 tcusparseDnMatSetValues *cusparseDnMatSetValues;
 tcusparseDnMatSetStridedBatch *cusparseDnMatSetStridedBatch;
 tcusparseDnMatGetStridedBatch *cusparseDnMatGetStridedBatch;
@@ -557,6 +490,7 @@ tcusparseSpSV_destroyDescr *cusparseSpSV_destroyDescr;
 tcusparseSpSV_bufferSize *cusparseSpSV_bufferSize;
 tcusparseSpSV_analysis *cusparseSpSV_analysis;
 tcusparseSpSV_solve *cusparseSpSV_solve;
+tcusparseSpSV_updateMatrix *cusparseSpSV_updateMatrix;
 tcusparseSpSM_createDescr *cusparseSpSM_createDescr;
 tcusparseSpSM_destroyDescr *cusparseSpSM_destroyDescr;
 tcusparseSpSM_bufferSize *cusparseSpSM_bufferSize;
@@ -568,14 +502,14 @@ tcusparseSpMM *cusparseSpMM;
 tcusparseSpGEMM_createDescr *cusparseSpGEMM_createDescr;
 tcusparseSpGEMM_destroyDescr *cusparseSpGEMM_destroyDescr;
 tcusparseSpGEMM_workEstimation *cusparseSpGEMM_workEstimation;
+tcusparseSpGEMM_getNumProducts *cusparseSpGEMM_getNumProducts;
+tcusparseSpGEMM_estimateMemory *cusparseSpGEMM_estimateMemory;
 tcusparseSpGEMM_compute *cusparseSpGEMM_compute;
 tcusparseSpGEMM_copy *cusparseSpGEMM_copy;
 tcusparseSpGEMMreuse_workEstimation *cusparseSpGEMMreuse_workEstimation;
 tcusparseSpGEMMreuse_nnz *cusparseSpGEMMreuse_nnz;
 tcusparseSpGEMMreuse_copy *cusparseSpGEMMreuse_copy;
 tcusparseSpGEMMreuse_compute *cusparseSpGEMMreuse_compute;
-tcusparseConstrainedGeMM *cusparseConstrainedGeMM;
-tcusparseConstrainedGeMM_bufferSize *cusparseConstrainedGeMM_bufferSize;
 tcusparseSDDMM_bufferSize *cusparseSDDMM_bufferSize;
 tcusparseSDDMM_preprocess *cusparseSDDMM_preprocess;
 tcusparseSDDMM *cusparseSDDMM;
@@ -583,7 +517,7 @@ tcusparseSpMMOp_createPlan *cusparseSpMMOp_createPlan;
 tcusparseSpMMOp *cusparseSpMMOp;
 tcusparseSpMMOp_destroyPlan *cusparseSpMMOp_destroyPlan;
 
-int cuewInitCUSPARSE() {
+int cuewInitCUSPARSE(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "cusparse.dll",
@@ -611,6 +545,11 @@ NULL};
     return result;
   }
   cusparse_lib = dynamic_library_open_find(paths);
+  if (cusparse_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      cusparse_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (cusparse_lib == NULL) { result = -1; return result; }
 
   CUSPARSE_LIBRARY_FIND(cusparseCreate)
@@ -631,7 +570,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseLoggerForceDisable)
   CUSPARSE_LIBRARY_FIND(cusparseCreateMatDescr)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyMatDescr)
-  CUSPARSE_LIBRARY_FIND(cusparseCopyMatDescr)
   CUSPARSE_LIBRARY_FIND(cusparseSetMatType)
   CUSPARSE_LIBRARY_FIND(cusparseGetMatType)
   CUSPARSE_LIBRARY_FIND(cusparseSetMatFillMode)
@@ -640,8 +578,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseGetMatDiagType)
   CUSPARSE_LIBRARY_FIND(cusparseSetMatIndexBase)
   CUSPARSE_LIBRARY_FIND(cusparseGetMatIndexBase)
-  CUSPARSE_LIBRARY_FIND(cusparseCreateCsrsv2Info)
-  CUSPARSE_LIBRARY_FIND(cusparseDestroyCsrsv2Info)
   CUSPARSE_LIBRARY_FIND(cusparseCreateCsric02Info)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyCsric02Info)
   CUSPARSE_LIBRARY_FIND(cusparseCreateBsric02Info)
@@ -658,28 +594,8 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseDestroyCsru2csrInfo)
   CUSPARSE_LIBRARY_FIND(cusparseCreateColorInfo)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyColorInfo)
-  CUSPARSE_LIBRARY_FIND(cusparseSetColorAlgs)
-  CUSPARSE_LIBRARY_FIND(cusparseGetColorAlgs)
   CUSPARSE_LIBRARY_FIND(cusparseCreatePruneInfo)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyPruneInfo)
-  CUSPARSE_LIBRARY_FIND(cusparseSaxpyi)
-  CUSPARSE_LIBRARY_FIND(cusparseDaxpyi)
-  CUSPARSE_LIBRARY_FIND(cusparseCaxpyi)
-  CUSPARSE_LIBRARY_FIND(cusparseZaxpyi)
-  CUSPARSE_LIBRARY_FIND(cusparseSgthr)
-  CUSPARSE_LIBRARY_FIND(cusparseDgthr)
-  CUSPARSE_LIBRARY_FIND(cusparseCgthr)
-  CUSPARSE_LIBRARY_FIND(cusparseZgthr)
-  CUSPARSE_LIBRARY_FIND(cusparseSgthrz)
-  CUSPARSE_LIBRARY_FIND(cusparseDgthrz)
-  CUSPARSE_LIBRARY_FIND(cusparseCgthrz)
-  CUSPARSE_LIBRARY_FIND(cusparseZgthrz)
-  CUSPARSE_LIBRARY_FIND(cusparseSsctr)
-  CUSPARSE_LIBRARY_FIND(cusparseDsctr)
-  CUSPARSE_LIBRARY_FIND(cusparseCsctr)
-  CUSPARSE_LIBRARY_FIND(cusparseZsctr)
-  CUSPARSE_LIBRARY_FIND(cusparseSroti)
-  CUSPARSE_LIBRARY_FIND(cusparseDroti)
   CUSPARSE_LIBRARY_FIND(cusparseSgemvi)
   CUSPARSE_LIBRARY_FIND(cusparseSgemvi_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseDgemvi)
@@ -688,8 +604,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseCgemvi_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseZgemvi)
   CUSPARSE_LIBRARY_FIND(cusparseZgemvi_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseCsrmvEx_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseCsrmvEx)
   CUSPARSE_LIBRARY_FIND(cusparseSbsrmv)
   CUSPARSE_LIBRARY_FIND(cusparseDbsrmv)
   CUSPARSE_LIBRARY_FIND(cusparseCbsrmv)
@@ -698,23 +612,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseDbsrxmv)
   CUSPARSE_LIBRARY_FIND(cusparseCbsrxmv)
   CUSPARSE_LIBRARY_FIND(cusparseZbsrxmv)
-  CUSPARSE_LIBRARY_FIND(cusparseXcsrsv2_zeroPivot)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsv2_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsv2_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsv2_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsv2_bufferSize)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsv2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsv2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsv2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsv2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsv2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsv2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsv2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsv2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsv2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsv2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsv2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsv2_solve)
   CUSPARSE_LIBRARY_FIND(cusparseXbsrsv2_zeroPivot)
   CUSPARSE_LIBRARY_FIND(cusparseSbsrsv2_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseDbsrsv2_bufferSize)
@@ -736,25 +633,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseDbsrmm)
   CUSPARSE_LIBRARY_FIND(cusparseCbsrmm)
   CUSPARSE_LIBRARY_FIND(cusparseZbsrmm)
-  CUSPARSE_LIBRARY_FIND(cusparseSgemmi)
-  CUSPARSE_LIBRARY_FIND(cusparseDgemmi)
-  CUSPARSE_LIBRARY_FIND(cusparseCgemmi)
-  CUSPARSE_LIBRARY_FIND(cusparseZgemmi)
-  CUSPARSE_LIBRARY_FIND(cusparseCreateCsrsm2Info)
-  CUSPARSE_LIBRARY_FIND(cusparseDestroyCsrsm2Info)
-  CUSPARSE_LIBRARY_FIND(cusparseXcsrsm2_zeroPivot)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsm2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsm2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsm2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsm2_analysis)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrsm2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrsm2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrsm2_solve)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrsm2_solve)
   CUSPARSE_LIBRARY_FIND(cusparseXbsrsm2_zeroPivot)
   CUSPARSE_LIBRARY_FIND(cusparseSbsrsm2_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseDbsrsm2_bufferSize)
@@ -888,17 +766,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseDgpsvInterleavedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseCgpsvInterleavedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseZgpsvInterleavedBatch)
-  CUSPARSE_LIBRARY_FIND(cusparseCreateCsrgemm2Info)
-  CUSPARSE_LIBRARY_FIND(cusparseDestroyCsrgemm2Info)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrgemm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrgemm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrgemm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrgemm2_bufferSizeExt)
-  CUSPARSE_LIBRARY_FIND(cusparseXcsrgemm2Nnz)
-  CUSPARSE_LIBRARY_FIND(cusparseScsrgemm2)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsrgemm2)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsrgemm2)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsrgemm2)
   CUSPARSE_LIBRARY_FIND(cusparseScsrgeam2_bufferSizeExt)
   CUSPARSE_LIBRARY_FIND(cusparseDcsrgeam2_bufferSizeExt)
   CUSPARSE_LIBRARY_FIND(cusparseCcsrgeam2_bufferSizeExt)
@@ -924,22 +791,6 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseDcsr2csr_compress)
   CUSPARSE_LIBRARY_FIND(cusparseCcsr2csr_compress)
   CUSPARSE_LIBRARY_FIND(cusparseZcsr2csr_compress)
-  CUSPARSE_LIBRARY_FIND(cusparseSdense2csr)
-  CUSPARSE_LIBRARY_FIND(cusparseDdense2csr)
-  CUSPARSE_LIBRARY_FIND(cusparseCdense2csr)
-  CUSPARSE_LIBRARY_FIND(cusparseZdense2csr)
-  CUSPARSE_LIBRARY_FIND(cusparseScsr2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsr2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsr2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsr2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseSdense2csc)
-  CUSPARSE_LIBRARY_FIND(cusparseDdense2csc)
-  CUSPARSE_LIBRARY_FIND(cusparseCdense2csc)
-  CUSPARSE_LIBRARY_FIND(cusparseZdense2csc)
-  CUSPARSE_LIBRARY_FIND(cusparseScsc2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseDcsc2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseCcsc2dense)
-  CUSPARSE_LIBRARY_FIND(cusparseZcsc2dense)
   CUSPARSE_LIBRARY_FIND(cusparseXcoo2csr)
   CUSPARSE_LIBRARY_FIND(cusparseXcsr2coo)
   CUSPARSE_LIBRARY_FIND(cusparseXcsr2bsrNnz)
@@ -1041,44 +892,65 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseCsr2cscEx2)
   CUSPARSE_LIBRARY_FIND(cusparseCsr2cscEx2_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseCreateSpVec)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstSpVec)
   CUSPARSE_LIBRARY_FIND(cusparseDestroySpVec)
   CUSPARSE_LIBRARY_FIND(cusparseSpVecGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstSpVecGet)
   CUSPARSE_LIBRARY_FIND(cusparseSpVecGetIndexBase)
   CUSPARSE_LIBRARY_FIND(cusparseSpVecGetValues)
+  CUSPARSE_LIBRARY_FIND(cusparseConstSpVecGetValues)
   CUSPARSE_LIBRARY_FIND(cusparseSpVecSetValues)
   CUSPARSE_LIBRARY_FIND(cusparseCreateDnVec)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstDnVec)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyDnVec)
   CUSPARSE_LIBRARY_FIND(cusparseDnVecGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstDnVecGet)
   CUSPARSE_LIBRARY_FIND(cusparseDnVecGetValues)
+  CUSPARSE_LIBRARY_FIND(cusparseConstDnVecGetValues)
   CUSPARSE_LIBRARY_FIND(cusparseDnVecSetValues)
   CUSPARSE_LIBRARY_FIND(cusparseDestroySpMat)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetFormat)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetIndexBase)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetValues)
+  CUSPARSE_LIBRARY_FIND(cusparseConstSpMatGetValues)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatSetValues)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetSize)
-  CUSPARSE_LIBRARY_FIND(cusparseSpMatSetStridedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetStridedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseCooSetStridedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseCsrSetStridedBatch)
+  CUSPARSE_LIBRARY_FIND(cusparseBsrSetStridedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatGetAttribute)
   CUSPARSE_LIBRARY_FIND(cusparseSpMatSetAttribute)
   CUSPARSE_LIBRARY_FIND(cusparseCreateCsr)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstCsr)
   CUSPARSE_LIBRARY_FIND(cusparseCreateCsc)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstCsc)
   CUSPARSE_LIBRARY_FIND(cusparseCsrGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstCsrGet)
+  CUSPARSE_LIBRARY_FIND(cusparseCscGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstCscGet)
   CUSPARSE_LIBRARY_FIND(cusparseCsrSetPointers)
   CUSPARSE_LIBRARY_FIND(cusparseCscSetPointers)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateBsr)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstBsr)
   CUSPARSE_LIBRARY_FIND(cusparseCreateCoo)
-  CUSPARSE_LIBRARY_FIND(cusparseCreateCooAoS)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstCoo)
   CUSPARSE_LIBRARY_FIND(cusparseCooGet)
-  CUSPARSE_LIBRARY_FIND(cusparseCooAoSGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstCooGet)
   CUSPARSE_LIBRARY_FIND(cusparseCooSetPointers)
   CUSPARSE_LIBRARY_FIND(cusparseCreateBlockedEll)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstBlockedEll)
   CUSPARSE_LIBRARY_FIND(cusparseBlockedEllGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstBlockedEllGet)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateSlicedEll)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstSlicedEll)
   CUSPARSE_LIBRARY_FIND(cusparseCreateDnMat)
+  CUSPARSE_LIBRARY_FIND(cusparseCreateConstDnMat)
   CUSPARSE_LIBRARY_FIND(cusparseDestroyDnMat)
   CUSPARSE_LIBRARY_FIND(cusparseDnMatGet)
+  CUSPARSE_LIBRARY_FIND(cusparseConstDnMatGet)
   CUSPARSE_LIBRARY_FIND(cusparseDnMatGetValues)
+  CUSPARSE_LIBRARY_FIND(cusparseConstDnMatGetValues)
   CUSPARSE_LIBRARY_FIND(cusparseDnMatSetValues)
   CUSPARSE_LIBRARY_FIND(cusparseDnMatSetStridedBatch)
   CUSPARSE_LIBRARY_FIND(cusparseDnMatGetStridedBatch)
@@ -1100,6 +972,7 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseSpSV_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseSpSV_analysis)
   CUSPARSE_LIBRARY_FIND(cusparseSpSV_solve)
+  CUSPARSE_LIBRARY_FIND(cusparseSpSV_updateMatrix)
   CUSPARSE_LIBRARY_FIND(cusparseSpSM_createDescr)
   CUSPARSE_LIBRARY_FIND(cusparseSpSM_destroyDescr)
   CUSPARSE_LIBRARY_FIND(cusparseSpSM_bufferSize)
@@ -1111,14 +984,14 @@ NULL};
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_createDescr)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_destroyDescr)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_workEstimation)
+  CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_getNumProducts)
+  CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_estimateMemory)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_compute)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMM_copy)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMMreuse_workEstimation)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMMreuse_nnz)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMMreuse_copy)
   CUSPARSE_LIBRARY_FIND(cusparseSpGEMMreuse_compute)
-  CUSPARSE_LIBRARY_FIND(cusparseConstrainedGeMM)
-  CUSPARSE_LIBRARY_FIND(cusparseConstrainedGeMM_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseSDDMM_bufferSize)
   CUSPARSE_LIBRARY_FIND(cusparseSDDMM_preprocess)
   CUSPARSE_LIBRARY_FIND(cusparseSDDMM)

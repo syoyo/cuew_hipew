@@ -103,7 +103,7 @@ tcufftDestroy *cufftDestroy;
 tcufftGetVersion *cufftGetVersion;
 tcufftGetProperty *cufftGetProperty;
 
-int cuewInitCUFFT() {
+int cuewInitCUFFT(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "cufft.dll",
@@ -131,6 +131,11 @@ NULL};
     return result;
   }
   cufft_lib = dynamic_library_open_find(paths);
+  if (cufft_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      cufft_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (cufft_lib == NULL) { result = -1; return result; }
 
   CUFFT_LIBRARY_FIND(cufftPlan1d)

@@ -4,7 +4,7 @@
 
 
 /*
- * Copyright 1993-2018 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2022 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -126,18 +126,19 @@ typedef void (*cusparseLoggerCallback_t)(int         logLevel,
 #endif
 #include "stdio.h"
 #include "cuew_cudart.h"
+#include "library_types.h"
 #include "cuComplex.h"
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
 struct cusparseContext;
-typedef struct cusparseContext * cusparseHandle_t; // id 0x1307760 
+typedef struct cusparseContext * cusparseHandle_t; // id 0x5558451b8b80 
 
 struct cusparseMatDescr;
-typedef struct cusparseMatDescr * cusparseMatDescr_t; // id 0x1307910 
+typedef struct cusparseMatDescr * cusparseMatDescr_t; // id 0x5558451b8d30 
 
 struct cusparseColorInfo;
-typedef struct cusparseColorInfo * cusparseColorInfo_t; // id 0x130ad90 
+typedef struct cusparseColorInfo * cusparseColorInfo_t; // id 0x5558451b9ab0 
 
 typedef enum 
 {
@@ -153,19 +154,19 @@ typedef enum
   CUSPARSE_STATUS_ZERO_PIVOT = 9,
   CUSPARSE_STATUS_NOT_SUPPORTED = 10,
   CUSPARSE_STATUS_INSUFFICIENT_RESOURCES = 11
-} cusparseStatus_t; // id 0x130af98 
+} cusparseStatus_t; // id 0x5558451b9cb8 
 
 typedef enum 
 {
   CUSPARSE_POINTER_MODE_HOST = 0,
   CUSPARSE_POINTER_MODE_DEVICE = 1
-} cusparsePointerMode_t; // id 0x130b788 
+} cusparsePointerMode_t; // id 0x5558451ba548 
 
 typedef enum 
 {
   CUSPARSE_ACTION_SYMBOLIC = 0,
   CUSPARSE_ACTION_NUMERIC = 1
-} cusparseAction_t; // id 0x130ba28 
+} cusparseAction_t; // id 0x5558451ba7f8 
 
 typedef enum 
 {
@@ -173,55 +174,50 @@ typedef enum
   CUSPARSE_MATRIX_TYPE_SYMMETRIC = 1,
   CUSPARSE_MATRIX_TYPE_HERMITIAN = 2,
   CUSPARSE_MATRIX_TYPE_TRIANGULAR = 3
-} cusparseMatrixType_t; // id 0x130bcc8 
+} cusparseMatrixType_t; // id 0x5558451baaa8 
 
 typedef enum 
 {
   CUSPARSE_FILL_MODE_LOWER = 0,
   CUSPARSE_FILL_MODE_UPPER = 1
-} cusparseFillMode_t; // id 0x130c078 
+} cusparseFillMode_t; // id 0x5558451bae78 
 
 typedef enum 
 {
   CUSPARSE_DIAG_TYPE_NON_UNIT = 0,
   CUSPARSE_DIAG_TYPE_UNIT = 1
-} cusparseDiagType_t; // id 0x130c318 
+} cusparseDiagType_t; // id 0x5558451bb128 
 
 typedef enum 
 {
   CUSPARSE_INDEX_BASE_ZERO = 0,
   CUSPARSE_INDEX_BASE_ONE = 1
-} cusparseIndexBase_t; // id 0x130c5b8 
+} cusparseIndexBase_t; // id 0x5558451bb3d8 
 
 typedef enum 
 {
   CUSPARSE_OPERATION_NON_TRANSPOSE = 0,
   CUSPARSE_OPERATION_TRANSPOSE = 1,
   CUSPARSE_OPERATION_CONJUGATE_TRANSPOSE = 2
-} cusparseOperation_t; // id 0x130c858 
+} cusparseOperation_t; // id 0x5558451bb688 
 
 typedef enum 
 {
   CUSPARSE_DIRECTION_ROW = 0,
   CUSPARSE_DIRECTION_COLUMN = 1
-} cusparseDirection_t; // id 0x130cb88 
+} cusparseDirection_t; // id 0x5558451bb9c8 
 
 typedef enum 
 {
   CUSPARSE_SOLVE_POLICY_NO_LEVEL = 0,
   CUSPARSE_SOLVE_POLICY_USE_LEVEL = 1
-} cusparseSolvePolicy_t; // id 0x130de58 
+} cusparseSolvePolicy_t; // id 0x5558451bbc78 
 
 typedef enum 
 {
   CUSPARSE_COLOR_ALG0 = 0,
   CUSPARSE_COLOR_ALG1 = 1
-} cusparseColorAlg_t; // id 0x130e0f8 
-
-typedef enum 
-{
-  CUSPARSE_ALG_MERGE_PATH
-} cusparseAlgMode_t; // id 0x130e398 
+} cusparseColorAlg_t; // id 0x5558451bcf58 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseCreate(cusparseHandle_t *);
 extern tcusparseCreate *cusparseCreate;
@@ -259,8 +255,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCreateMatDescr(cusparseMatDescr_t *);
 extern tcusparseCreateMatDescr *cusparseCreateMatDescr;
 typedef cusparseStatus_t  CUDAAPI tcusparseDestroyMatDescr(cusparseMatDescr_t);
 extern tcusparseDestroyMatDescr *cusparseDestroyMatDescr;
-typedef cusparseStatus_t  CUDAAPI tcusparseCopyMatDescr(cusparseMatDescr_t, const cusparseMatDescr_t);
-extern tcusparseCopyMatDescr *cusparseCopyMatDescr;
 typedef cusparseStatus_t  CUDAAPI tcusparseSetMatType(cusparseMatDescr_t, cusparseMatrixType_t);
 extern tcusparseSetMatType *cusparseSetMatType;
 typedef cusparseMatrixType_t  CUDAAPI tcusparseGetMatType(const cusparseMatDescr_t);
@@ -277,10 +271,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseSetMatIndexBase(cusparseMatDescr_t, c
 extern tcusparseSetMatIndexBase *cusparseSetMatIndexBase;
 typedef cusparseIndexBase_t  CUDAAPI tcusparseGetMatIndexBase(const cusparseMatDescr_t);
 extern tcusparseGetMatIndexBase *cusparseGetMatIndexBase;
-typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsrsv2Info(csrsv2Info_t *);
-extern tcusparseCreateCsrsv2Info *cusparseCreateCsrsv2Info;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroyCsrsv2Info(csrsv2Info_t);
-extern tcusparseDestroyCsrsv2Info *cusparseDestroyCsrsv2Info;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsric02Info(csric02Info_t *);
 extern tcusparseCreateCsric02Info *cusparseCreateCsric02Info;
 typedef cusparseStatus_t  CUDAAPI tcusparseDestroyCsric02Info(csric02Info_t);
@@ -313,50 +303,10 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCreateColorInfo(cusparseColorInfo_t *
 extern tcusparseCreateColorInfo *cusparseCreateColorInfo;
 typedef cusparseStatus_t  CUDAAPI tcusparseDestroyColorInfo(cusparseColorInfo_t);
 extern tcusparseDestroyColorInfo *cusparseDestroyColorInfo;
-typedef cusparseStatus_t  CUDAAPI tcusparseSetColorAlgs(cusparseColorInfo_t, cusparseColorAlg_t);
-extern tcusparseSetColorAlgs *cusparseSetColorAlgs;
-typedef cusparseStatus_t  CUDAAPI tcusparseGetColorAlgs(cusparseColorInfo_t, cusparseColorAlg_t *);
-extern tcusparseGetColorAlgs *cusparseGetColorAlgs;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreatePruneInfo(pruneInfo_t *);
 extern tcusparseCreatePruneInfo *cusparseCreatePruneInfo;
 typedef cusparseStatus_t  CUDAAPI tcusparseDestroyPruneInfo(pruneInfo_t);
 extern tcusparseDestroyPruneInfo *cusparseDestroyPruneInfo;
-typedef cusparseStatus_t  CUDAAPI tcusparseSaxpyi(cusparseHandle_t, int, const float *, const float *, const int *, float *, cusparseIndexBase_t);
-extern tcusparseSaxpyi *cusparseSaxpyi;
-typedef cusparseStatus_t  CUDAAPI tcusparseDaxpyi(cusparseHandle_t, int, const double *, const double *, const int *, double *, cusparseIndexBase_t);
-extern tcusparseDaxpyi *cusparseDaxpyi;
-typedef cusparseStatus_t  CUDAAPI tcusparseCaxpyi(cusparseHandle_t, int, const cuComplex *, const cuComplex *, const int *, cuComplex *, cusparseIndexBase_t);
-extern tcusparseCaxpyi *cusparseCaxpyi;
-typedef cusparseStatus_t  CUDAAPI tcusparseZaxpyi(cusparseHandle_t, int, const cuDoubleComplex *, const cuDoubleComplex *, const int *, cuDoubleComplex *, cusparseIndexBase_t);
-extern tcusparseZaxpyi *cusparseZaxpyi;
-typedef cusparseStatus_t  CUDAAPI tcusparseSgthr(cusparseHandle_t, int, const float *, float *, const int *, cusparseIndexBase_t);
-extern tcusparseSgthr *cusparseSgthr;
-typedef cusparseStatus_t  CUDAAPI tcusparseDgthr(cusparseHandle_t, int, const double *, double *, const int *, cusparseIndexBase_t);
-extern tcusparseDgthr *cusparseDgthr;
-typedef cusparseStatus_t  CUDAAPI tcusparseCgthr(cusparseHandle_t, int, const cuComplex *, cuComplex *, const int *, cusparseIndexBase_t);
-extern tcusparseCgthr *cusparseCgthr;
-typedef cusparseStatus_t  CUDAAPI tcusparseZgthr(cusparseHandle_t, int, const cuDoubleComplex *, cuDoubleComplex *, const int *, cusparseIndexBase_t);
-extern tcusparseZgthr *cusparseZgthr;
-typedef cusparseStatus_t  CUDAAPI tcusparseSgthrz(cusparseHandle_t, int, float *, float *, const int *, cusparseIndexBase_t);
-extern tcusparseSgthrz *cusparseSgthrz;
-typedef cusparseStatus_t  CUDAAPI tcusparseDgthrz(cusparseHandle_t, int, double *, double *, const int *, cusparseIndexBase_t);
-extern tcusparseDgthrz *cusparseDgthrz;
-typedef cusparseStatus_t  CUDAAPI tcusparseCgthrz(cusparseHandle_t, int, cuComplex *, cuComplex *, const int *, cusparseIndexBase_t);
-extern tcusparseCgthrz *cusparseCgthrz;
-typedef cusparseStatus_t  CUDAAPI tcusparseZgthrz(cusparseHandle_t, int, cuDoubleComplex *, cuDoubleComplex *, const int *, cusparseIndexBase_t);
-extern tcusparseZgthrz *cusparseZgthrz;
-typedef cusparseStatus_t  CUDAAPI tcusparseSsctr(cusparseHandle_t, int, const float *, const int *, float *, cusparseIndexBase_t);
-extern tcusparseSsctr *cusparseSsctr;
-typedef cusparseStatus_t  CUDAAPI tcusparseDsctr(cusparseHandle_t, int, const double *, const int *, double *, cusparseIndexBase_t);
-extern tcusparseDsctr *cusparseDsctr;
-typedef cusparseStatus_t  CUDAAPI tcusparseCsctr(cusparseHandle_t, int, const cuComplex *, const int *, cuComplex *, cusparseIndexBase_t);
-extern tcusparseCsctr *cusparseCsctr;
-typedef cusparseStatus_t  CUDAAPI tcusparseZsctr(cusparseHandle_t, int, const cuDoubleComplex *, const int *, cuDoubleComplex *, cusparseIndexBase_t);
-extern tcusparseZsctr *cusparseZsctr;
-typedef cusparseStatus_t  CUDAAPI tcusparseSroti(cusparseHandle_t, int, float *, const int *, float *, const float *, const float *, cusparseIndexBase_t);
-extern tcusparseSroti *cusparseSroti;
-typedef cusparseStatus_t  CUDAAPI tcusparseDroti(cusparseHandle_t, int, double *, const int *, double *, const double *, const double *, cusparseIndexBase_t);
-extern tcusparseDroti *cusparseDroti;
 typedef cusparseStatus_t  CUDAAPI tcusparseSgemvi(cusparseHandle_t, cusparseOperation_t, int, int, const float *, const float *, int, int, const float *, const int *, const float *, float *, cusparseIndexBase_t, void *);
 extern tcusparseSgemvi *cusparseSgemvi;
 typedef cusparseStatus_t  CUDAAPI tcusparseSgemvi_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, int, int *);
@@ -373,10 +323,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseZgemvi(cusparseHandle_t, cusparseOper
 extern tcusparseZgemvi *cusparseZgemvi;
 typedef cusparseStatus_t  CUDAAPI tcusparseZgemvi_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, int, int *);
 extern tcusparseZgemvi_bufferSize *cusparseZgemvi_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseCsrmvEx_bufferSize(cusparseHandle_t, cusparseAlgMode_t, cusparseOperation_t, int, int, int, const void *, cudaDataType, const cusparseMatDescr_t, const void *, cudaDataType, const int *, const int *, const void *, cudaDataType, const void *, cudaDataType, void *, cudaDataType, cudaDataType, size_t *);
-extern tcusparseCsrmvEx_bufferSize *cusparseCsrmvEx_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseCsrmvEx(cusparseHandle_t, cusparseAlgMode_t, cusparseOperation_t, int, int, int, const void *, cudaDataType, const cusparseMatDescr_t, const void *, cudaDataType, const int *, const int *, const void *, cudaDataType, const void *, cudaDataType, void *, cudaDataType, cudaDataType, void *);
-extern tcusparseCsrmvEx *cusparseCsrmvEx;
 typedef cusparseStatus_t  CUDAAPI tcusparseSbsrmv(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, int, int, int, const float *, const cusparseMatDescr_t, const float *, const int *, const int *, int, const float *, const float *, float *);
 extern tcusparseSbsrmv *cusparseSbsrmv;
 typedef cusparseStatus_t  CUDAAPI tcusparseDbsrmv(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, int, int, int, const double *, const cusparseMatDescr_t, const double *, const int *, const int *, int, const double *, const double *, double *);
@@ -393,40 +339,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCbsrxmv(cusparseHandle_t, cusparseDir
 extern tcusparseCbsrxmv *cusparseCbsrxmv;
 typedef cusparseStatus_t  CUDAAPI tcusparseZbsrxmv(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, int, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, const int *, const int *, int, const cuDoubleComplex *, const cuDoubleComplex *, cuDoubleComplex *);
 extern tcusparseZbsrxmv *cusparseZbsrxmv;
-typedef cusparseStatus_t  CUDAAPI tcusparseXcsrsv2_zeroPivot(cusparseHandle_t, csrsv2Info_t, int *);
-extern tcusparseXcsrsv2_zeroPivot *cusparseXcsrsv2_zeroPivot;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsv2_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, float *, const int *, const int *, csrsv2Info_t, int *);
-extern tcusparseScsrsv2_bufferSize *cusparseScsrsv2_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsv2_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, double *, const int *, const int *, csrsv2Info_t, int *);
-extern tcusparseDcsrsv2_bufferSize *cusparseDcsrsv2_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsv2_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, cuComplex *, const int *, const int *, csrsv2Info_t, int *);
-extern tcusparseCcsrsv2_bufferSize *cusparseCcsrsv2_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsv2_bufferSize(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, cuDoubleComplex *, const int *, const int *, csrsv2Info_t, int *);
-extern tcusparseZcsrsv2_bufferSize *cusparseZcsrsv2_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsv2_bufferSizeExt(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, float *, const int *, const int *, csrsv2Info_t, size_t *);
-extern tcusparseScsrsv2_bufferSizeExt *cusparseScsrsv2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsv2_bufferSizeExt(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, double *, const int *, const int *, csrsv2Info_t, size_t *);
-extern tcusparseDcsrsv2_bufferSizeExt *cusparseDcsrsv2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsv2_bufferSizeExt(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, cuComplex *, const int *, const int *, csrsv2Info_t, size_t *);
-extern tcusparseCcsrsv2_bufferSizeExt *cusparseCcsrsv2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsv2_bufferSizeExt(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, cuDoubleComplex *, const int *, const int *, csrsv2Info_t, size_t *);
-extern tcusparseZcsrsv2_bufferSizeExt *cusparseZcsrsv2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsv2_analysis(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, const float *, const int *, const int *, csrsv2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseScsrsv2_analysis *cusparseScsrsv2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsv2_analysis(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, const double *, const int *, const int *, csrsv2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseDcsrsv2_analysis *cusparseDcsrsv2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsv2_analysis(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, csrsv2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseCcsrsv2_analysis *cusparseCcsrsv2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsv2_analysis(cusparseHandle_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, csrsv2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseZcsrsv2_analysis *cusparseZcsrsv2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsv2_solve(cusparseHandle_t, cusparseOperation_t, int, int, const float *, const cusparseMatDescr_t, const float *, const int *, const int *, csrsv2Info_t, const float *, float *, cusparseSolvePolicy_t, void *);
-extern tcusparseScsrsv2_solve *cusparseScsrsv2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsv2_solve(cusparseHandle_t, cusparseOperation_t, int, int, const double *, const cusparseMatDescr_t, const double *, const int *, const int *, csrsv2Info_t, const double *, double *, cusparseSolvePolicy_t, void *);
-extern tcusparseDcsrsv2_solve *cusparseDcsrsv2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsv2_solve(cusparseHandle_t, cusparseOperation_t, int, int, const cuComplex *, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, csrsv2Info_t, const cuComplex *, cuComplex *, cusparseSolvePolicy_t, void *);
-extern tcusparseCcsrsv2_solve *cusparseCcsrsv2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsv2_solve(cusparseHandle_t, cusparseOperation_t, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, csrsv2Info_t, const cuDoubleComplex *, cuDoubleComplex *, cusparseSolvePolicy_t, void *);
-extern tcusparseZcsrsv2_solve *cusparseZcsrsv2_solve;
 typedef cusparseStatus_t  CUDAAPI tcusparseXbsrsv2_zeroPivot(cusparseHandle_t, bsrsv2Info_t, int *);
 extern tcusparseXbsrsv2_zeroPivot *cusparseXbsrsv2_zeroPivot;
 typedef cusparseStatus_t  CUDAAPI tcusparseSbsrsv2_bufferSize(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, int, int, const cusparseMatDescr_t, float *, const int *, const int *, int, bsrsv2Info_t, int *);
@@ -469,44 +381,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCbsrmm(cusparseHandle_t, cusparseDire
 extern tcusparseCbsrmm *cusparseCbsrmm;
 typedef cusparseStatus_t  CUDAAPI tcusparseZbsrmm(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, cusparseOperation_t, int, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, const int, const cuDoubleComplex *, const int, const cuDoubleComplex *, cuDoubleComplex *, int);
 extern tcusparseZbsrmm *cusparseZbsrmm;
-typedef cusparseStatus_t  CUDAAPI tcusparseSgemmi(cusparseHandle_t, int, int, int, int, const float *, const float *, int, const float *, const int *, const int *, const float *, float *, int);
-extern tcusparseSgemmi *cusparseSgemmi;
-typedef cusparseStatus_t  CUDAAPI tcusparseDgemmi(cusparseHandle_t, int, int, int, int, const double *, const double *, int, const double *, const int *, const int *, const double *, double *, int);
-extern tcusparseDgemmi *cusparseDgemmi;
-typedef cusparseStatus_t  CUDAAPI tcusparseCgemmi(cusparseHandle_t, int, int, int, int, const cuComplex *, const cuComplex *, int, const cuComplex *, const int *, const int *, const cuComplex *, cuComplex *, int);
-extern tcusparseCgemmi *cusparseCgemmi;
-typedef cusparseStatus_t  CUDAAPI tcusparseZgemmi(cusparseHandle_t, int, int, int, int, const cuDoubleComplex *, const cuDoubleComplex *, int, const cuDoubleComplex *, const int *, const int *, const cuDoubleComplex *, cuDoubleComplex *, int);
-extern tcusparseZgemmi *cusparseZgemmi;
-typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsrsm2Info(csrsm2Info_t *);
-extern tcusparseCreateCsrsm2Info *cusparseCreateCsrsm2Info;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroyCsrsm2Info(csrsm2Info_t);
-extern tcusparseDestroyCsrsm2Info *cusparseDestroyCsrsm2Info;
-typedef cusparseStatus_t  CUDAAPI tcusparseXcsrsm2_zeroPivot(cusparseHandle_t, csrsm2Info_t, int *);
-extern tcusparseXcsrsm2_zeroPivot *cusparseXcsrsm2_zeroPivot;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsm2_bufferSizeExt(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const float *, const cusparseMatDescr_t, const float *, const int *, const int *, const float *, int, csrsm2Info_t, cusparseSolvePolicy_t, size_t *);
-extern tcusparseScsrsm2_bufferSizeExt *cusparseScsrsm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsm2_bufferSizeExt(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const double *, const cusparseMatDescr_t, const double *, const int *, const int *, const double *, int, csrsm2Info_t, cusparseSolvePolicy_t, size_t *);
-extern tcusparseDcsrsm2_bufferSizeExt *cusparseDcsrsm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsm2_bufferSizeExt(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuComplex *, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, const cuComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, size_t *);
-extern tcusparseCcsrsm2_bufferSizeExt *cusparseCcsrsm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsm2_bufferSizeExt(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, const cuDoubleComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, size_t *);
-extern tcusparseZcsrsm2_bufferSizeExt *cusparseZcsrsm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsm2_analysis(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const float *, const cusparseMatDescr_t, const float *, const int *, const int *, const float *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseScsrsm2_analysis *cusparseScsrsm2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsm2_analysis(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const double *, const cusparseMatDescr_t, const double *, const int *, const int *, const double *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseDcsrsm2_analysis *cusparseDcsrsm2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsm2_analysis(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuComplex *, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, const cuComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseCcsrsm2_analysis *cusparseCcsrsm2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsm2_analysis(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, const cuDoubleComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseZcsrsm2_analysis *cusparseZcsrsm2_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrsm2_solve(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const float *, const cusparseMatDescr_t, const float *, const int *, const int *, float *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseScsrsm2_solve *cusparseScsrsm2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrsm2_solve(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const double *, const cusparseMatDescr_t, const double *, const int *, const int *, double *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseDcsrsm2_solve *cusparseDcsrsm2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrsm2_solve(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuComplex *, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, cuComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseCcsrsm2_solve *cusparseCcsrsm2_solve;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrsm2_solve(cusparseHandle_t, int, cusparseOperation_t, cusparseOperation_t, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, cuDoubleComplex *, int, csrsm2Info_t, cusparseSolvePolicy_t, void *);
-extern tcusparseZcsrsm2_solve *cusparseZcsrsm2_solve;
 typedef cusparseStatus_t  CUDAAPI tcusparseXbsrsm2_zeroPivot(cusparseHandle_t, bsrsm2Info_t, int *);
 extern tcusparseXbsrsm2_zeroPivot *cusparseXbsrsm2_zeroPivot;
 typedef cusparseStatus_t  CUDAAPI tcusparseSbsrsm2_bufferSize(cusparseHandle_t, cusparseDirection_t, cusparseOperation_t, cusparseOperation_t, int, int, int, const cusparseMatDescr_t, float *, const int *, const int *, int, bsrsm2Info_t, int *);
@@ -773,28 +647,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCgpsvInterleavedBatch(cusparseHandle_
 extern tcusparseCgpsvInterleavedBatch *cusparseCgpsvInterleavedBatch;
 typedef cusparseStatus_t  CUDAAPI tcusparseZgpsvInterleavedBatch(cusparseHandle_t, int, int, cuDoubleComplex *, cuDoubleComplex *, cuDoubleComplex *, cuDoubleComplex *, cuDoubleComplex *, cuDoubleComplex *, int, void *);
 extern tcusparseZgpsvInterleavedBatch *cusparseZgpsvInterleavedBatch;
-typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsrgemm2Info(csrgemm2Info_t *);
-extern tcusparseCreateCsrgemm2Info *cusparseCreateCsrgemm2Info;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroyCsrgemm2Info(csrgemm2Info_t);
-extern tcusparseDestroyCsrgemm2Info *cusparseDestroyCsrgemm2Info;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrgemm2_bufferSizeExt(cusparseHandle_t, int, int, int, const float *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const float *, const cusparseMatDescr_t, int, const int *, const int *, csrgemm2Info_t, size_t *);
-extern tcusparseScsrgemm2_bufferSizeExt *cusparseScsrgemm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrgemm2_bufferSizeExt(cusparseHandle_t, int, int, int, const double *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const double *, const cusparseMatDescr_t, int, const int *, const int *, csrgemm2Info_t, size_t *);
-extern tcusparseDcsrgemm2_bufferSizeExt *cusparseDcsrgemm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrgemm2_bufferSizeExt(cusparseHandle_t, int, int, int, const cuComplex *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const cuComplex *, const cusparseMatDescr_t, int, const int *, const int *, csrgemm2Info_t, size_t *);
-extern tcusparseCcsrgemm2_bufferSizeExt *cusparseCcsrgemm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrgemm2_bufferSizeExt(cusparseHandle_t, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const cuDoubleComplex *, const cusparseMatDescr_t, int, const int *, const int *, csrgemm2Info_t, size_t *);
-extern tcusparseZcsrgemm2_bufferSizeExt *cusparseZcsrgemm2_bufferSizeExt;
-typedef cusparseStatus_t  CUDAAPI tcusparseXcsrgemm2Nnz(cusparseHandle_t, int, int, int, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int, const int *, const int *, const cusparseMatDescr_t, int *, int *, const csrgemm2Info_t, void *);
-extern tcusparseXcsrgemm2Nnz *cusparseXcsrgemm2Nnz;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsrgemm2(cusparseHandle_t, int, int, int, const float *, const cusparseMatDescr_t, int, const float *, const int *, const int *, const cusparseMatDescr_t, int, const float *, const int *, const int *, const float *, const cusparseMatDescr_t, int, const float *, const int *, const int *, const cusparseMatDescr_t, float *, const int *, int *, const csrgemm2Info_t, void *);
-extern tcusparseScsrgemm2 *cusparseScsrgemm2;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsrgemm2(cusparseHandle_t, int, int, int, const double *, const cusparseMatDescr_t, int, const double *, const int *, const int *, const cusparseMatDescr_t, int, const double *, const int *, const int *, const double *, const cusparseMatDescr_t, int, const double *, const int *, const int *, const cusparseMatDescr_t, double *, const int *, int *, const csrgemm2Info_t, void *);
-extern tcusparseDcsrgemm2 *cusparseDcsrgemm2;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsrgemm2(cusparseHandle_t, int, int, int, const cuComplex *, const cusparseMatDescr_t, int, const cuComplex *, const int *, const int *, const cusparseMatDescr_t, int, const cuComplex *, const int *, const int *, const cuComplex *, const cusparseMatDescr_t, int, const cuComplex *, const int *, const int *, const cusparseMatDescr_t, cuComplex *, const int *, int *, const csrgemm2Info_t, void *);
-extern tcusparseCcsrgemm2 *cusparseCcsrgemm2;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsrgemm2(cusparseHandle_t, int, int, int, const cuDoubleComplex *, const cusparseMatDescr_t, int, const cuDoubleComplex *, const int *, const int *, const cusparseMatDescr_t, int, const cuDoubleComplex *, const int *, const int *, const cuDoubleComplex *, const cusparseMatDescr_t, int, const cuDoubleComplex *, const int *, const int *, const cusparseMatDescr_t, cuDoubleComplex *, const int *, int *, const csrgemm2Info_t, void *);
-extern tcusparseZcsrgemm2 *cusparseZcsrgemm2;
 typedef cusparseStatus_t  CUDAAPI tcusparseScsrgeam2_bufferSizeExt(cusparseHandle_t, int, int, const float *, const cusparseMatDescr_t, int, const float *, const int *, const int *, const float *, const cusparseMatDescr_t, int, const float *, const int *, const int *, const cusparseMatDescr_t, const float *, const int *, const int *, size_t *);
 extern tcusparseScsrgeam2_bufferSizeExt *cusparseScsrgeam2_bufferSizeExt;
 typedef cusparseStatus_t  CUDAAPI tcusparseDcsrgeam2_bufferSizeExt(cusparseHandle_t, int, int, const double *, const cusparseMatDescr_t, int, const double *, const int *, const int *, const double *, const cusparseMatDescr_t, int, const double *, const int *, const int *, const cusparseMatDescr_t, const double *, const int *, const int *, size_t *);
@@ -845,38 +697,6 @@ typedef cusparseStatus_t  CUDAAPI tcusparseCcsr2csr_compress(cusparseHandle_t, i
 extern tcusparseCcsr2csr_compress *cusparseCcsr2csr_compress;
 typedef cusparseStatus_t  CUDAAPI tcusparseZcsr2csr_compress(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, int, const int *, cuDoubleComplex *, int *, int *, cuDoubleComplex);
 extern tcusparseZcsr2csr_compress *cusparseZcsr2csr_compress;
-typedef cusparseStatus_t  CUDAAPI tcusparseSdense2csr(cusparseHandle_t, int, int, const cusparseMatDescr_t, const float *, int, const int *, float *, int *, int *);
-extern tcusparseSdense2csr *cusparseSdense2csr;
-typedef cusparseStatus_t  CUDAAPI tcusparseDdense2csr(cusparseHandle_t, int, int, const cusparseMatDescr_t, const double *, int, const int *, double *, int *, int *);
-extern tcusparseDdense2csr *cusparseDdense2csr;
-typedef cusparseStatus_t  CUDAAPI tcusparseCdense2csr(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuComplex *, int, const int *, cuComplex *, int *, int *);
-extern tcusparseCdense2csr *cusparseCdense2csr;
-typedef cusparseStatus_t  CUDAAPI tcusparseZdense2csr(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, int, const int *, cuDoubleComplex *, int *, int *);
-extern tcusparseZdense2csr *cusparseZdense2csr;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsr2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const float *, const int *, const int *, float *, int);
-extern tcusparseScsr2dense *cusparseScsr2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsr2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const double *, const int *, const int *, double *, int);
-extern tcusparseDcsr2dense *cusparseDcsr2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsr2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, cuComplex *, int);
-extern tcusparseCcsr2dense *cusparseCcsr2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsr2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, cuDoubleComplex *, int);
-extern tcusparseZcsr2dense *cusparseZcsr2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseSdense2csc(cusparseHandle_t, int, int, const cusparseMatDescr_t, const float *, int, const int *, float *, int *, int *);
-extern tcusparseSdense2csc *cusparseSdense2csc;
-typedef cusparseStatus_t  CUDAAPI tcusparseDdense2csc(cusparseHandle_t, int, int, const cusparseMatDescr_t, const double *, int, const int *, double *, int *, int *);
-extern tcusparseDdense2csc *cusparseDdense2csc;
-typedef cusparseStatus_t  CUDAAPI tcusparseCdense2csc(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuComplex *, int, const int *, cuComplex *, int *, int *);
-extern tcusparseCdense2csc *cusparseCdense2csc;
-typedef cusparseStatus_t  CUDAAPI tcusparseZdense2csc(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, int, const int *, cuDoubleComplex *, int *, int *);
-extern tcusparseZdense2csc *cusparseZdense2csc;
-typedef cusparseStatus_t  CUDAAPI tcusparseScsc2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const float *, const int *, const int *, float *, int);
-extern tcusparseScsc2dense *cusparseScsc2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseDcsc2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const double *, const int *, const int *, double *, int);
-extern tcusparseDcsc2dense *cusparseDcsc2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseCcsc2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuComplex *, const int *, const int *, cuComplex *, int);
-extern tcusparseCcsc2dense *cusparseCcsc2dense;
-typedef cusparseStatus_t  CUDAAPI tcusparseZcsc2dense(cusparseHandle_t, int, int, const cusparseMatDescr_t, const cuDoubleComplex *, const int *, const int *, cuDoubleComplex *, int);
-extern tcusparseZcsc2dense *cusparseZcsc2dense;
 typedef cusparseStatus_t  CUDAAPI tcusparseXcoo2csr(cusparseHandle_t, const int *, int, int, int *, cusparseIndexBase_t);
 extern tcusparseXcoo2csr *cusparseXcoo2csr;
 typedef cusparseStatus_t  CUDAAPI tcusparseXcsr2coo(cusparseHandle_t, const int *, int, int, int *, cusparseIndexBase_t);
@@ -1075,9 +895,9 @@ typedef cusparseStatus_t  CUDAAPI tcusparseDpruneCsr2csrByPercentage(cusparseHan
 extern tcusparseDpruneCsr2csrByPercentage *cusparseDpruneCsr2csrByPercentage;
 typedef enum 
 {
-  CUSPARSE_CSR2CSC_ALG1 = 1,
-  CUSPARSE_CSR2CSC_ALG2 = 2
-} cusparseCsr2CscAlg_t; // id 0x13f97a0 
+  CUSPARSE_CSR2CSC_ALG_DEFAULT = 1,
+  CUSPARSE_CSR2CSC_ALG1 = 1
+} cusparseCsr2CscAlg_t; // id 0x555845263d10 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseCsr2cscEx2(cusparseHandle_t, int, int, int, const void *, const int *, const int *, void *, int *, int *, cudaDataType, cusparseAction_t, cusparseIndexBase_t, cusparseCsr2CscAlg_t, void *);
 extern tcusparseCsr2cscEx2 *cusparseCsr2cscEx2;
@@ -1088,217 +908,268 @@ typedef enum
   CUSPARSE_FORMAT_CSR = 1,
   CUSPARSE_FORMAT_CSC = 2,
   CUSPARSE_FORMAT_COO = 3,
-  CUSPARSE_FORMAT_COO_AOS = 4,
-  CUSPARSE_FORMAT_BLOCKED_ELL = 5
-} cusparseFormat_t; // id 0x13faf88 
+  CUSPARSE_FORMAT_BLOCKED_ELL = 5,
+  CUSPARSE_FORMAT_BSR = 6,
+  CUSPARSE_FORMAT_SLICED_ELLPACK = 7
+} cusparseFormat_t; // id 0x555845265490 
 
 typedef enum 
 {
   CUSPARSE_ORDER_COL = 1,
   CUSPARSE_ORDER_ROW = 2
-} cusparseOrder_t; // id 0x13fb498 
+} cusparseOrder_t; // id 0x555845265a98 
 
 typedef enum 
 {
   CUSPARSE_INDEX_16U = 1,
   CUSPARSE_INDEX_32I = 2,
   CUSPARSE_INDEX_64I = 3
-} cusparseIndexType_t; // id 0x13fb798 
+} cusparseIndexType_t; // id 0x555845265da8 
 
 struct cusparseSpVecDescr;
 struct cusparseDnVecDescr;
 struct cusparseSpMatDescr;
 struct cusparseDnMatDescr;
-typedef struct cusparseSpVecDescr * cusparseSpVecDescr_t; // id 0x13fbe80 
+typedef struct cusparseSpVecDescr * cusparseSpVecDescr_t; // id 0x5558452664b0 
 
-typedef struct cusparseDnVecDescr * cusparseDnVecDescr_t; // id 0x13fbf90 
+typedef struct cusparseDnVecDescr * cusparseDnVecDescr_t; // id 0x5558452665c0 
 
-typedef struct cusparseSpMatDescr * cusparseSpMatDescr_t; // id 0x13fc0a0 
+typedef struct cusparseSpMatDescr * cusparseSpMatDescr_t; // id 0x5558452666d0 
 
-typedef struct cusparseDnMatDescr * cusparseDnMatDescr_t; // id 0x13fc1b0 
+typedef struct cusparseDnMatDescr * cusparseDnMatDescr_t; // id 0x5558452667e0 
+
+typedef const struct cusparseSpVecDescr * cusparseConstSpVecDescr_t; // id 0x5558452668c0 
+
+typedef const struct cusparseDnVecDescr * cusparseConstDnVecDescr_t; // id 0x5558452669a0 
+
+typedef const struct cusparseSpMatDescr * cusparseConstSpMatDescr_t; // id 0x555845266a80 
+
+typedef const struct cusparseDnMatDescr * cusparseConstDnMatDescr_t; // id 0x555845266b60 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateSpVec(cusparseSpVecDescr_t *, int64_t, int64_t, void *, void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
 extern tcusparseCreateSpVec *cusparseCreateSpVec;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroySpVec(cusparseSpVecDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstSpVec(cusparseConstSpVecDescr_t *, int64_t, int64_t, const void *, const void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstSpVec *cusparseCreateConstSpVec;
+typedef cusparseStatus_t  CUDAAPI tcusparseDestroySpVec(cusparseConstSpVecDescr_t);
 extern tcusparseDestroySpVec *cusparseDestroySpVec;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpVecGet(cusparseSpVecDescr_t, int64_t *, int64_t *, void **, void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
 extern tcusparseSpVecGet *cusparseSpVecGet;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpVecGetIndexBase(cusparseSpVecDescr_t, cusparseIndexBase_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseConstSpVecGet(cusparseConstSpVecDescr_t, int64_t *, int64_t *, const void **, const void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseConstSpVecGet *cusparseConstSpVecGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseSpVecGetIndexBase(cusparseConstSpVecDescr_t, cusparseIndexBase_t *);
 extern tcusparseSpVecGetIndexBase *cusparseSpVecGetIndexBase;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpVecGetValues(cusparseSpVecDescr_t, void **);
 extern tcusparseSpVecGetValues *cusparseSpVecGetValues;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstSpVecGetValues(cusparseConstSpVecDescr_t, const void **);
+extern tcusparseConstSpVecGetValues *cusparseConstSpVecGetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpVecSetValues(cusparseSpVecDescr_t, void *);
 extern tcusparseSpVecSetValues *cusparseSpVecSetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateDnVec(cusparseDnVecDescr_t *, int64_t, void *, cudaDataType);
 extern tcusparseCreateDnVec *cusparseCreateDnVec;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroyDnVec(cusparseDnVecDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstDnVec(cusparseConstDnVecDescr_t *, int64_t, const void *, cudaDataType);
+extern tcusparseCreateConstDnVec *cusparseCreateConstDnVec;
+typedef cusparseStatus_t  CUDAAPI tcusparseDestroyDnVec(cusparseConstDnVecDescr_t);
 extern tcusparseDestroyDnVec *cusparseDestroyDnVec;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnVecGet(cusparseDnVecDescr_t, int64_t *, void **, cudaDataType *);
 extern tcusparseDnVecGet *cusparseDnVecGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstDnVecGet(cusparseConstDnVecDescr_t, int64_t *, const void **, cudaDataType *);
+extern tcusparseConstDnVecGet *cusparseConstDnVecGet;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnVecGetValues(cusparseDnVecDescr_t, void **);
 extern tcusparseDnVecGetValues *cusparseDnVecGetValues;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstDnVecGetValues(cusparseConstDnVecDescr_t, const void **);
+extern tcusparseConstDnVecGetValues *cusparseConstDnVecGetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnVecSetValues(cusparseDnVecDescr_t, void *);
 extern tcusparseDnVecSetValues *cusparseDnVecSetValues;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroySpMat(cusparseSpMatDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseDestroySpMat(cusparseConstSpMatDescr_t);
 extern tcusparseDestroySpMat *cusparseDestroySpMat;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetFormat(cusparseSpMatDescr_t, cusparseFormat_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetFormat(cusparseConstSpMatDescr_t, cusparseFormat_t *);
 extern tcusparseSpMatGetFormat *cusparseSpMatGetFormat;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetIndexBase(cusparseSpMatDescr_t, cusparseIndexBase_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetIndexBase(cusparseConstSpMatDescr_t, cusparseIndexBase_t *);
 extern tcusparseSpMatGetIndexBase *cusparseSpMatGetIndexBase;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetValues(cusparseSpMatDescr_t, void **);
 extern tcusparseSpMatGetValues *cusparseSpMatGetValues;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstSpMatGetValues(cusparseConstSpMatDescr_t, const void **);
+extern tcusparseConstSpMatGetValues *cusparseConstSpMatGetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpMatSetValues(cusparseSpMatDescr_t, void *);
 extern tcusparseSpMatSetValues *cusparseSpMatSetValues;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetSize(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetSize(cusparseConstSpMatDescr_t, int64_t *, int64_t *, int64_t *);
 extern tcusparseSpMatGetSize *cusparseSpMatGetSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatSetStridedBatch(cusparseSpMatDescr_t, int);
-extern tcusparseSpMatSetStridedBatch *cusparseSpMatSetStridedBatch;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetStridedBatch(cusparseSpMatDescr_t, int *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetStridedBatch(cusparseConstSpMatDescr_t, int *);
 extern tcusparseSpMatGetStridedBatch *cusparseSpMatGetStridedBatch;
 typedef cusparseStatus_t  CUDAAPI tcusparseCooSetStridedBatch(cusparseSpMatDescr_t, int, int64_t);
 extern tcusparseCooSetStridedBatch *cusparseCooSetStridedBatch;
 typedef cusparseStatus_t  CUDAAPI tcusparseCsrSetStridedBatch(cusparseSpMatDescr_t, int, int64_t, int64_t);
 extern tcusparseCsrSetStridedBatch *cusparseCsrSetStridedBatch;
+typedef cusparseStatus_t  CUDAAPI tcusparseBsrSetStridedBatch(cusparseSpMatDescr_t, int, int64_t, int64_t, int64_t);
+extern tcusparseBsrSetStridedBatch *cusparseBsrSetStridedBatch;
 typedef enum 
 {
   CUSPARSE_SPMAT_FILL_MODE,
   CUSPARSE_SPMAT_DIAG_TYPE
-} cusparseSpMatAttribute_t; // id 0x14010d8 
+} cusparseSpMatAttribute_t; // id 0x55584526e7d0 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetAttribute(cusparseSpMatDescr_t, cusparseSpMatAttribute_t, void *, size_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMatGetAttribute(cusparseConstSpMatDescr_t, cusparseSpMatAttribute_t, void *, size_t);
 extern tcusparseSpMatGetAttribute *cusparseSpMatGetAttribute;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpMatSetAttribute(cusparseSpMatDescr_t, cusparseSpMatAttribute_t, void *, size_t);
 extern tcusparseSpMatSetAttribute *cusparseSpMatSetAttribute;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsr(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, void *, void *, void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
 extern tcusparseCreateCsr *cusparseCreateCsr;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstCsr(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, const void *, const void *, const void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstCsr *cusparseCreateConstCsr;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateCsc(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, void *, void *, void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
 extern tcusparseCreateCsc *cusparseCreateCsc;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstCsc(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, const void *, const void *, const void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstCsc *cusparseCreateConstCsc;
 typedef cusparseStatus_t  CUDAAPI tcusparseCsrGet(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *, void **, void **, void **, cusparseIndexType_t *, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
 extern tcusparseCsrGet *cusparseCsrGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstCsrGet(cusparseConstSpMatDescr_t, int64_t *, int64_t *, int64_t *, const void **, const void **, const void **, cusparseIndexType_t *, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseConstCsrGet *cusparseConstCsrGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseCscGet(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *, void **, void **, void **, cusparseIndexType_t *, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseCscGet *cusparseCscGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstCscGet(cusparseConstSpMatDescr_t, int64_t *, int64_t *, int64_t *, const void **, const void **, const void **, cusparseIndexType_t *, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseConstCscGet *cusparseConstCscGet;
 typedef cusparseStatus_t  CUDAAPI tcusparseCsrSetPointers(cusparseSpMatDescr_t, void *, void *, void *);
 extern tcusparseCsrSetPointers *cusparseCsrSetPointers;
 typedef cusparseStatus_t  CUDAAPI tcusparseCscSetPointers(cusparseSpMatDescr_t, void *, void *, void *);
 extern tcusparseCscSetPointers *cusparseCscSetPointers;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateBsr(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, int64_t, void *, void *, void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType, cusparseOrder_t);
+extern tcusparseCreateBsr *cusparseCreateBsr;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstBsr(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, int64_t, const void *, const void *, const void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType, cusparseOrder_t);
+extern tcusparseCreateConstBsr *cusparseCreateConstBsr;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateCoo(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, void *, void *, void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
 extern tcusparseCreateCoo *cusparseCreateCoo;
-typedef cusparseStatus_t  CUDAAPI tcusparseCreateCooAoS(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, void *, void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
-extern tcusparseCreateCooAoS *cusparseCreateCooAoS;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstCoo(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, const void *, const void *, const void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstCoo *cusparseCreateConstCoo;
 typedef cusparseStatus_t  CUDAAPI tcusparseCooGet(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *, void **, void **, void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
 extern tcusparseCooGet *cusparseCooGet;
-typedef cusparseStatus_t  CUDAAPI tcusparseCooAoSGet(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *, void **, void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
-extern tcusparseCooAoSGet *cusparseCooAoSGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstCooGet(cusparseConstSpMatDescr_t, int64_t *, int64_t *, int64_t *, const void **, const void **, const void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseConstCooGet *cusparseConstCooGet;
 typedef cusparseStatus_t  CUDAAPI tcusparseCooSetPointers(cusparseSpMatDescr_t, void *, void *, void *);
 extern tcusparseCooSetPointers *cusparseCooSetPointers;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateBlockedEll(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, void *, void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
 extern tcusparseCreateBlockedEll *cusparseCreateBlockedEll;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstBlockedEll(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, const void *, const void *, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstBlockedEll *cusparseCreateConstBlockedEll;
 typedef cusparseStatus_t  CUDAAPI tcusparseBlockedEllGet(cusparseSpMatDescr_t, int64_t *, int64_t *, int64_t *, int64_t *, void **, void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
 extern tcusparseBlockedEllGet *cusparseBlockedEllGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstBlockedEllGet(cusparseConstSpMatDescr_t, int64_t *, int64_t *, int64_t *, int64_t *, const void **, const void **, cusparseIndexType_t *, cusparseIndexBase_t *, cudaDataType *);
+extern tcusparseConstBlockedEllGet *cusparseConstBlockedEllGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateSlicedEll(cusparseSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, int64_t, void *, void *, void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateSlicedEll *cusparseCreateSlicedEll;
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstSlicedEll(cusparseConstSpMatDescr_t *, int64_t, int64_t, int64_t, int64_t, int64_t, const void *, const void *, const void *, cusparseIndexType_t, cusparseIndexType_t, cusparseIndexBase_t, cudaDataType);
+extern tcusparseCreateConstSlicedEll *cusparseCreateConstSlicedEll;
 typedef cusparseStatus_t  CUDAAPI tcusparseCreateDnMat(cusparseDnMatDescr_t *, int64_t, int64_t, int64_t, void *, cudaDataType, cusparseOrder_t);
 extern tcusparseCreateDnMat *cusparseCreateDnMat;
-typedef cusparseStatus_t  CUDAAPI tcusparseDestroyDnMat(cusparseDnMatDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseCreateConstDnMat(cusparseConstDnMatDescr_t *, int64_t, int64_t, int64_t, const void *, cudaDataType, cusparseOrder_t);
+extern tcusparseCreateConstDnMat *cusparseCreateConstDnMat;
+typedef cusparseStatus_t  CUDAAPI tcusparseDestroyDnMat(cusparseConstDnMatDescr_t);
 extern tcusparseDestroyDnMat *cusparseDestroyDnMat;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnMatGet(cusparseDnMatDescr_t, int64_t *, int64_t *, int64_t *, void **, cudaDataType *, cusparseOrder_t *);
 extern tcusparseDnMatGet *cusparseDnMatGet;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstDnMatGet(cusparseConstDnMatDescr_t, int64_t *, int64_t *, int64_t *, const void **, cudaDataType *, cusparseOrder_t *);
+extern tcusparseConstDnMatGet *cusparseConstDnMatGet;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnMatGetValues(cusparseDnMatDescr_t, void **);
 extern tcusparseDnMatGetValues *cusparseDnMatGetValues;
+typedef cusparseStatus_t  CUDAAPI tcusparseConstDnMatGetValues(cusparseConstDnMatDescr_t, const void **);
+extern tcusparseConstDnMatGetValues *cusparseConstDnMatGetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnMatSetValues(cusparseDnMatDescr_t, void *);
 extern tcusparseDnMatSetValues *cusparseDnMatSetValues;
 typedef cusparseStatus_t  CUDAAPI tcusparseDnMatSetStridedBatch(cusparseDnMatDescr_t, int, int64_t);
 extern tcusparseDnMatSetStridedBatch *cusparseDnMatSetStridedBatch;
-typedef cusparseStatus_t  CUDAAPI tcusparseDnMatGetStridedBatch(cusparseDnMatDescr_t, int *, int64_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseDnMatGetStridedBatch(cusparseConstDnMatDescr_t, int *, int64_t *);
 extern tcusparseDnMatGetStridedBatch *cusparseDnMatGetStridedBatch;
-typedef cusparseStatus_t  CUDAAPI tcusparseAxpby(cusparseHandle_t, const void *, cusparseSpVecDescr_t, const void *, cusparseDnVecDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseAxpby(cusparseHandle_t, const void *, cusparseConstSpVecDescr_t, const void *, cusparseDnVecDescr_t);
 extern tcusparseAxpby *cusparseAxpby;
-typedef cusparseStatus_t  CUDAAPI tcusparseGather(cusparseHandle_t, cusparseDnVecDescr_t, cusparseSpVecDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseGather(cusparseHandle_t, cusparseConstDnVecDescr_t, cusparseSpVecDescr_t);
 extern tcusparseGather *cusparseGather;
-typedef cusparseStatus_t  CUDAAPI tcusparseScatter(cusparseHandle_t, cusparseSpVecDescr_t, cusparseDnVecDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseScatter(cusparseHandle_t, cusparseConstSpVecDescr_t, cusparseDnVecDescr_t);
 extern tcusparseScatter *cusparseScatter;
 typedef cusparseStatus_t  CUDAAPI tcusparseRot(cusparseHandle_t, const void *, const void *, cusparseSpVecDescr_t, cusparseDnVecDescr_t);
 extern tcusparseRot *cusparseRot;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpVV_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseSpVecDescr_t, cusparseDnVecDescr_t, const void *, cudaDataType, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpVV_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseConstSpVecDescr_t, cusparseConstDnVecDescr_t, const void *, cudaDataType, size_t *);
 extern tcusparseSpVV_bufferSize *cusparseSpVV_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpVV(cusparseHandle_t, cusparseOperation_t, cusparseSpVecDescr_t, cusparseDnVecDescr_t, void *, cudaDataType, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpVV(cusparseHandle_t, cusparseOperation_t, cusparseConstSpVecDescr_t, cusparseConstDnVecDescr_t, void *, cudaDataType, void *);
 extern tcusparseSpVV *cusparseSpVV;
 typedef enum 
 {
   CUSPARSE_SPARSETODENSE_ALG_DEFAULT = 0
-} cusparseSparseToDenseAlg_t; // id 0x140a670 
+} cusparseSparseToDenseAlg_t; // id 0x55584527e140 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSparseToDense_bufferSize(cusparseHandle_t, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseSparseToDenseAlg_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSparseToDense_bufferSize(cusparseHandle_t, cusparseConstSpMatDescr_t, cusparseDnMatDescr_t, cusparseSparseToDenseAlg_t, size_t *);
 extern tcusparseSparseToDense_bufferSize *cusparseSparseToDense_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSparseToDense(cusparseHandle_t, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseSparseToDenseAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSparseToDense(cusparseHandle_t, cusparseConstSpMatDescr_t, cusparseDnMatDescr_t, cusparseSparseToDenseAlg_t, void *);
 extern tcusparseSparseToDense *cusparseSparseToDense;
 typedef enum 
 {
   CUSPARSE_DENSETOSPARSE_ALG_DEFAULT = 0
-} cusparseDenseToSparseAlg_t; // id 0x140b120 
+} cusparseDenseToSparseAlg_t; // id 0x55584527ebe0 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_bufferSize(cusparseHandle_t, cusparseDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_bufferSize(cusparseHandle_t, cusparseConstDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, size_t *);
 extern tcusparseDenseToSparse_bufferSize *cusparseDenseToSparse_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_analysis(cusparseHandle_t, cusparseDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_analysis(cusparseHandle_t, cusparseConstDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, void *);
 extern tcusparseDenseToSparse_analysis *cusparseDenseToSparse_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_convert(cusparseHandle_t, cusparseDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseDenseToSparse_convert(cusparseHandle_t, cusparseConstDnMatDescr_t, cusparseSpMatDescr_t, cusparseDenseToSparseAlg_t, void *);
 extern tcusparseDenseToSparse_convert *cusparseDenseToSparse_convert;
 typedef enum 
 {
-  CUSPARSE_MV_ALG_DEFAULT = 0,
-  CUSPARSE_COOMV_ALG = 1,
-  CUSPARSE_CSRMV_ALG1 = 2,
-  CUSPARSE_CSRMV_ALG2 = 3,
   CUSPARSE_SPMV_ALG_DEFAULT = 0,
   CUSPARSE_SPMV_CSR_ALG1 = 2,
   CUSPARSE_SPMV_CSR_ALG2 = 3,
   CUSPARSE_SPMV_COO_ALG1 = 1,
-  CUSPARSE_SPMV_COO_ALG2 = 4
-} cusparseSpMVAlg_t; // id 0x140bee0 
+  CUSPARSE_SPMV_COO_ALG2 = 4,
+  CUSPARSE_SPMV_SELL_ALG1 = 5
+} cusparseSpMVAlg_t; // id 0x55584527f9a0 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMV(cusparseHandle_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnVecDescr_t, const void *, cusparseDnVecDescr_t, cudaDataType, cusparseSpMVAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMV(cusparseHandle_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnVecDescr_t, const void *, cusparseDnVecDescr_t, cudaDataType, cusparseSpMVAlg_t, void *);
 extern tcusparseSpMV *cusparseSpMV;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMV_bufferSize(cusparseHandle_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnVecDescr_t, const void *, cusparseDnVecDescr_t, cudaDataType, cusparseSpMVAlg_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMV_bufferSize(cusparseHandle_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnVecDescr_t, const void *, cusparseDnVecDescr_t, cudaDataType, cusparseSpMVAlg_t, size_t *);
 extern tcusparseSpMV_bufferSize *cusparseSpMV_bufferSize;
 typedef enum 
 {
   CUSPARSE_SPSV_ALG_DEFAULT = 0
-} cusparseSpSVAlg_t; // id 0x140f728 
+} cusparseSpSVAlg_t; // id 0x555845280cf8 
+
+typedef enum 
+{
+  CUSPARSE_SPSV_UPDATE_GENERAL = 0,
+  CUSPARSE_SPSV_UPDATE_DIAGONAL = 1
+} cusparseSpSVUpdate_t; // id 0x555845280f18 
 
 struct cusparseSpSVDescr;
-typedef struct cusparseSpSVDescr * cusparseSpSVDescr_t; // id 0x140faa0 
+typedef struct cusparseSpSVDescr * cusparseSpSVDescr_t; // id 0x555845281320 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_createDescr(cusparseSpSVDescr_t *);
 extern tcusparseSpSV_createDescr *cusparseSpSV_createDescr;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_destroyDescr(cusparseSpSVDescr_t);
 extern tcusparseSpSV_destroyDescr *cusparseSpSV_destroyDescr;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_bufferSize(cusparseHandle_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_bufferSize(cusparseHandle_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t, size_t *);
 extern tcusparseSpSV_bufferSize *cusparseSpSV_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_analysis(cusparseHandle_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_analysis(cusparseHandle_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t, void *);
 extern tcusparseSpSV_analysis *cusparseSpSV_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_solve(cusparseHandle_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_solve(cusparseHandle_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnVecDescr_t, cusparseDnVecDescr_t, cudaDataType, cusparseSpSVAlg_t, cusparseSpSVDescr_t);
 extern tcusparseSpSV_solve *cusparseSpSV_solve;
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSV_updateMatrix(cusparseHandle_t, cusparseSpSVDescr_t, void *, cusparseSpSVUpdate_t);
+extern tcusparseSpSV_updateMatrix *cusparseSpSV_updateMatrix;
 typedef enum 
 {
   CUSPARSE_SPSM_ALG_DEFAULT = 0
-} cusparseSpSMAlg_t; // id 0x14113b0 
+} cusparseSpSMAlg_t; // id 0x555845284028 
 
 struct cusparseSpSMDescr;
-typedef struct cusparseSpSMDescr * cusparseSpSMDescr_t; // id 0x1411720 
+typedef struct cusparseSpSMDescr * cusparseSpSMDescr_t; // id 0x5558452843a0 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_createDescr(cusparseSpSMDescr_t *);
 extern tcusparseSpSM_createDescr *cusparseSpSM_createDescr;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_destroyDescr(cusparseSpSMDescr_t);
 extern tcusparseSpSM_destroyDescr *cusparseSpSM_destroyDescr;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t, size_t *);
 extern tcusparseSpSM_bufferSize *cusparseSpSM_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_analysis(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_analysis(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t, void *);
 extern tcusparseSpSM_analysis *cusparseSpSM_analysis;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_solve(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpSM_solve(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpSMAlg_t, cusparseSpSMDescr_t);
 extern tcusparseSpSM_solve *cusparseSpSM_solve;
 typedef enum 
 {
-  CUSPARSE_MM_ALG_DEFAULT = 0,
-  CUSPARSE_COOMM_ALG1 = 1,
-  CUSPARSE_COOMM_ALG2 = 2,
-  CUSPARSE_COOMM_ALG3 = 3,
-  CUSPARSE_CSRMM_ALG1 = 4,
   CUSPARSE_SPMM_ALG_DEFAULT = 0,
   CUSPARSE_SPMM_COO_ALG1 = 1,
   CUSPARSE_SPMM_COO_ALG2 = 2,
@@ -1308,72 +1179,75 @@ typedef enum
   CUSPARSE_SPMM_CSR_ALG2 = 6,
   CUSPARSE_SPMM_CSR_ALG3 = 12,
   CUSPARSE_SPMM_BLOCKED_ELL_ALG1 = 13
-} cusparseSpMMAlg_t; // id 0x1413208 
+} cusparseSpMMAlg_t; // id 0x555845285e68 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, size_t *);
 extern tcusparseSpMM_bufferSize *cusparseSpMM_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMM_preprocess(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMM_preprocess(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, void *);
 extern tcusparseSpMM_preprocess *cusparseSpMM_preprocess;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMM(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMM(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMAlg_t, void *);
 extern tcusparseSpMM *cusparseSpMM;
 typedef enum 
 {
   CUSPARSE_SPGEMM_DEFAULT = 0,
   CUSPARSE_SPGEMM_CSR_ALG_DETERMINITIC = 1,
-  CUSPARSE_SPGEMM_CSR_ALG_NONDETERMINITIC = 2
-} cusparseSpGEMMAlg_t; // id 0x1415620 
+  CUSPARSE_SPGEMM_CSR_ALG_NONDETERMINITIC = 2,
+  CUSPARSE_SPGEMM_ALG1 = 3,
+  CUSPARSE_SPGEMM_ALG2 = 4,
+  CUSPARSE_SPGEMM_ALG3 = 5
+} cusparseSpGEMMAlg_t; // id 0x555845287b58 
 
 struct cusparseSpGEMMDescr;
-typedef struct cusparseSpGEMMDescr * cusparseSpGEMMDescr_t; // id 0x1415aa0 
+typedef struct cusparseSpGEMMDescr * cusparseSpGEMMDescr_t; // id 0x5558452881a0 
 
 typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_createDescr(cusparseSpGEMMDescr_t *);
 extern tcusparseSpGEMM_createDescr *cusparseSpGEMM_createDescr;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_destroyDescr(cusparseSpGEMMDescr_t);
 extern tcusparseSpGEMM_destroyDescr *cusparseSpGEMM_destroyDescr;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_workEstimation(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_workEstimation(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
 extern tcusparseSpGEMM_workEstimation *cusparseSpGEMM_workEstimation;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_compute(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_getNumProducts(cusparseSpGEMMDescr_t, int64_t *);
+extern tcusparseSpGEMM_getNumProducts *cusparseSpGEMM_getNumProducts;
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_estimateMemory(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, float, size_t *, void *, size_t *);
+extern tcusparseSpGEMM_estimateMemory *cusparseSpGEMM_estimateMemory;
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_compute(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
 extern tcusparseSpGEMM_compute *cusparseSpGEMM_compute;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_copy(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMM_copy(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t);
 extern tcusparseSpGEMM_copy *cusparseSpGEMM_copy;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_workEstimation(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_workEstimation(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
 extern tcusparseSpGEMMreuse_workEstimation *cusparseSpGEMMreuse_workEstimation;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_nnz(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *, size_t *, void *, size_t *, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_nnz(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *, size_t *, void *, size_t *, void *);
 extern tcusparseSpGEMMreuse_nnz *cusparseSpGEMMreuse_nnz;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_copy(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_copy(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, cusparseSpMatDescr_t, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t, size_t *, void *);
 extern tcusparseSpGEMMreuse_copy *cusparseSpGEMMreuse_copy;
-typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_compute(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseSpMatDescr_t, cusparseSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpGEMMreuse_compute(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstSpMatDescr_t, cusparseConstSpMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSpGEMMAlg_t, cusparseSpGEMMDescr_t);
 extern tcusparseSpGEMMreuse_compute *cusparseSpGEMMreuse_compute;
-typedef cusparseStatus_t  CUDAAPI tcusparseConstrainedGeMM(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseDnMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, void *);
-extern tcusparseConstrainedGeMM *cusparseConstrainedGeMM;
-typedef cusparseStatus_t  CUDAAPI tcusparseConstrainedGeMM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseDnMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, size_t *);
-extern tcusparseConstrainedGeMM_bufferSize *cusparseConstrainedGeMM_bufferSize;
 typedef enum 
 {
   CUSPARSE_SDDMM_ALG_DEFAULT = 0
-} cusparseSDDMMAlg_t; // id 0x141b4a8 
+} cusparseSDDMMAlg_t; // id 0x55584528c8a8 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseDnMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM_bufferSize(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstDnMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, size_t *);
 extern tcusparseSDDMM_bufferSize *cusparseSDDMM_bufferSize;
-typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM_preprocess(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseDnMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM_preprocess(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstDnMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, void *);
 extern tcusparseSDDMM_preprocess *cusparseSDDMM_preprocess;
-typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseDnMatDescr_t, cusparseDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, void *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSDDMM(cusparseHandle_t, cusparseOperation_t, cusparseOperation_t, const void *, cusparseConstDnMatDescr_t, cusparseConstDnMatDescr_t, const void *, cusparseSpMatDescr_t, cudaDataType, cusparseSDDMMAlg_t, void *);
 extern tcusparseSDDMM *cusparseSDDMM;
 struct cusparseSpMMOpPlan;
-typedef struct cusparseSpMMOpPlan * cusparseSpMMOpPlan_t; // id 0x141cea0 
+typedef struct cusparseSpMMOpPlan * cusparseSpMMOpPlan_t; // id 0x55584528e240 
 
 typedef enum 
 {
   CUSPARSE_SPMM_OP_ALG_DEFAULT
-} cusparseSpMMOpAlg_t; // id 0x141cef8 
+} cusparseSpMMOpAlg_t; // id 0x55584528e298 
 
-typedef cusparseStatus_t  CUDAAPI tcusparseSpMMOp_createPlan(cusparseHandle_t, cusparseSpMMOpPlan_t *, cusparseOperation_t, cusparseOperation_t, cusparseSpMatDescr_t, cusparseDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMOpAlg_t, const void *, size_t, const void *, size_t, const void *, size_t, size_t *);
+typedef cusparseStatus_t  CUDAAPI tcusparseSpMMOp_createPlan(cusparseHandle_t, cusparseSpMMOpPlan_t *, cusparseOperation_t, cusparseOperation_t, cusparseConstSpMatDescr_t, cusparseConstDnMatDescr_t, cusparseDnMatDescr_t, cudaDataType, cusparseSpMMOpAlg_t, const void *, size_t, const void *, size_t, const void *, size_t, size_t *);
 extern tcusparseSpMMOp_createPlan *cusparseSpMMOp_createPlan;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpMMOp(cusparseSpMMOpPlan_t, void *);
 extern tcusparseSpMMOp *cusparseSpMMOp;
 typedef cusparseStatus_t  CUDAAPI tcusparseSpMMOp_destroyPlan(cusparseSpMMOpPlan_t);
 extern tcusparseSpMMOp_destroyPlan *cusparseSpMMOp_destroyPlan;
-extern int cuewInitCUSPARSE(void);
+extern int cuewInitCUSPARSE(const char **extra_dll_search_paths);
 
 
 #ifdef __cplusplus

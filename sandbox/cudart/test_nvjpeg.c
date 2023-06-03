@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
-  int ret = cuewInitCUDART();
+  int ret = cuewInitCUDART(NULL);
   printf("ret = %d\n", ret);
 
   if (ret != 0) {
@@ -17,10 +17,9 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  char *ptr;
-
-  cudaMalloc((void **)&ptr, 1024);
-  cudaFree(ptr);
+  /* TODO */
+  printf("TODO: nvJPEG test.\n");
+  exit(-1);
 
   return 0;
 }

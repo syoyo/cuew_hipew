@@ -533,8 +533,14 @@ tcusolverDnXgesvdp_bufferSize *cusolverDnXgesvdp_bufferSize;
 tcusolverDnXgesvdp *cusolverDnXgesvdp;
 tcusolverDnXgesvdr_bufferSize *cusolverDnXgesvdr_bufferSize;
 tcusolverDnXgesvdr *cusolverDnXgesvdr;
+tcusolverDnLoggerSetCallback *cusolverDnLoggerSetCallback;
+tcusolverDnLoggerSetFile *cusolverDnLoggerSetFile;
+tcusolverDnLoggerOpenFile *cusolverDnLoggerOpenFile;
+tcusolverDnLoggerSetLevel *cusolverDnLoggerSetLevel;
+tcusolverDnLoggerSetMask *cusolverDnLoggerSetMask;
+tcusolverDnLoggerForceDisable *cusolverDnLoggerForceDisable;
 
-int cuewInitCUSOLVER() {
+int cuewInitCUSOLVER(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "cusolver.dll",
@@ -562,6 +568,11 @@ NULL};
     return result;
   }
   cusolver_lib = dynamic_library_open_find(paths);
+  if (cusolver_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      cusolver_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (cusolver_lib == NULL) { result = -1; return result; }
 
   CUSOLVER_LIBRARY_FIND(cusolverGetProperty)
@@ -1027,6 +1038,12 @@ NULL};
   CUSOLVER_LIBRARY_FIND(cusolverDnXgesvdp)
   CUSOLVER_LIBRARY_FIND(cusolverDnXgesvdr_bufferSize)
   CUSOLVER_LIBRARY_FIND(cusolverDnXgesvdr)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerSetCallback)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerSetFile)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerOpenFile)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerSetLevel)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerSetMask)
+  CUSOLVER_LIBRARY_FIND(cusolverDnLoggerForceDisable)
   result = 0; // success
   return result;
 }

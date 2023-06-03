@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
-  int ret = cuewInitCUDART();
+  int ret = cuewInitCUDART(NULL);
   printf("cuewInitCUDART ret = %d\n", ret);
 
   if (ret != 0) {
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  ret = cuewInitCURAND();
+  ret = cuewInitCURAND(NULL);
   printf("cuewInitCURAND ret = %d\n", ret);
 
   if (ret != 0) {

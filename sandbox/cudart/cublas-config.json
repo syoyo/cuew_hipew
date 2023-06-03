@@ -7,7 +7,7 @@
     "win32": [ "cublas.dll" ],
     "linux": [ "libcublas.so", "/usr/local/cuda/lib64/libcublas.so"]
   },
-  "includes": [ "cuew_cudart.h", "cuComplex.h" ],
+  "includes": [ "cuew_cudart.h", "library_types.h", "cuComplex.h" ],
   "allowedSymbols": {
     "enum" : [ ],
     "struct" : [ ],

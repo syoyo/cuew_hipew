@@ -7,7 +7,7 @@
     "win32": [ "cusparse.dll" ],
     "linux": [ "libcusparse.so", "/usr/local/cuda/lib64/libcusparse.so"]
   },
-  "includes": [ "stdio.h", "cuew_cudart.h", "cuComplex.h" ],
+  "includes": [ "stdio.h", "cuew_cudart.h", "library_types.h", "cuComplex.h" ],
   "allowedSymbols": {
     "enum" : [ ],
     "struct" : [],

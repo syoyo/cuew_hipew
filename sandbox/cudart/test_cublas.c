@@ -25,16 +25,16 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
-  int ret = cuewInitCUDART();
-  printf("cuewInitCUDART ret = %d\n", ret);
+  int ret = cuewInitCUDART(NULL);
+  printf("cuewInitCUDART ret = %d(0 = success)\n", ret);
 
   if (ret != 0) {
     printf("cudart init failed.\n");
     exit(-1);
   }
 
-  ret = cuewInitCUBLAS();
-  printf("cuewInitCUBLAS ret = %d\n", ret);
+  ret = cuewInitCUBLAS(NULL);
+  printf("cuewInitCUBLAS ret = %d(0 = success)\n", ret);
 
   if (ret != 0) {
     printf("cublas init failed.\n");

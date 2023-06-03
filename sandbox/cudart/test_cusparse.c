@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
-  int ret = cuewInitCUDART();
+  int ret = cuewInitCUDART(NULL);
   printf("cuewInitCUDART ret = %d\n", ret);
 
   if (ret != 0) {
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  ret = cuewInitCUSPARSE();
+  ret = cuewInitCUSPARSE(NULL);
   printf("cuewInitCUSPARSE ret = %d\n", ret);
 
   if (ret != 0) {
@@ -49,26 +49,7 @@ int main(int argc, char **argv) {
   CUSPARSE_CHECK(cusparseCreate(&h));
   CUSPARSE_CHECK(cusparseDestroy(h));
 
-#if 0 // TODO
-  int new_size = 1024; // FIXME
-  CUFFT_CHECK(cufftPlan1d(&plan, new_size, CUFFT_C2C, 1));
-
-  cufftComplex *data;
-
-  CUDART_CHECK(cudaMalloc((void**)&data, sizeof(cufftComplex)*NX*BATCH));
-
-  /*
-  cufftPlanMany(&plan, RANK, NX, &iembed, istride, idist,
-      &oembed, ostride, odist, CUFFT_C2C, BATCH);
-  */
-
-  CUFFT_CHECK(cufftExecC2C(plan, data, data, CUFFT_FORWARD));
-
-  CUDART_CHECK(cudaDeviceSynchronize());
-  CUFFT_CHECK(cufftDestroy(plan));
-
-  CUDART_CHECK(cudaFree(data));
-#endif
+  /* TODO: call more cusparse APIs */
 
   printf("cusparse OK!\n");
 
