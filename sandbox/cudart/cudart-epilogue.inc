@@ -4,7 +4,7 @@
 #endif
 
 /* cuda_local/library_types.h */
-#include "library_types.h"
+/* #include "library_types.h" */
 
 #ifdef __clang__
 #pragma clang diagnostic pop

@@ -1391,9 +1391,9 @@ typedef struct CUDA_RESOURCE_VIEW_DESC_st {
 typedef CUDA_RESOURCE_VIEW_DESC_v1 CUDA_RESOURCE_VIEW_DESC;
 
 typedef struct CUtensorMap_st {
-#if __cplusplus >= 201103L
+#if defined(__cplusplus) && ( __cplusplus >= 201103L)
     alignas(64)
-#elif __STDC_VERSION__ >= 201112L
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
     _Alignas(64)
 #endif
   cuuint64_t opaque[16];

@@ -100,7 +100,7 @@ extern "C" {
 #endif
 
 /* cuda_local/library_types.h */
-#include "library_types.h"
+/* #include "library_types.h" */
 
 #ifdef __clang__
 #pragma clang diagnostic pop
@@ -121,6 +121,7 @@ struct cudaArray;
 struct cudaMipmappedArray;
 struct cudaMipmappedArray;
 struct cudaArraySparseProperties;
+struct cudaArrayMemoryRequirements;
 struct cudaPitchedPtr;
 struct cudaExtent;
 struct cudaPos;
@@ -129,9 +130,7 @@ struct cudaMemcpy3DPeerParms;
 struct cudaMemsetParams;
 struct cudaAccessPolicyWindow;
 struct cudaHostNodeParams;
-union cudaStreamAttrValue;
 struct cudaGraphicsResource;
-union cudaKernelNodeAttrValue;
 struct cudaResourceDesc;
 struct cudaResourceViewDesc;
 struct cudaPointerAttributes;
@@ -156,8 +155,12 @@ struct cudaLaunchParams;
 struct cudaKernelNodeParams;
 struct cudaExternalSemaphoreSignalNodeParams;
 struct cudaExternalSemaphoreWaitNodeParams;
-struct surfaceReference;
-struct textureReference;
+struct cudaGraphInstantiateParams_st;
+struct cudaGraphExecUpdateResultInfo_st;
+struct cudaLaunchMemSyncDomainMap_st;
+union cudaLaunchAttributeValue;
+struct cudaLaunchAttribute_st;
+struct cudaLaunchConfig_st;
 struct cudaTextureDesc;
 typedef cudaError_t  CUDAAPI tcudaDeviceReset(void);
 extern tcudaDeviceReset *cudaDeviceReset;
@@ -217,8 +220,8 @@ typedef const char * CUDAAPI tcudaGetErrorString(cudaError_t);
 extern tcudaGetErrorString *cudaGetErrorString;
 typedef cudaError_t  CUDAAPI tcudaGetDeviceCount(int *);
 extern tcudaGetDeviceCount *cudaGetDeviceCount;
-typedef cudaError_t  CUDAAPI tcudaGetDeviceProperties(struct cudaDeviceProp *, int);
-extern tcudaGetDeviceProperties *cudaGetDeviceProperties;
+typedef cudaError_t  CUDAAPI tcudaGetDeviceProperties_v2(struct cudaDeviceProp *, int);
+extern tcudaGetDeviceProperties_v2 *cudaGetDeviceProperties_v2;
 typedef cudaError_t  CUDAAPI tcudaDeviceGetAttribute(int *, enum cudaDeviceAttr, int);
 extern tcudaDeviceGetAttribute *cudaDeviceGetAttribute;
 typedef cudaError_t  CUDAAPI tcudaDeviceGetDefaultMemPool(cudaMemPool_t *, int);
@@ -233,6 +236,8 @@ typedef cudaError_t  CUDAAPI tcudaDeviceGetP2PAttribute(int *, enum cudaDeviceP2
 extern tcudaDeviceGetP2PAttribute *cudaDeviceGetP2PAttribute;
 typedef cudaError_t  CUDAAPI tcudaChooseDevice(int *, const struct cudaDeviceProp *);
 extern tcudaChooseDevice *cudaChooseDevice;
+typedef cudaError_t  CUDAAPI tcudaInitDevice(int, unsigned int, unsigned int);
+extern tcudaInitDevice *cudaInitDevice;
 typedef cudaError_t  CUDAAPI tcudaSetDevice(int);
 extern tcudaSetDevice *cudaSetDevice;
 typedef cudaError_t  CUDAAPI tcudaGetDevice(int *);
@@ -253,13 +258,15 @@ typedef cudaError_t  CUDAAPI tcudaStreamGetPriority(cudaStream_t, int *);
 extern tcudaStreamGetPriority *cudaStreamGetPriority;
 typedef cudaError_t  CUDAAPI tcudaStreamGetFlags(cudaStream_t, unsigned int *);
 extern tcudaStreamGetFlags *cudaStreamGetFlags;
+typedef cudaError_t  CUDAAPI tcudaStreamGetId(cudaStream_t, unsigned long long *);
+extern tcudaStreamGetId *cudaStreamGetId;
 typedef cudaError_t  CUDAAPI tcudaCtxResetPersistingL2Cache(void);
 extern tcudaCtxResetPersistingL2Cache *cudaCtxResetPersistingL2Cache;
 typedef cudaError_t  CUDAAPI tcudaStreamCopyAttributes(cudaStream_t, cudaStream_t);
 extern tcudaStreamCopyAttributes *cudaStreamCopyAttributes;
-typedef cudaError_t  CUDAAPI tcudaStreamGetAttribute(cudaStream_t, enum cudaStreamAttrID, union cudaStreamAttrValue *);
+typedef cudaError_t  CUDAAPI tcudaStreamGetAttribute(cudaStream_t, cudaLaunchAttributeID, cudaLaunchAttributeValue *);
 extern tcudaStreamGetAttribute *cudaStreamGetAttribute;
-typedef cudaError_t  CUDAAPI tcudaStreamSetAttribute(cudaStream_t, enum cudaStreamAttrID, const union cudaStreamAttrValue *);
+typedef cudaError_t  CUDAAPI tcudaStreamSetAttribute(cudaStream_t, cudaLaunchAttributeID, const cudaLaunchAttributeValue *);
 extern tcudaStreamSetAttribute *cudaStreamSetAttribute;
 typedef cudaError_t  CUDAAPI tcudaStreamDestroy(cudaStream_t);
 extern tcudaStreamDestroy *cudaStreamDestroy;
@@ -281,8 +288,6 @@ typedef cudaError_t  CUDAAPI tcudaStreamEndCapture(cudaStream_t, cudaGraph_t *);
 extern tcudaStreamEndCapture *cudaStreamEndCapture;
 typedef cudaError_t  CUDAAPI tcudaStreamIsCapturing(cudaStream_t, enum cudaStreamCaptureStatus *);
 extern tcudaStreamIsCapturing *cudaStreamIsCapturing;
-typedef cudaError_t  CUDAAPI tcudaStreamGetCaptureInfo(cudaStream_t, enum cudaStreamCaptureStatus *, unsigned long long *);
-extern tcudaStreamGetCaptureInfo *cudaStreamGetCaptureInfo;
 typedef cudaError_t  CUDAAPI tcudaStreamGetCaptureInfo_v2(cudaStream_t, enum cudaStreamCaptureStatus *, unsigned long long *, cudaGraph_t *, const cudaGraphNode_t **, size_t *);
 extern tcudaStreamGetCaptureInfo_v2 *cudaStreamGetCaptureInfo_v2;
 typedef cudaError_t  CUDAAPI tcudaStreamUpdateCaptureDependencies(cudaStream_t, cudaGraphNode_t *, size_t, unsigned int);
@@ -321,6 +326,8 @@ typedef cudaError_t  CUDAAPI tcudaDestroyExternalSemaphore(cudaExternalSemaphore
 extern tcudaDestroyExternalSemaphore *cudaDestroyExternalSemaphore;
 typedef cudaError_t  CUDAAPI tcudaLaunchKernel(const void *, dim3, dim3, void **, size_t, cudaStream_t);
 extern tcudaLaunchKernel *cudaLaunchKernel;
+typedef cudaError_t  CUDAAPI tcudaLaunchKernelExC(const cudaLaunchConfig_t *, const void *, void **);
+extern tcudaLaunchKernelExC *cudaLaunchKernelExC;
 typedef cudaError_t  CUDAAPI tcudaLaunchCooperativeKernel(const void *, dim3, dim3, void **, size_t, cudaStream_t);
 extern tcudaLaunchCooperativeKernel *cudaLaunchCooperativeKernel;
 typedef cudaError_t  CUDAAPI tcudaLaunchCooperativeKernelMultiDevice(struct cudaLaunchParams *, unsigned int, unsigned int);
@@ -345,6 +352,10 @@ typedef cudaError_t  CUDAAPI tcudaOccupancyAvailableDynamicSMemPerBlock(size_t *
 extern tcudaOccupancyAvailableDynamicSMemPerBlock *cudaOccupancyAvailableDynamicSMemPerBlock;
 typedef cudaError_t  CUDAAPI tcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(int *, const void *, int, size_t, unsigned int);
 extern tcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags *cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags;
+typedef cudaError_t  CUDAAPI tcudaOccupancyMaxPotentialClusterSize(int *, const void *, const cudaLaunchConfig_t *);
+extern tcudaOccupancyMaxPotentialClusterSize *cudaOccupancyMaxPotentialClusterSize;
+typedef cudaError_t  CUDAAPI tcudaOccupancyMaxActiveClusters(int *, const void *, const cudaLaunchConfig_t *);
+extern tcudaOccupancyMaxActiveClusters *cudaOccupancyMaxActiveClusters;
 typedef cudaError_t  CUDAAPI tcudaMallocManaged(void **, size_t, unsigned int);
 extern tcudaMallocManaged *cudaMallocManaged;
 typedef cudaError_t  CUDAAPI tcudaMalloc(void **, size_t);
@@ -395,6 +406,10 @@ typedef cudaError_t  CUDAAPI tcudaArrayGetInfo(struct cudaChannelFormatDesc *, s
 extern tcudaArrayGetInfo *cudaArrayGetInfo;
 typedef cudaError_t  CUDAAPI tcudaArrayGetPlane(cudaArray_t *, cudaArray_t, unsigned int);
 extern tcudaArrayGetPlane *cudaArrayGetPlane;
+typedef cudaError_t  CUDAAPI tcudaArrayGetMemoryRequirements(struct cudaArrayMemoryRequirements *, cudaArray_t, int);
+extern tcudaArrayGetMemoryRequirements *cudaArrayGetMemoryRequirements;
+typedef cudaError_t  CUDAAPI tcudaMipmappedArrayGetMemoryRequirements(struct cudaArrayMemoryRequirements *, cudaMipmappedArray_t, int);
+extern tcudaMipmappedArrayGetMemoryRequirements *cudaMipmappedArrayGetMemoryRequirements;
 typedef cudaError_t  CUDAAPI tcudaArrayGetSparseProperties(struct cudaArraySparseProperties *, cudaArray_t);
 extern tcudaArrayGetSparseProperties *cudaArrayGetSparseProperties;
 typedef cudaError_t  CUDAAPI tcudaMipmappedArrayGetSparseProperties(struct cudaArraySparseProperties *, cudaMipmappedArray_t);
@@ -513,24 +528,6 @@ typedef cudaError_t  CUDAAPI tcudaGraphicsSubResourceGetMappedArray(cudaArray_t 
 extern tcudaGraphicsSubResourceGetMappedArray *cudaGraphicsSubResourceGetMappedArray;
 typedef cudaError_t  CUDAAPI tcudaGraphicsResourceGetMappedMipmappedArray(cudaMipmappedArray_t *, cudaGraphicsResource_t);
 extern tcudaGraphicsResourceGetMappedMipmappedArray *cudaGraphicsResourceGetMappedMipmappedArray;
-typedef cudaError_t  CUDAAPI tcudaBindTexture(size_t *, const struct textureReference *, const void *, const struct cudaChannelFormatDesc *, size_t);
-extern tcudaBindTexture *cudaBindTexture;
-typedef cudaError_t  CUDAAPI tcudaBindTexture2D(size_t *, const struct textureReference *, const void *, const struct cudaChannelFormatDesc *, size_t, size_t, size_t);
-extern tcudaBindTexture2D *cudaBindTexture2D;
-typedef cudaError_t  CUDAAPI tcudaBindTextureToArray(const struct textureReference *, cudaArray_const_t, const struct cudaChannelFormatDesc *);
-extern tcudaBindTextureToArray *cudaBindTextureToArray;
-typedef cudaError_t  CUDAAPI tcudaBindTextureToMipmappedArray(const struct textureReference *, cudaMipmappedArray_const_t, const struct cudaChannelFormatDesc *);
-extern tcudaBindTextureToMipmappedArray *cudaBindTextureToMipmappedArray;
-typedef cudaError_t  CUDAAPI tcudaUnbindTexture(const struct textureReference *);
-extern tcudaUnbindTexture *cudaUnbindTexture;
-typedef cudaError_t  CUDAAPI tcudaGetTextureAlignmentOffset(size_t *, const struct textureReference *);
-extern tcudaGetTextureAlignmentOffset *cudaGetTextureAlignmentOffset;
-typedef cudaError_t  CUDAAPI tcudaGetTextureReference(const struct textureReference **, const void *);
-extern tcudaGetTextureReference *cudaGetTextureReference;
-typedef cudaError_t  CUDAAPI tcudaBindSurfaceToArray(const struct surfaceReference *, cudaArray_const_t, const struct cudaChannelFormatDesc *);
-extern tcudaBindSurfaceToArray *cudaBindSurfaceToArray;
-typedef cudaError_t  CUDAAPI tcudaGetSurfaceReference(const struct surfaceReference **, const void *);
-extern tcudaGetSurfaceReference *cudaGetSurfaceReference;
 typedef cudaError_t  CUDAAPI tcudaGetChannelDesc(struct cudaChannelFormatDesc *, cudaArray_const_t);
 extern tcudaGetChannelDesc *cudaGetChannelDesc;
 typedef struct cudaChannelFormatDesc  CUDAAPI tcudaCreateChannelDesc(int, int, int, int, enum cudaChannelFormatKind);
@@ -565,9 +562,9 @@ typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeSetParams(cudaGraphNode_t, cons
 extern tcudaGraphKernelNodeSetParams *cudaGraphKernelNodeSetParams;
 typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeCopyAttributes(cudaGraphNode_t, cudaGraphNode_t);
 extern tcudaGraphKernelNodeCopyAttributes *cudaGraphKernelNodeCopyAttributes;
-typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeGetAttribute(cudaGraphNode_t, enum cudaKernelNodeAttrID, union cudaKernelNodeAttrValue *);
+typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeGetAttribute(cudaGraphNode_t, cudaLaunchAttributeID, cudaLaunchAttributeValue *);
 extern tcudaGraphKernelNodeGetAttribute *cudaGraphKernelNodeGetAttribute;
-typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeSetAttribute(cudaGraphNode_t, enum cudaKernelNodeAttrID, const union cudaKernelNodeAttrValue *);
+typedef cudaError_t  CUDAAPI tcudaGraphKernelNodeSetAttribute(cudaGraphNode_t, cudaLaunchAttributeID, const cudaLaunchAttributeValue *);
 extern tcudaGraphKernelNodeSetAttribute *cudaGraphKernelNodeSetAttribute;
 typedef cudaError_t  CUDAAPI tcudaGraphAddMemcpyNode(cudaGraphNode_t *, cudaGraph_t, const cudaGraphNode_t *, size_t, const struct cudaMemcpy3DParms *);
 extern tcudaGraphAddMemcpyNode *cudaGraphAddMemcpyNode;
@@ -665,10 +662,14 @@ typedef cudaError_t  CUDAAPI tcudaGraphRemoveDependencies(cudaGraph_t, const cud
 extern tcudaGraphRemoveDependencies *cudaGraphRemoveDependencies;
 typedef cudaError_t  CUDAAPI tcudaGraphDestroyNode(cudaGraphNode_t);
 extern tcudaGraphDestroyNode *cudaGraphDestroyNode;
-typedef cudaError_t  CUDAAPI tcudaGraphInstantiate(cudaGraphExec_t *, cudaGraph_t, cudaGraphNode_t *, char *, size_t);
+typedef cudaError_t  CUDAAPI tcudaGraphInstantiate(cudaGraphExec_t *, cudaGraph_t, unsigned long long);
 extern tcudaGraphInstantiate *cudaGraphInstantiate;
 typedef cudaError_t  CUDAAPI tcudaGraphInstantiateWithFlags(cudaGraphExec_t *, cudaGraph_t, unsigned long long);
 extern tcudaGraphInstantiateWithFlags *cudaGraphInstantiateWithFlags;
+typedef cudaError_t  CUDAAPI tcudaGraphInstantiateWithParams(cudaGraphExec_t *, cudaGraph_t, cudaGraphInstantiateParams *);
+extern tcudaGraphInstantiateWithParams *cudaGraphInstantiateWithParams;
+typedef cudaError_t  CUDAAPI tcudaGraphExecGetFlags(cudaGraphExec_t, unsigned long long *);
+extern tcudaGraphExecGetFlags *cudaGraphExecGetFlags;
 typedef cudaError_t  CUDAAPI tcudaGraphExecKernelNodeSetParams(cudaGraphExec_t, cudaGraphNode_t, const struct cudaKernelNodeParams *);
 extern tcudaGraphExecKernelNodeSetParams *cudaGraphExecKernelNodeSetParams;
 typedef cudaError_t  CUDAAPI tcudaGraphExecMemcpyNodeSetParams(cudaGraphExec_t, cudaGraphNode_t, const struct cudaMemcpy3DParms *);
@@ -693,7 +694,11 @@ typedef cudaError_t  CUDAAPI tcudaGraphExecExternalSemaphoresSignalNodeSetParams
 extern tcudaGraphExecExternalSemaphoresSignalNodeSetParams *cudaGraphExecExternalSemaphoresSignalNodeSetParams;
 typedef cudaError_t  CUDAAPI tcudaGraphExecExternalSemaphoresWaitNodeSetParams(cudaGraphExec_t, cudaGraphNode_t, const struct cudaExternalSemaphoreWaitNodeParams *);
 extern tcudaGraphExecExternalSemaphoresWaitNodeSetParams *cudaGraphExecExternalSemaphoresWaitNodeSetParams;
-typedef cudaError_t  CUDAAPI tcudaGraphExecUpdate(cudaGraphExec_t, cudaGraph_t, cudaGraphNode_t *, enum cudaGraphExecUpdateResult *);
+typedef cudaError_t  CUDAAPI tcudaGraphNodeSetEnabled(cudaGraphExec_t, cudaGraphNode_t, unsigned int);
+extern tcudaGraphNodeSetEnabled *cudaGraphNodeSetEnabled;
+typedef cudaError_t  CUDAAPI tcudaGraphNodeGetEnabled(cudaGraphExec_t, cudaGraphNode_t, unsigned int *);
+extern tcudaGraphNodeGetEnabled *cudaGraphNodeGetEnabled;
+typedef cudaError_t  CUDAAPI tcudaGraphExecUpdate(cudaGraphExec_t, cudaGraph_t, cudaGraphExecUpdateResultInfo *);
 extern tcudaGraphExecUpdate *cudaGraphExecUpdate;
 typedef cudaError_t  CUDAAPI tcudaGraphUpload(cudaGraphExec_t, cudaStream_t);
 extern tcudaGraphUpload *cudaGraphUpload;
@@ -715,13 +720,15 @@ typedef cudaError_t  CUDAAPI tcudaGraphRetainUserObject(cudaGraph_t, cudaUserObj
 extern tcudaGraphRetainUserObject *cudaGraphRetainUserObject;
 typedef cudaError_t  CUDAAPI tcudaGraphReleaseUserObject(cudaGraph_t, cudaUserObject_t, unsigned int);
 extern tcudaGraphReleaseUserObject *cudaGraphReleaseUserObject;
-typedef cudaError_t  CUDAAPI tcudaGetDriverEntryPoint(const char *, void **, unsigned long long);
+typedef cudaError_t  CUDAAPI tcudaGetDriverEntryPoint(const char *, void **, unsigned long long, enum cudaDriverEntryPointQueryResult *);
 extern tcudaGetDriverEntryPoint *cudaGetDriverEntryPoint;
 typedef cudaError_t  CUDAAPI tcudaGetExportTable(const void **, const cudaUUID_t *);
 extern tcudaGetExportTable *cudaGetExportTable;
 typedef cudaError_t  CUDAAPI tcudaGetFuncBySymbol(cudaFunction_t *, const void *);
 extern tcudaGetFuncBySymbol *cudaGetFuncBySymbol;
-extern int cuewInitCUDART(void);
+typedef cudaError_t  CUDAAPI tcudaGetKernel(cudaKernel_t *, const void *);
+extern tcudaGetKernel *cudaGetKernel;
+extern int cuewInitCUDART(const char **extra_dll_search_paths);
 
 
 #ifdef __cplusplus

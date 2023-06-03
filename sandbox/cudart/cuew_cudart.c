@@ -99,7 +99,7 @@ tcudaPeekAtLastError *cudaPeekAtLastError;
 tcudaGetErrorName *cudaGetErrorName;
 tcudaGetErrorString *cudaGetErrorString;
 tcudaGetDeviceCount *cudaGetDeviceCount;
-tcudaGetDeviceProperties *cudaGetDeviceProperties;
+tcudaGetDeviceProperties_v2 *cudaGetDeviceProperties_v2;
 tcudaDeviceGetAttribute *cudaDeviceGetAttribute;
 tcudaDeviceGetDefaultMemPool *cudaDeviceGetDefaultMemPool;
 tcudaDeviceSetMemPool *cudaDeviceSetMemPool;
@@ -107,6 +107,7 @@ tcudaDeviceGetMemPool *cudaDeviceGetMemPool;
 tcudaDeviceGetNvSciSyncAttributes *cudaDeviceGetNvSciSyncAttributes;
 tcudaDeviceGetP2PAttribute *cudaDeviceGetP2PAttribute;
 tcudaChooseDevice *cudaChooseDevice;
+tcudaInitDevice *cudaInitDevice;
 tcudaSetDevice *cudaSetDevice;
 tcudaGetDevice *cudaGetDevice;
 tcudaSetValidDevices *cudaSetValidDevices;
@@ -117,6 +118,7 @@ tcudaStreamCreateWithFlags *cudaStreamCreateWithFlags;
 tcudaStreamCreateWithPriority *cudaStreamCreateWithPriority;
 tcudaStreamGetPriority *cudaStreamGetPriority;
 tcudaStreamGetFlags *cudaStreamGetFlags;
+tcudaStreamGetId *cudaStreamGetId;
 tcudaCtxResetPersistingL2Cache *cudaCtxResetPersistingL2Cache;
 tcudaStreamCopyAttributes *cudaStreamCopyAttributes;
 tcudaStreamGetAttribute *cudaStreamGetAttribute;
@@ -131,7 +133,6 @@ tcudaStreamBeginCapture *cudaStreamBeginCapture;
 tcudaThreadExchangeStreamCaptureMode *cudaThreadExchangeStreamCaptureMode;
 tcudaStreamEndCapture *cudaStreamEndCapture;
 tcudaStreamIsCapturing *cudaStreamIsCapturing;
-tcudaStreamGetCaptureInfo *cudaStreamGetCaptureInfo;
 tcudaStreamGetCaptureInfo_v2 *cudaStreamGetCaptureInfo_v2;
 tcudaStreamUpdateCaptureDependencies *cudaStreamUpdateCaptureDependencies;
 tcudaEventCreate *cudaEventCreate;
@@ -151,6 +152,7 @@ tcudaSignalExternalSemaphoresAsync_v2 *cudaSignalExternalSemaphoresAsync_v2;
 tcudaWaitExternalSemaphoresAsync_v2 *cudaWaitExternalSemaphoresAsync_v2;
 tcudaDestroyExternalSemaphore *cudaDestroyExternalSemaphore;
 tcudaLaunchKernel *cudaLaunchKernel;
+tcudaLaunchKernelExC *cudaLaunchKernelExC;
 tcudaLaunchCooperativeKernel *cudaLaunchCooperativeKernel;
 tcudaLaunchCooperativeKernelMultiDevice *cudaLaunchCooperativeKernelMultiDevice;
 tcudaFuncSetCacheConfig *cudaFuncSetCacheConfig;
@@ -163,6 +165,8 @@ tcudaLaunchHostFunc *cudaLaunchHostFunc;
 tcudaOccupancyMaxActiveBlocksPerMultiprocessor *cudaOccupancyMaxActiveBlocksPerMultiprocessor;
 tcudaOccupancyAvailableDynamicSMemPerBlock *cudaOccupancyAvailableDynamicSMemPerBlock;
 tcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags *cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags;
+tcudaOccupancyMaxPotentialClusterSize *cudaOccupancyMaxPotentialClusterSize;
+tcudaOccupancyMaxActiveClusters *cudaOccupancyMaxActiveClusters;
 tcudaMallocManaged *cudaMallocManaged;
 tcudaMalloc *cudaMalloc;
 tcudaMallocHost *cudaMallocHost;
@@ -188,6 +192,8 @@ tcudaMemcpy3DPeerAsync *cudaMemcpy3DPeerAsync;
 tcudaMemGetInfo *cudaMemGetInfo;
 tcudaArrayGetInfo *cudaArrayGetInfo;
 tcudaArrayGetPlane *cudaArrayGetPlane;
+tcudaArrayGetMemoryRequirements *cudaArrayGetMemoryRequirements;
+tcudaMipmappedArrayGetMemoryRequirements *cudaMipmappedArrayGetMemoryRequirements;
 tcudaArrayGetSparseProperties *cudaArrayGetSparseProperties;
 tcudaMipmappedArrayGetSparseProperties *cudaMipmappedArrayGetSparseProperties;
 tcudaMemcpy *cudaMemcpy;
@@ -247,15 +253,6 @@ tcudaGraphicsUnmapResources *cudaGraphicsUnmapResources;
 tcudaGraphicsResourceGetMappedPointer *cudaGraphicsResourceGetMappedPointer;
 tcudaGraphicsSubResourceGetMappedArray *cudaGraphicsSubResourceGetMappedArray;
 tcudaGraphicsResourceGetMappedMipmappedArray *cudaGraphicsResourceGetMappedMipmappedArray;
-tcudaBindTexture *cudaBindTexture;
-tcudaBindTexture2D *cudaBindTexture2D;
-tcudaBindTextureToArray *cudaBindTextureToArray;
-tcudaBindTextureToMipmappedArray *cudaBindTextureToMipmappedArray;
-tcudaUnbindTexture *cudaUnbindTexture;
-tcudaGetTextureAlignmentOffset *cudaGetTextureAlignmentOffset;
-tcudaGetTextureReference *cudaGetTextureReference;
-tcudaBindSurfaceToArray *cudaBindSurfaceToArray;
-tcudaGetSurfaceReference *cudaGetSurfaceReference;
 tcudaGetChannelDesc *cudaGetChannelDesc;
 tcudaCreateChannelDesc *cudaCreateChannelDesc;
 tcudaCreateTextureObject *cudaCreateTextureObject;
@@ -325,6 +322,8 @@ tcudaGraphRemoveDependencies *cudaGraphRemoveDependencies;
 tcudaGraphDestroyNode *cudaGraphDestroyNode;
 tcudaGraphInstantiate *cudaGraphInstantiate;
 tcudaGraphInstantiateWithFlags *cudaGraphInstantiateWithFlags;
+tcudaGraphInstantiateWithParams *cudaGraphInstantiateWithParams;
+tcudaGraphExecGetFlags *cudaGraphExecGetFlags;
 tcudaGraphExecKernelNodeSetParams *cudaGraphExecKernelNodeSetParams;
 tcudaGraphExecMemcpyNodeSetParams *cudaGraphExecMemcpyNodeSetParams;
 tcudaGraphExecMemcpyNodeSetParamsToSymbol *cudaGraphExecMemcpyNodeSetParamsToSymbol;
@@ -337,6 +336,8 @@ tcudaGraphExecEventRecordNodeSetEvent *cudaGraphExecEventRecordNodeSetEvent;
 tcudaGraphExecEventWaitNodeSetEvent *cudaGraphExecEventWaitNodeSetEvent;
 tcudaGraphExecExternalSemaphoresSignalNodeSetParams *cudaGraphExecExternalSemaphoresSignalNodeSetParams;
 tcudaGraphExecExternalSemaphoresWaitNodeSetParams *cudaGraphExecExternalSemaphoresWaitNodeSetParams;
+tcudaGraphNodeSetEnabled *cudaGraphNodeSetEnabled;
+tcudaGraphNodeGetEnabled *cudaGraphNodeGetEnabled;
 tcudaGraphExecUpdate *cudaGraphExecUpdate;
 tcudaGraphUpload *cudaGraphUpload;
 tcudaGraphLaunch *cudaGraphLaunch;
@@ -351,8 +352,9 @@ tcudaGraphReleaseUserObject *cudaGraphReleaseUserObject;
 tcudaGetDriverEntryPoint *cudaGetDriverEntryPoint;
 tcudaGetExportTable *cudaGetExportTable;
 tcudaGetFuncBySymbol *cudaGetFuncBySymbol;
+tcudaGetKernel *cudaGetKernel;
 
-int cuewInitCUDART() {
+int cuewInitCUDART(const char **extra_dll_search_paths) {
 
 #ifdef _WIN32
   const char *paths[] = {   "cudart.dll",
@@ -380,6 +382,11 @@ NULL};
     return result;
   }
   cudart_lib = dynamic_library_open_find(paths);
+  if (cudart_lib == NULL) { 
+    if (extra_dll_search_paths) { 
+      cudart_lib = dynamic_library_open_find(extra_dll_search_paths);
+    }
+  }
   if (cudart_lib == NULL) { result = -1; return result; }
 
   CUDART_LIBRARY_FIND(cudaDeviceReset)
@@ -411,7 +418,7 @@ NULL};
   CUDART_LIBRARY_FIND(cudaGetErrorName)
   CUDART_LIBRARY_FIND(cudaGetErrorString)
   CUDART_LIBRARY_FIND(cudaGetDeviceCount)
-  CUDART_LIBRARY_FIND(cudaGetDeviceProperties)
+  CUDART_LIBRARY_FIND(cudaGetDeviceProperties_v2)
   CUDART_LIBRARY_FIND(cudaDeviceGetAttribute)
   CUDART_LIBRARY_FIND(cudaDeviceGetDefaultMemPool)
   CUDART_LIBRARY_FIND(cudaDeviceSetMemPool)
@@ -419,6 +426,7 @@ NULL};
   CUDART_LIBRARY_FIND(cudaDeviceGetNvSciSyncAttributes)
   CUDART_LIBRARY_FIND(cudaDeviceGetP2PAttribute)
   CUDART_LIBRARY_FIND(cudaChooseDevice)
+  CUDART_LIBRARY_FIND(cudaInitDevice)
   CUDART_LIBRARY_FIND(cudaSetDevice)
   CUDART_LIBRARY_FIND(cudaGetDevice)
   CUDART_LIBRARY_FIND(cudaSetValidDevices)
@@ -429,6 +437,7 @@ NULL};
   CUDART_LIBRARY_FIND(cudaStreamCreateWithPriority)
   CUDART_LIBRARY_FIND(cudaStreamGetPriority)
   CUDART_LIBRARY_FIND(cudaStreamGetFlags)
+  CUDART_LIBRARY_FIND(cudaStreamGetId)
   CUDART_LIBRARY_FIND(cudaCtxResetPersistingL2Cache)
   CUDART_LIBRARY_FIND(cudaStreamCopyAttributes)
   CUDART_LIBRARY_FIND(cudaStreamGetAttribute)
@@ -443,7 +452,6 @@ NULL};
   CUDART_LIBRARY_FIND(cudaThreadExchangeStreamCaptureMode)
   CUDART_LIBRARY_FIND(cudaStreamEndCapture)
   CUDART_LIBRARY_FIND(cudaStreamIsCapturing)
-  CUDART_LIBRARY_FIND(cudaStreamGetCaptureInfo)
   CUDART_LIBRARY_FIND(cudaStreamGetCaptureInfo_v2)
   CUDART_LIBRARY_FIND(cudaStreamUpdateCaptureDependencies)
   CUDART_LIBRARY_FIND(cudaEventCreate)
@@ -463,6 +471,7 @@ NULL};
   CUDART_LIBRARY_FIND(cudaWaitExternalSemaphoresAsync_v2)
   CUDART_LIBRARY_FIND(cudaDestroyExternalSemaphore)
   CUDART_LIBRARY_FIND(cudaLaunchKernel)
+  CUDART_LIBRARY_FIND(cudaLaunchKernelExC)
   CUDART_LIBRARY_FIND(cudaLaunchCooperativeKernel)
   CUDART_LIBRARY_FIND(cudaLaunchCooperativeKernelMultiDevice)
   CUDART_LIBRARY_FIND(cudaFuncSetCacheConfig)
@@ -475,6 +484,8 @@ NULL};
   CUDART_LIBRARY_FIND(cudaOccupancyMaxActiveBlocksPerMultiprocessor)
   CUDART_LIBRARY_FIND(cudaOccupancyAvailableDynamicSMemPerBlock)
   CUDART_LIBRARY_FIND(cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags)
+  CUDART_LIBRARY_FIND(cudaOccupancyMaxPotentialClusterSize)
+  CUDART_LIBRARY_FIND(cudaOccupancyMaxActiveClusters)
   CUDART_LIBRARY_FIND(cudaMallocManaged)
   CUDART_LIBRARY_FIND(cudaMalloc)
   CUDART_LIBRARY_FIND(cudaMallocHost)
@@ -500,6 +511,8 @@ NULL};
   CUDART_LIBRARY_FIND(cudaMemGetInfo)
   CUDART_LIBRARY_FIND(cudaArrayGetInfo)
   CUDART_LIBRARY_FIND(cudaArrayGetPlane)
+  CUDART_LIBRARY_FIND(cudaArrayGetMemoryRequirements)
+  CUDART_LIBRARY_FIND(cudaMipmappedArrayGetMemoryRequirements)
   CUDART_LIBRARY_FIND(cudaArrayGetSparseProperties)
   CUDART_LIBRARY_FIND(cudaMipmappedArrayGetSparseProperties)
   CUDART_LIBRARY_FIND(cudaMemcpy)
@@ -559,15 +572,6 @@ NULL};
   CUDART_LIBRARY_FIND(cudaGraphicsResourceGetMappedPointer)
   CUDART_LIBRARY_FIND(cudaGraphicsSubResourceGetMappedArray)
   CUDART_LIBRARY_FIND(cudaGraphicsResourceGetMappedMipmappedArray)
-  CUDART_LIBRARY_FIND(cudaBindTexture)
-  CUDART_LIBRARY_FIND(cudaBindTexture2D)
-  CUDART_LIBRARY_FIND(cudaBindTextureToArray)
-  CUDART_LIBRARY_FIND(cudaBindTextureToMipmappedArray)
-  CUDART_LIBRARY_FIND(cudaUnbindTexture)
-  CUDART_LIBRARY_FIND(cudaGetTextureAlignmentOffset)
-  CUDART_LIBRARY_FIND(cudaGetTextureReference)
-  CUDART_LIBRARY_FIND(cudaBindSurfaceToArray)
-  CUDART_LIBRARY_FIND(cudaGetSurfaceReference)
   CUDART_LIBRARY_FIND(cudaGetChannelDesc)
   CUDART_LIBRARY_FIND(cudaCreateChannelDesc)
   CUDART_LIBRARY_FIND(cudaCreateTextureObject)
@@ -637,6 +641,8 @@ NULL};
   CUDART_LIBRARY_FIND(cudaGraphDestroyNode)
   CUDART_LIBRARY_FIND(cudaGraphInstantiate)
   CUDART_LIBRARY_FIND(cudaGraphInstantiateWithFlags)
+  CUDART_LIBRARY_FIND(cudaGraphInstantiateWithParams)
+  CUDART_LIBRARY_FIND(cudaGraphExecGetFlags)
   CUDART_LIBRARY_FIND(cudaGraphExecKernelNodeSetParams)
   CUDART_LIBRARY_FIND(cudaGraphExecMemcpyNodeSetParams)
   CUDART_LIBRARY_FIND(cudaGraphExecMemcpyNodeSetParamsToSymbol)
@@ -649,6 +655,8 @@ NULL};
   CUDART_LIBRARY_FIND(cudaGraphExecEventWaitNodeSetEvent)
   CUDART_LIBRARY_FIND(cudaGraphExecExternalSemaphoresSignalNodeSetParams)
   CUDART_LIBRARY_FIND(cudaGraphExecExternalSemaphoresWaitNodeSetParams)
+  CUDART_LIBRARY_FIND(cudaGraphNodeSetEnabled)
+  CUDART_LIBRARY_FIND(cudaGraphNodeGetEnabled)
   CUDART_LIBRARY_FIND(cudaGraphExecUpdate)
   CUDART_LIBRARY_FIND(cudaGraphUpload)
   CUDART_LIBRARY_FIND(cudaGraphLaunch)
@@ -663,6 +671,7 @@ NULL};
   CUDART_LIBRARY_FIND(cudaGetDriverEntryPoint)
   CUDART_LIBRARY_FIND(cudaGetExportTable)
   CUDART_LIBRARY_FIND(cudaGetFuncBySymbol)
+  CUDART_LIBRARY_FIND(cudaGetKernel)
   result = 0; // success
   return result;
 }

@@ -117,7 +117,7 @@ def emit_header(apiname: str, prologue, epilogue, includes):
 
     s += """
 /*
- * Copyright 1993-2018 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2022 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -227,7 +227,7 @@ def emit_footer(suffix: str):
 
     s = ""
 
-    s += "extern int cuewInit{}(void)".format(suffix) + ";\n\n"
+    s += "extern int cuewInit{}(const char **extra_dll_search_paths)".format(suffix) + ";\n\n"
 
 
     s += "\n"
@@ -336,7 +336,7 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 
     s += "\n"
 
-    s += "int cuewInit{}()".format(suffix) + " {\n\n"
+    s += "int cuewInit{}(const char **extra_dll_search_paths)".format(suffix) + " {\n\n"
 
     s += "#ifdef _WIN32\n"
     s += "  const char *paths[] = {"
@@ -372,6 +372,12 @@ static DynamicLibrary dynamic_library_open_find(const char **paths) {
 """
 
     s += "  {}_lib = dynamic_library_open_find(paths);\n".format(suffix_lowered)
+
+    s += "  if (" + suffix_lowered + "_lib == NULL) { \n"
+    s += "    if (extra_dll_search_paths) { \n"
+    s += "      {}_lib = dynamic_library_open_find(extra_dll_search_paths);\n".format(suffix_lowered)
+    s += "    }\n"
+    s += "  }\n"
 
     s += "  if (" + suffix_lowered + "_lib == NULL) { result = -1; return result; }\n"
 
