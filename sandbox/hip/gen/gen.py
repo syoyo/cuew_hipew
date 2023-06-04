@@ -466,9 +466,9 @@ def main():
                 if not item['name'].lower().startswith(api_prefix.lower()):
                     continue
 
-            if tagname in emitted_symbols:
-                # typedef is already emitted.
-                continue
+            #if tagname in emitted_symbols:
+            #    # typedef is already emitted.
+            #    continue
 
             # Assume corresponding EnumDecl has been emitted.
             if item['inner'][0]['kind'] == 'PointerType' and item['inner'][0]['inner'][0]['kind'] == "ParenType":

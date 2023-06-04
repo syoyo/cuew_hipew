@@ -1,0 +1,22 @@
+{ "prefix": "rocblas",
+  "api_prefix": "rocblas",
+  "lib_prefix": "rocblas",
+  "header_prologue": "rocblas-prologue.inc",
+  "header_epilogue": "rocblas-epilogue.inc",
+  "dllpaths": {
+    "win32": [ "rocblas.dll" ],
+    "linux": [ "librocblas.so", "/opt/rocm/lib/librocblas.so"]
+  },
+  "includes": [ ],
+  "allowedSymbols": {
+    "struct" : [ "textureReference", "surfaceReference" ],
+    "union" : [ ],
+    "enum" : [ ]
+  },
+  "ignoredSymbols": {
+    "struct": [],
+    "union": [],
+    "enum": [ ],
+    "typedef": []
+  }
+}
