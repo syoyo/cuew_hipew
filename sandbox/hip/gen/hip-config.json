@@ -1,0 +1,22 @@
+{ "prefix": "hip",
+  "api_prefix": "hip",
+  "lib_prefix": "hip",
+  "header_prologue": "hip-prologue.inc",
+  "header_epilogue": "hip-epilogue.inc",
+  "dllpaths": {
+    "win32": [ "hip_runtime.dll" ],
+    "linux": [ "libamdhip64.so", "/opt/rocm/lib/libamdhip64.so"]
+  },
+  "includes": [ ],
+  "allowedSymbols": {
+    "struct" : [ "textureReference", "surfaceReference" ],
+    "union" : [ ],
+    "enum" : [ ]
+  },
+  "ignoredSymbols": {
+    "struct": [],
+    "union": [],
+    "enum": [ ],
+    "typedef": []
+  }
+}
