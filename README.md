@@ -99,6 +99,12 @@ Content of `<gl.h>` is not used when generating cuew header/source.
 * CUEW does not report warning when using deprecated CUDA API
 * `CUDA_API_PER_THREAD_DEFAULT_STREAM` is not supported.
 
+## Compiling device and host mixed .cu without nvcc
+
+You'll need vanilla clang(clang 12 or later recommended).
+
+T.B.W.
+
 ## TODO
 
 * [ ] Use clang AST approach for `cuew.h` gen.
