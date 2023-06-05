@@ -13,6 +13,7 @@ Currently tested on Ubuntu 20.04 x86-64 and Windows 11 64bit.
   * cuGetProcAddress is not supported.
 * Support CUDNN 8.0.3
 * HIP support
+  * ROCm 5.5 
 
 ## Supported API
 
