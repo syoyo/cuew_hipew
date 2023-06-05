@@ -1,12 +1,18 @@
-syoyo's modification to CUEW.
+# Dependency-free, runtime CUDA/HIP wrangler library.
 
-Currently tested on Ubuntu 20.04 x86-64 and Windows 10 64bit.
+syoyo's modification to CUEW. Also provides HIPEW hip wrangler.
 
-## Changes compared to original version
+CUEW and HIPEW is a runtime CUDA/HIP symbol resolution library.
+When compiling, neither CUDA SDK nor ROCm SDK required.
+
+Currently tested on Ubuntu 20.04 x86-64 and Windows 11 64bit.
+
+## Changes compared to original CUEW version
 
 * Support CUDA 12.1
   * cuGetProcAddress is not supported.
 * Support CUDNN 8.0.3
+* HIP support
 
 ## Supported API
 
@@ -30,8 +36,14 @@ See `experimental/cudart`.
 * [x] cuSolver
 * [ ] nvJPEG
 
-* [ ] ROCm HIP
+* ROCm HIP
   * `sandbox/hip/`
+  * [x] HIP runtime
+  * [x] rocBLAS
+  * [ ] rocRAND
+  * [ ] rocFFT
+  * [ ] rocSolver
+  * [ ] rocSparse
 
 ## Buld tests
 
@@ -88,6 +100,7 @@ Content of `<gl.h>` is not used when generating cuew header/source.
 
 ## TODO
 
+* [ ] Use clang AST approach for `cuew.h` gen.
 * [ ] Test on MSVC.
   * [x] `clang-cl` works
 * [ ] Test CUDA-GL interop API
