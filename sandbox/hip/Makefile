@@ -1,2 +1,2 @@
 all:
-	clang++ test.cc hipew.c  -ldl
+	clang++ test_hipew.cc hipew.c  -ldl

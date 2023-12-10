@@ -749,7 +749,7 @@ static int hipewHipInit(void) {
   /* Library paths. */
 #ifdef _WIN32
   /* Expected in c:/windows/system or similar, no path needed. */
-  const char *hip_paths[] = {"nvcuda.dll", NULL};
+  const char *hip_paths[] = {"amdhip64.dll", NULL};
 #else
   const char *hip_paths[] = {"libamdhip64.so", "/opt/rocm/hip/lib/libamdhip64.so", "libamdhip64.so.4", NULL};
 #endif
