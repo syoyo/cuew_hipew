@@ -6,7 +6,7 @@
 #include <string.h>
 #include "cuew.h"
 
-#include "nvPTXCompiler.h"
+#include "cuew_ptx_compiler.h"
 
 
 const char *ptxCode = "                                      \
